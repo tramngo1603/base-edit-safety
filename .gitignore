@@ -1,0 +1,46 @@
+# --- Environment files and credentials ---
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+api_keys*
+credentials*
+secrets*
+# --- Local or licensed data ---
+data/*
+!data/README.md
+data/inputs/*
+data/inputs/d5_fastq/
+data/outputs/*
+validation/sources/*
+!validation/sources/SOURCES.md
+validation/d5_outcomes/*
+!validation/d5_outcomes/QC_SUMMARY.md
+validation/*
+!validation/README.md
+!validation/validation-protocol.md
+!validation/dataset_registry.md
+!validation/SPLIT_PROPOSAL.md
+!validation/han_overlap_map.json
+!validation/HAN_OVERLAP_MAP.md
+# --- local research and generated review material ---
+BASE_EDIT_SAFETY_CORE_FLAT.txt
+review/
+papers/
+curation_results/
+documentation/
+# --- Operating-system files ---
+.DS_Store
+# --- Python-generated files ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+build/
+dist/

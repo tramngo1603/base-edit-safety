@@ -1,0 +1,14 @@
+dataset_id	assay	assay_class	cell_type	guide_id	record_type	site_id	point_id	measured_positive	measured_value	editor_class	offset	ref	alt	true_negatives_available	failure_code	failure_note
+D1	CHANGE-seq-BE	biochemical	cell-free DNA	off-guide	off_target_site	s1		true						false		
+D1	CHANGE-seq-BE	biochemical	cell-free DNA	off-guide	off_target_site	s2		true						false		
+D1	CHANGE-seq-BE	biochemical	cell-free DNA	off-guide	off_target_site	s3		true						false		
+D1	CHANGE-seq-BE	biochemical	cell-free DNA	off-guide	off_target_site	s4		true						false		
+D1	CHANGE-seq-BE	biochemical	cell-free DNA	off-guide	off_target_site	s5		true						false	F5	fixture site below nomination reach
+D4	amplicon NGS		HEK293T	bystander-guide	bystander		b1		10	ABE	-116	A	G			
+D4	amplicon NGS		HEK293T	bystander-guide	bystander		b2		20	ABE	-112	A	G			
+D4	amplicon NGS		HEK293T	bystander-guide	bystander		b3		30	ABE	-110	A	G			
+D4	amplicon NGS		HEK293T	bystander-guide	bystander		b4		40	ABE	-108	A	G			
+D4	amplicon NGS		HEK293T	outcome-guide	on_target_outcome		t1		10	ABE						
+D4	amplicon NGS		HEK293T	outcome-guide	on_target_outcome		t2		20	ABE						
+D4	amplicon NGS		HEK293T	outcome-guide	on_target_outcome		t3		30	ABE						
+D4	amplicon NGS		HEK293T	outcome-guide	on_target_outcome		t4		40	ABE						

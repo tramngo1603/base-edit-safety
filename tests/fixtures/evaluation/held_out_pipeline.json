@@ -1,0 +1,16 @@
+{
+  "schema": "base_edit_safety/evaluation-pipeline-output/v1",
+  "tool_versions": {"fixture-predictor": "1.2.3"},
+  "records": [
+    {"dataset_id": "D5", "assay": "targeted HBG amplicon sequencing", "cell_type": "primary CD34+ HSPCs", "guide_id": "held-bystander", "record_type": "bystander_prediction", "point_id": "h1", "editor_class": "CBE", "offset": -114, "ref": "C", "alt": "T", "predicted_value": 1},
+    {"dataset_id": "D5", "assay": "targeted HBG amplicon sequencing", "cell_type": "primary CD34+ HSPCs", "guide_id": "held-bystander", "record_type": "bystander_prediction", "point_id": "h2", "editor_class": "CBE", "offset": -115, "ref": "C", "alt": "T", "predicted_value": 2},
+    {"dataset_id": "D5", "assay": "targeted HBG amplicon sequencing", "cell_type": "primary CD34+ HSPCs", "guide_id": "held-bystander", "record_type": "bystander_prediction", "point_id": "h3", "editor_class": "CBE", "offset": -113, "ref": "C", "alt": "T", "predicted_value": 4},
+    {"dataset_id": "D5", "assay": "targeted HBG amplicon sequencing", "cell_type": "primary CD34+ HSPCs", "guide_id": "held-bystander", "record_type": "bystander_prediction", "point_id": "h4", "editor_class": "CBE", "offset": -111, "ref": "C", "alt": "T", "predicted_value": 3},
+    {"dataset_id": "D5", "assay": "targeted HBG amplicon sequencing", "cell_type": "primary CD34+ HSPCs", "guide_id": "held-bystander", "record_type": "guide_result", "status": "complete", "dual_engagement_flag": false, "intergenic_deletion_warning": false, "chip_driver_overlap_flag": false, "evidence_tier": "predicted_only"},
+    {"dataset_id": "D5", "assay": "targeted HBG amplicon sequencing", "cell_type": "primary CD34+ HSPCs", "guide_id": "held-outcome", "record_type": "on_target_prediction", "point_id": "o1", "editor_class": "CBE", "predicted_value": 1},
+    {"dataset_id": "D5", "assay": "targeted HBG amplicon sequencing", "cell_type": "primary CD34+ HSPCs", "guide_id": "held-outcome", "record_type": "on_target_prediction", "point_id": "o2", "editor_class": "CBE", "predicted_value": 2},
+    {"dataset_id": "D5", "assay": "targeted HBG amplicon sequencing", "cell_type": "primary CD34+ HSPCs", "guide_id": "held-outcome", "record_type": "guide_result", "status": "complete", "dual_engagement_flag": false, "intergenic_deletion_warning": false, "chip_driver_overlap_flag": false, "evidence_tier": "predicted_only"},
+    {"dataset_id": "D5", "assay": "targeted HBG amplicon sequencing", "cell_type": "primary CD34+ HSPCs", "guide_id": "held-gold", "record_type": "guide_result", "status": "complete", "dual_engagement_flag": true, "intergenic_deletion_warning": true, "chip_driver_overlap_flag": true, "evidence_tier": "analog_supported"},
+    {"dataset_id": "D5", "assay": "targeted HBG amplicon sequencing", "cell_type": "primary CD34+ HSPCs", "guide_id": "held-negative", "record_type": "guide_result", "status": "error", "error": "fixture predictor rejected malformed input", "dual_engagement_flag": false, "intergenic_deletion_warning": false, "chip_driver_overlap_flag": false, "evidence_tier": "predicted_only"}
+  ]
+}

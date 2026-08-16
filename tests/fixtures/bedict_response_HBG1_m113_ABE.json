@@ -1,0 +1,13 @@
+{
+  "_note": "SYNTHETIC hand-authored fixture for parser tests; NOT a captured BE-DICT run (see fixtures/README.md).",
+  "editor": "ABE8e",
+  "ensemble_runs": 5,
+  "sequences": {
+    "HBG1_m113_ABE": [
+      {"output_seq": "CTTGACCAATAGCCTTGACA", "pred_score": 0.60},
+      {"output_seq": "CTTGACCGATAGCCTTGACA", "pred_score": 0.20},
+      {"output_seq": "CTTGGCCAATAGCCTTGACA", "pred_score": 0.15},
+      {"output_seq": "CTTGGCCGATAGCCTTGACA", "pred_score": 0.05}
+    ]
+  }
+}

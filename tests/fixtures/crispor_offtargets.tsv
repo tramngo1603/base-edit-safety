@@ -1,0 +1,5 @@
+guideId	mismatchCount	cfdOfftargetScore	chrom	start	strand	locusDesc
+19rev	0	1.0	chr11	5254894	-	intergenic:HBG1-HBG2
+19rev	2	0.3	chr2	25264110	+	exon:DNMT3A
+19rev	4	0.02	chr7	1000000	+	intergenic:GENEA-GENEB
+19rev	4	0.01	chr8	2000000	-	intron:SOMEGENE

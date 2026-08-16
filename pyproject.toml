@@ -1,0 +1,53 @@
+[project]
+name = "base-edit-safety"
+version = "0.1.0"
+description = "Safety triage for base-editing guides at the HBG1/HBG2 fetal-hemoglobin promoters."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+keywords = [
+    "bioinformatics",
+    "base-editing",
+    "crispr",
+    "off-target",
+    "sickle-cell",
+    "thalassemia",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = []   # the prediction tools are installed separately; see requirements-external.txt
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[project.urls]
+Repository = "https://github.com/tramngo1603/base-edit-safety"
+Documentation = "https://github.com/tramngo1603/base-edit-safety/tree/main/docs"
+Issues = "https://github.com/tramngo1603/base-edit-safety/issues"
+
+[project.scripts]
+base-edit-safety-evaluate-tuning = "base_edit_safety.evaluation.tuning:main"
+base-edit-safety-evaluate-held-out = "base_edit_safety.evaluation.held_out:main"
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+markers = [
+    "integration: needs an external prediction tool installed and configured",
+    "evaluation_fixture: synthetic evaluation data only; never an ingested validation dataset",
+]
