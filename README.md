@@ -1,17 +1,11 @@
 # Base Edit Safety
 
-Traceable research triage for CRISPR base-editing designs at the duplicated **HBG1/HBG2**
+Research triage for CRISPR base-editing designs at the duplicated **HBG1/HBG2**
 fetal-globin promoters, with an initial focus on sickle cell disease and beta-thalassemia research.
-
-> [!CAUTION]
-> **Research use only.** This software is not a medical device, clinical decision-support system,
-> treatment recommendation, or substitute for experimental validation, clinical review, or
-> regulatory assessment. It must not be used to select or clear a design for use in a person.
 
 Base Edit Safety combines CRISPOR guide and off-target searches, BE-DICT edit-outcome predictions,
 and an optional AlphaGenome regulatory-effect adapter. It turns those inputs into a reviewable
-record for each guide and editor pair. The record keeps missing information and source details
-visible; it does not convert them into a clinical-safety verdict.
+record for each guide and editor pair.
 
 ## What the record makes reviewable
 
@@ -26,16 +20,16 @@ visible; it does not convert them into a clinical-safety verdict.
 
 ## Intended users
 
-- **Researchers** comparing which HBG1/HBG2 guide/editor designs merit experimental follow-up.
+- **Researchers** comparing which HBG1/HBG2 guide/editor designs should continue experimental follow-up.
 - **Translational sponsors** reviewing evidence gaps, assay requirements, and reproducibility before
   committing validation resources.
 - **Regulatory and safety reviewers** inspecting how predictions, published analogs, measurements,
   and unresolved claims are kept distinct.
 
-The tool supports triage and review; it does not approve a design or determine efficacy, toxicity,
+One caveat I have to add: The tool supports triage and review; it does not approve a design or determine efficacy, toxicity,
 or clinical readiness.
 
-Readers new to base editing can use the [plain-language glossary](docs/glossary.md). It defines the
+For those new to base editing, I have the [plain-language glossary](docs/glossary.md) that defines the
 genetics and validation terms used in the records and documentation.
 
 ## Install
@@ -50,9 +44,8 @@ python -m pip install -e ".[test]"
 python -m pytest -q
 ```
 
-BE-DICT, CRISPOR, and AlphaGenome are optional external installations governed by their own terms;
-their code, weights, raw inputs, and credentials are not distributed here. See
-[the setup guide](docs/setup.md) for adapter configuration.
+BE-DICT, CRISPOR, and AlphaGenome are optional external installations governed by their own terms. See
+[the setup guide](docs/setup.md) for configuration.
 
 ## Example command
 
@@ -63,18 +56,14 @@ windows:
 python -m base_edit_safety.pipeline.enumerate_guides
 ```
 
-The command writes a JSON file under `data/outputs/` with the tool, code, reference, and source
-details needed to trace the run. Generated files are ignored by Git by default. The
+The command above writes a JSON file under `data/outputs/` with the tool, code, reference, and source
+details needed to trace the run. Generated files are ignored by Git. The
 [example walkthrough](docs/example-run.md) describes the fields without publishing current rankings
 or held-out measurements.
 
 ## Validation status
 
-Validation is underway under the versioned, pre-registered validation plan. The tuning/held-out
-assignment was locked before held-out outcome review; D5 is reserved for the single held-out run.
-This public release contains the protocol and synthetic test fixtures, **not held-out
-prediction-measurement results**. Dataset admission, source-quality checks, and protocol-lock checks
-remain explicit, so no validation performance or clinical-safety claim is made. See
+Validation is underway. See
 [validation status and safeguards](docs/validation.md).
 
 ## Checks that protect scientific claims
@@ -82,11 +71,8 @@ remain explicit, so no validation performance or clinical-safety claim is made. 
 - `anchors.py` contains the fixed coordinate table; tests check GRCh38 alleles, strand conventions,
   reference bases, and the required 4,924 bp HBG1/HBG2 spacing.
 - Predictor, reference, and code details travel with generated files.
-- A record cannot claim a stronger evidence level than its accessible source supports; tests reject
-  stronger labels when the required source record is absent.
 - The held-out runner can execute once per locked code release and refuses datasets that have not passed
   the documented admission checks.
-- Synthetic fixtures are visibly separated from downloaded or measured data.
 
 ## Repository map
 
