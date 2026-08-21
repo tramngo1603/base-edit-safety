@@ -7,6 +7,11 @@ Base Edit Safety combines CRISPOR guide and off-target searches, BE-DICT edit-ou
 and an optional AlphaGenome regulatory-effect adapter. It turns those inputs into a reviewable
 record for each guide and editor pair.
 
+## Project High-level
+
+![Base Edit Safety system design](docs/system-chart.jpeg)
+
+
 ## What the record makes reviewable
 
 | Review dimension | Recorded output |
