@@ -1,8 +1,7 @@
-"""Write versioned pipeline records under `data/outputs`.
+"""Read and write versioned pipeline artifacts under ``data/outputs``.
 
-Each output carries `ARTIFACT_SCHEMA_VERSION`. `read_enumeration()` rejects a different version so
-older fields cannot be interpreted under the current field definitions. Increase the version when a field or
-its meaning changes in a way that makes an older file incompatible.
+The schema version prevents an older output file from being read with newer field meanings. Bump
+it whenever a shape change could make an existing file ambiguous.
 """
 from __future__ import annotations
 
@@ -13,15 +12,14 @@ import os
 from ..pipeline.datatypes import EditRecord
 
 # 4: multi-edit enumeration records carry an allele-keyed joint_on_target_rate and its model,
-#    method, confidence, and source fields. BE-DICT-backed records also carry uniform-v1 score
-#    score-scaling details and the unscaled total; run metadata stores totals and exclusions.
-#    Design-record version 2 reads the joint value.
+#    method, confidence, and caveat provenance. BE-DICT-backed records also carry uniform-v1 score
+#    normalization provenance and raw mass; run metadata records the policy and any exclusions.
 # 3: enumeration records carry `offtarget_sites_low_mismatch`, the per-site coordinates for
 #    <=3-mismatch off-targets. Without these a run cannot be compared against a published panel,
-#    which permits comparison of the eleven Ravi sites with the twelve CRISPOR sites for 61forw.
+#    which is how eleven Ravi sites for 61forw sat uncomparable against our own twelve.
 # 2: records carry `confidence` (model_predicted | not_evaluated) and a rate of None where the
 #    predictor was never asked, the header key is `scope`, and meta carries a reproducibility block.
-# 1: files written before the version-2 fields were introduced.
+# 1: anything written before that, including every file in data/outputs as of 2026-07-26.
 ARTIFACT_SCHEMA_VERSION = "4"
 
 # Header keys that were removed at version 2. Their presence dates a file on its own.
@@ -31,24 +29,15 @@ _RETIRED_HEADER_KEYS = ("disclaimer", "claim_disclaim")
 class StaleArtifact(RuntimeError):
     """Raised when an output file on disk was written by a different build of this code."""
 
-# Include scope in every output so copied files retain their intended use and limits.
+# Goes at the top of every output file, so a file that gets passed around still says what it is.
 SCOPE = {
     "what_this_is": (
-        "A shortlist of base-editing guide and editor designs for prioritizing laboratory tests. "
-        "Ordering uses the provisional triage rubric described in the output."
+        "Base-editing guide and editor records with predicted edits, candidate off-targets, "
+        "evidence links, and follow-up assays."
     ),
     "what_this_is_not": [
-        "Not a safety clearance: no design here is called safe.",
-        "Not an efficacy ranking: efficiency is an eligibility threshold, not the ranking target.",
-        "Not a per-person prediction: the clonal-hematopoiesis layer flags gene membership and "
-        "uses it as a triage flag, and produces no patient-level estimate.",
-        "Not measured: on-target rates are model predictions and off-targets are candidate sites.",
+        "A replacement for experimental confirmation or review of the underlying evidence.",
     ],
-    "thresholds": (
-        "The efficiency and weighting thresholds are starting values taken from allelic-editing "
-        "literature. Re-estimate them with the final guide, editor, process, and a measured "
-        "potency assay."
-    ),
     "confirmation_assays": "amplicon NGS for on-target, CHANGE-seq-BE or GUIDE-seq for off-target.",
 }
 
@@ -84,9 +73,10 @@ def _write_json(filename: str, body: dict, meta: dict | None) -> str:
 
 
 def schema_complaints(doc: dict) -> list[str]:
-    """List each way a document differs from the current required output fields.
+    """Every way this document disagrees with what the current writer produces.
 
-    Return all differences so the error identifies every incompatible field in one pass.
+    Returns all of them rather than the first, because a file written by an old build usually
+    disagrees in several ways at once and the full list is what dates it.
     """
     found = []
     version = doc.get("artifact_schema_version")
@@ -107,7 +97,7 @@ def schema_complaints(doc: dict) -> list[str]:
     meta = doc.get("meta") or {}
     step = str(meta.get("step", ""))
     if "spine" in step:
-        found.append(f"meta.step is {step!r}; 'spine' was renamed to 'single_guide'")
+        found.append(f"meta.step is {step!r}; 'spine' is a retired step label")
     if not (meta.get("reproducibility") or {}):
         found.append("meta.reproducibility is empty, so the run cannot be traced to its inputs")
 
@@ -117,10 +107,10 @@ def schema_complaints(doc: dict) -> list[str]:
 
 
 def read_enumeration() -> dict:
-    """Load an enumeration file only when its version matches the current fields.
+    """Load the enumeration file, refusing anything a different build wrote.
 
-    Later steps share this file, so rejecting older incompatible schemas prevents calculations from using
-    fields whose meaning has changed.
+    Every later step reads this file. Letting a stale one through means every downstream number is
+    computed from records whose meaning has since changed, which is exactly what happened here.
     """
     path = enumeration_path()
     if not os.path.isfile(path):
@@ -146,16 +136,6 @@ def read_enumeration() -> dict:
 def write_records(records: list[EditRecord], filename: str, meta: dict | None = None) -> str:
     """Write edit records. Returns the path."""
     return _write_json(filename, {"record_count": len(records), "records": records_to_dicts(records)}, meta)
-
-
-def write_credibility(payload_body: dict, filename: str, meta: dict | None = None) -> str:
-    """Write the divergence and uncertainty report."""
-    return _write_json(filename, payload_body, meta)
-
-
-def write_ranking(ranked: list[dict], filename: str, meta: dict | None = None) -> str:
-    """Write the ranked shortlist."""
-    return _write_json(filename, {"guide_count": len(ranked), "ranking": ranked}, meta)
 
 
 def write_design_records(record_set: dict, filename: str, meta: dict | None = None) -> str:

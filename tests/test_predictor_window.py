@@ -1,9 +1,9 @@
-"""Share the BE-DICT edit window without changing the full-sequence model input.
+"""The supported BE-DICT edit window is shared without changing its tensor configuration.
 
-BE-DICT's example configuration gives two `SeqProcessConfig` objects different jobs. The
-`HaplotypeSeqProcessor` uses positions 3-10 to generate possible edited sequences, while the
-`BEDICT_HaplotypeModel` uses the full guide-matched sequence as numeric input. The adapter passes the
-3-10 window only to the first step.
+BE-DICT's upstream demo gives the two ``SeqProcessConfig`` objects different jobs. The
+``HaplotypeSeqProcessor`` uses positions 3-10 to enumerate possible edited haplotypes, while the
+``BEDICT_HaplotypeModel`` uses a separate full-protospacer configuration to generate tensors. The
+adapter must propagate only the former from the pipeline's source of truth.
 """
 from __future__ import annotations
 
@@ -63,7 +63,7 @@ GUIDE = Guide(
 
 
 def test_adapter_request_carries_edit_window_bounds(monkeypatch):
-    """Write the `EDIT_WINDOW` bounds into the external-tool request."""
+    """The request serializes the bounds owned by ``EDIT_WINDOW``."""
     captured = []
     predictor = BedictBystanderPredictor(
         BedictConfig(repo_root="unused", python_executable="unused"), runs=2,
@@ -105,7 +105,7 @@ def test_runner_passes_the_requested_window_to_the_processor():
 
 
 def test_processor_window_and_tensor_configuration_are_intentionally_distinct():
-    """Keep BE-DICT's full-sequence input separate from its edited-sequence window."""
+    """Keep upstream's full tensor span separate from its haplotype-generation window."""
     configs = _calls("SeqProcessConfig")
     assert len(configs) == 2
 
@@ -120,5 +120,5 @@ def test_processor_window_and_tensor_configuration_are_intentionally_distinct():
 
 
 def test_edit_window_is_what_the_pipeline_thinks_it_is():
-    """Do not widen predictions beyond BE-DICT's supported processor window."""
+    """Do not widen supported predictions beyond upstream's processor window."""
     assert list(EDIT_WINDOW) == [3, 4, 5, 6, 7, 8, 9, 10]

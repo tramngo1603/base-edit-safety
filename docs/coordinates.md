@@ -1,7 +1,8 @@
 # HBG1/HBG2 promoter coordinates
 
-This is the coordinate table used by every downstream step. `src/base_edit_safety/anchors.py` is a direct copy
-of it, and nothing in the code re-derives a position. Checked against RefSeq and ClinVar in June 2026.
+This is the coordinate reference used throughout the project. `src/base_edit_safety/anchors.py`
+stores the same values, and the code does not re-derive them. The table was checked against RefSeq
+and ClinVar in June 2026.
 
 ## Conventions
 
@@ -11,12 +12,12 @@ of it, and nothing in the code re-derives a position. Checked against RefSeq and
 - **Promoter numbering.** Positions like -198 or -113 are counted back from the transcription cap
   site: +1 is the first transcribed base, -1 is the base immediately before it, and there is no zero.
   For these minus-strand genes that makes the arithmetic `genomic position = TSS + |offset|`.
-- **Store both allele orientations.** The literature writes promoter alleles on the gene's own
+- **Both allele orientations.** The literature writes promoter alleles on the gene's own
   strand ("-198 T>C"). Genome browsers and VCFs write them on the plus strand ("-198 A>G"), which is
-  the reverse complement. A single `ref_base` field would guarantee a strand error, so both are
-  stored. The mapping is: sense T>C = plus A>G, sense A>G = plus T>C, sense G>A = plus C>T,
+  the reverse complement. Storing both orientations helps prevent strand errors. The mapping is:
+  sense T>C = plus A>G, sense A>G = plus T>C, sense G>A = plus C>T,
   sense C>T = plus G>A.
-- **Identifiers.** The standard database form is genomic HGVS, for example `NC_000011.10:g.5250055A>G`. The
+- **Identifiers.** The canonical form is genomic HGVS, for example `NC_000011.10:g.5250055A>G`. The
   current transcripts are NM_000559.3 (HBG1) and NM_000184.3 (HBG2); the older `.2` versions are
   aliases only. Do not use a transcript HGVS such as `c.-53-198T>C` as a coordinate: transcript
   numbering counts from the ATG through the 5' UTR, which is not the same arithmetic, and ClinVar
@@ -71,8 +72,8 @@ KLF1 binding at -123/-124 was shown for the double substitution, not for either 
 
 ## Variant database status
 
-Store identifiers per gene because the records differ between HBG1 and HBG2. An rsID assigned to
-one gene is not copied to the other.
+Per gene, because the records differ between the paralogs. An rsID belongs to one gene and is never
+copied across.
 
 **db_confirmed** (ClinVar accession and rsID):
 
@@ -82,14 +83,13 @@ one gene is not copied to the other.
 | HBG1 -117 | rs35378915 | RCV000016173 / VCV000015030 |
 | HBG1 -114 | rs281860601 | RCV001814969 or RCV000016179 / VCV000015035 |
 | HBG2 -175 | rs63750654 | RCV001814961 / VCV000014983 |
-| HBG2 -114 | rs34809449 | RCV000016130 / VCV000014990 (multiallelic: store the G>A allele rather than only the rsID) |
+| HBG2 -114 | rs34809449 | RCV000016130 / VCV000014990 (multiallelic: store the G>A allele, not just the rsID) |
 
-**db_unverified**: shown experimentally in CD34+ HSPCs, with a coordinate derived from RefSeq, but
-with **no ClinVar record** for that gene. The workflow may target it, but does not describe it as a
-catalogued variant.
+**db_unverified**: shown experimentally in CD34+ HSPCs, coordinate derived from RefSeq, but **no
+ClinVar record** for that gene. Fine to target, not citable as a catalogued variant.
 
 A dbSNP rsID may still exist, and for two of these it does. A dbSNP submission is not curation, so it
-does not promote the status. The five rows are:
+does not promote the status. All five rows, which is three more than this list used to name:
 
 | | dbSNP | ClinVar |
 |---|---|---|
@@ -104,8 +104,8 @@ curator working from this page alone would have skipped both.
 
 All five rows were re-queried by position on 2026-07-26, not by exact-HGVS string, because SPDI is
 0-based and HGVS is 1-based and an off-by-one could have hidden records. It had not: the position
-query returns the same two rsIDs. The search returned no dbSNP record for the other three rows on
-that access date.
+query returns the same two rsIDs and nothing further. The three "none" rows above are a settled
+negative result.
 
 **synthetic**: -123 and -124. Screen hits, not natural HPFH alleles.
 
@@ -118,7 +118,7 @@ Kept here as explicit negative cases:
   bystander, which is in scope. Both tables are keyed by (offset, ref, alt) so the two cannot merge.
 - **-114 C>A and -114 C>G.** Transversions. C>A is Doerfler's cellular allele and C>G its EMSA
   oligo; neither is the repo's C>T.
-- **-69 C>T and -70 C>T.** Substitutions first reported by Ravi 2022, outside the -210 to -80 modelling window.
+- **-69 C>T and -70 C>T.** Ravi 2022 novel substitutions, outside the -210 to -80 modelling window.
   Recorded so that omitting them is a decision rather than an oversight. Widening the window to
   reach them is a separate call.
 - **Delta-13**, roughly -114 to -102. A 13 nt deletion, modelled with a Cas9 nuclease. Base editors
@@ -126,17 +126,17 @@ Kept here as explicit negative cases:
 
 ## Conversions this tool cannot predict
 
-Ravi 2022 reports an observed **-117 G>A** CBE conversion *outside* the protospacer and outside
+Ravi 2022 reports a real **-117 G>A** CBE conversion happening *outside* the protospacer and outside
 the editing window. BE-DICT is only asked about positions inside the window, so no prediction will
 ever contain it. It is recorded in `anchors.OBSERVED_OUTSIDE_WINDOW` rather than beside the
 within-window bystanders, because filing it there would imply a capability the tool does not have.
-It is distinct from the -117 CBE anchor above, which is the intended within-window edit.
+It is a different thing from the -117 CBE anchor above, which is the intended within-window edit.
 
-## Positions with the highest evidence level
+## Where the evidence is strongest
 
 Build and demo on these first:
 
-- **-175**, **-113**, and the **-123/-124** pair have the highest exact-allele evidence level in HSPCs.
+- **-175**, **-113**, and the **-123/-124** pair have the strongest exact-allele evidence in HSPCs.
   HBG2 -175 has a database record and HBG1 -175 does not. The exact -113 A>G was installed with
   ABE8e in patient CD34+ HSCs and in an in-vivo human-locus model.
 - **-117** and **-114** were covered by tiling screens and motif-disruption work, not by an
@@ -146,11 +146,11 @@ Build and demo on these first:
 
 Matching HBG1 and HBG2 positions must differ by exactly 4,924 bp, which is the TSS separation
 (5,254,781 - 5,249,857) on GRCh38 and the same on GRCh37. `anchors.check_paralog_spacing()` runs this
-when the coordinate table loads and stops the run if it fails. It once caught an off-by-one that had put HBG2
+before anything else and stops the run if it fails. It once caught an off-by-one that had put HBG2
 -114 at HBG2 -113's coordinate.
 
-The check catches shifted rows. It does not identify the gene copy, so do not assign HBG1 or HBG2 by
-adding or subtracting 4,924. When processing reads, require a flank that can only
+The check catches shifted rows. It does not tell you which gene a position belongs to, so never work
+a gene out by adding or subtracting 4,924. When processing reads, require a flank that can only
 belong to one gene; otherwise label the read `HBG1/HBG2_AMBIGUOUS`.
 
 ## Citations

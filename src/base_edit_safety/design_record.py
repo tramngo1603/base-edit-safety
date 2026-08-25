@@ -1,22 +1,16 @@
-"""Build the primary review record for each candidate guide.
+"""Build one review record per candidate guide.
 
-A record contains the available candidate information: the predicted on-target and bystander edits, the
-off-target results separated by category, HBG gene-copy flags, CH-driver overlap, comparison with the
-HBG registry, evidence level, and required laboratory tests. The score is included only as a
-tiebreaker after the evidence and required tests.
-
-A design that installs more than one edit, such as the -123/-124 pair, keeps every intended edit,
-and the registry comparison runs over all of them rather than only the highest-rate one.
+Each record keeps the predicted edit spectrum, off-target candidate summary, HBG paralog checks,
+CH-driver overlap, evidence links, and follow-up assays together. It does not collapse those fields
+into a composite score.
 """
 from __future__ import annotations
 
-from . import (annotation, anchors, evidence, hbg_registry, offtarget_kinds,
-               offtarget_reference, paralog_flags)
+from . import annotation, anchors, evidence, hbg_registry, offtarget_kinds, paralog_flags
 from .pipeline import environment
 from .pipeline.datatypes import JOINT_ON_TARGET_CAVEAT, JOINT_ON_TARGET_METHOD, NOT_EVALUATED
-from .scoring.rubric import RubricWeights, score_guides
 
-SCHEMA_VERSION = "2"
+SCHEMA_VERSION = "3"
 _MECHANISM_BY_OFFSET = {p.promoter_offset: p.mechanism for p in anchors.IN_SCOPE}
 _REL_ORDER = (hbg_registry.NO_MATCH, hbg_registry.NEARBY,
               hbg_registry.SAME_MOTIF, hbg_registry.EXACT_EDIT)
@@ -30,7 +24,7 @@ def _edit_str(record: dict) -> dict:
 
 
 def _allele_key(record: dict) -> dict:
-    """Return the stable sense-strand identity for one intended or bystander edit."""
+    """Canonical sense-strand identity for one intended or bystander edit."""
     ref = record.get("promoter_sense_ref")
     alt = record.get("promoter_sense_alt")
     if (not isinstance(ref, str) or ref not in "ACGT"
@@ -45,13 +39,113 @@ def _allele_key(record: dict) -> dict:
     }
 
 
+def _joint_edit_summary(on_target: list[dict]) -> dict:
+    """Return the validated joint rate for a multi-edit design, if the predictor supplied one."""
+    if len(on_target) < 2:
+        return {}
+
+    expected_keys = {
+        (key["promoter_offset"], key["promoter_sense_ref"], key["promoter_sense_alt"])
+        for key in (_allele_key(record) for record in on_target)
+    }
+    fallback_provenance = on_target[0].get("provenance") or {}
+
+    def not_evaluated() -> dict:
+        return {
+            "joint_on_target_rate": None,
+            "joint_on_target_rate_provenance": {
+                "allele_keys": [_allele_key(record) for record in on_target],
+                "method": JOINT_ON_TARGET_METHOD,
+                "model": on_target[0].get("model_name"),
+                "predictor_runs": fallback_provenance.get("predictor_runs"),
+                "confidence": NOT_EVALUATED,
+                "caveat": JOINT_ON_TARGET_CAVEAT,
+            },
+        }
+
+    payloads = []
+    for record in on_target:
+        provenance = record.get("provenance") or {}
+        if "joint_on_target_rate" not in provenance:
+            continue
+        allele_keys = tuple(
+            (key.get("promoter_offset"), key.get("promoter_sense_ref"),
+             key.get("promoter_sense_alt"))
+            for key in (provenance.get("joint_on_target_allele_keys") or [])
+        )
+        payloads.append({
+            "rate": provenance.get("joint_on_target_rate"),
+            "confidence": provenance.get("joint_on_target_confidence"),
+            "method": provenance.get("joint_on_target_method"),
+            "allele_keys": allele_keys,
+            "model": provenance.get("joint_on_target_model"),
+            "predictor_runs": provenance.get("predictor_runs"),
+            "caveat": provenance.get("joint_on_target_caveat"),
+        })
+
+    if len(payloads) != len(on_target):
+        return not_evaluated()
+    if any(payload != payloads[0] for payload in payloads[1:]):
+        raise ValueError("inconsistent joint_on_target_rate provenance across one design")
+
+    payload = payloads[0]
+    allele_keys = payload["allele_keys"]
+    if len(set(allele_keys)) != len(allele_keys) or set(allele_keys) != expected_keys:
+        raise ValueError("joint_on_target_rate allele keys do not match the intended edits")
+    if payload["method"] != JOINT_ON_TARGET_METHOD:
+        raise ValueError(f"unsupported joint_on_target_rate method {payload['method']!r}")
+    if payload["caveat"] != JOINT_ON_TARGET_CAVEAT:
+        raise ValueError("joint_on_target_rate is missing its required provenance note")
+
+    confidence = payload["confidence"]
+    rate = payload["rate"]
+    if confidence == NOT_EVALUATED:
+        if rate is not None:
+            raise ValueError("not_evaluated joint_on_target_rate must be None")
+        return not_evaluated()
+    if confidence != "model_predicted":
+        raise ValueError(f"unsupported joint_on_target_rate confidence {confidence!r}")
+    if not isinstance(payload["model"], str) or not payload["model"]:
+        raise ValueError("model-predicted joint_on_target_rate needs model provenance")
+    runs = payload["predictor_runs"]
+    if not isinstance(runs, int) or isinstance(runs, bool) or runs < 1:
+        raise ValueError("model-predicted joint_on_target_rate needs a positive predictor run count")
+    try:
+        rate = float(rate)
+    except (TypeError, ValueError):
+        raise ValueError(f"joint_on_target_rate is not numeric: {rate!r}")
+    if not 0.0 <= rate <= 1.0:
+        raise ValueError(f"joint_on_target_rate {rate} outside [0, 1]")
+    marginals = [record.get("predicted_rate") for record in on_target]
+    if any(value is None for value in marginals):
+        raise ValueError("model-predicted joint rate cannot accompany an unevaluated intended edit")
+    if rate > min(float(value) for value in marginals) + 1e-6:
+        raise ValueError("joint_on_target_rate exceeds an intended edit's marginal rate")
+
+    return {
+        "joint_on_target_rate": round(rate, 6),
+        "joint_on_target_rate_provenance": {
+            "allele_keys": [
+                {"promoter_offset": offset, "promoter_sense_ref": ref,
+                 "promoter_sense_alt": alt}
+                for offset, ref, alt in allele_keys
+            ],
+            "method": payload["method"],
+            "model": payload["model"],
+            "predictor_runs": runs,
+            "confidence": confidence,
+            "caveat": payload["caveat"],
+        },
+    }
+
+
 def _strongest(values, order) -> str:
     present = [v for v in values if v in order]
     return max(present, key=order.index) if present else order[0]
 
 
 def _validation_checklist(bystanders, off_triggers, flags, ch_annot) -> list[dict]:
-    """Return the laboratory tests required before experimental follow-up."""
+    """The lab tests this candidate needs before anyone acts on it."""
     items = [{"validates": "on_target_edit_rate",
               "assay": "amplicon NGS in the target cell type (CD34+ HSPCs)", "status": "required"}]
     if bystanders:
@@ -67,36 +161,27 @@ def _validation_checklist(bystanders, off_triggers, flags, ch_annot) -> list[dic
     return items
 
 
-def _limitations(multi_edit: bool = False) -> list[str]:
-    limitations = [
-        "On-target and bystander rates come from BE-DICT, not from measurements in HSCs.",
-        "Off-target candidates come from a Cas9-style search of the reference genome. It finds "
-        "mismatch-only sites: no bulged sites and no population-variant-created sites. Measured "
-        "assays (GUIDE-seq / CHANGE-seq-BE) detect bulged sites; population-variant off-targets "
-        "need a variant-aware module that does not exist in v1. Off-targets specific to the base "
-        "editor, guide-independent deaminase activity, and RNA editing are not checked here.",
-        "The CH layer records which driver gene a site falls in, plus coordinate and mechanism "
-        "context. It produces no number about clonal expansion, leukemia, or long-term outcome.",
-        "Matches to clinical programs are motif and mechanism analogs. Exact clinical positions are "
-        "not always public. Published work is analog support, not a measurement from this run.",
-        "Scope is the HBG1/HBG2 proximal promoter only.",
+def _limitations() -> list[str]:
+    return [
+        "BE-DICT estimates the on-target and bystander rates; confirm them in the target cell type.",
+        "The CRISPOR search covers mismatch-only sites in the reference genome. Bulges and "
+        "population variants need separate searches, while editor-context and RNA effects remain "
+        "separate fields.",
+        "The CH annotation reports site overlap and gene context without estimating patient "
+        "outcomes.",
+        "The current target scope is the HBG1/HBG2 proximal promoter. Clinical-program matches "
+        "compare motif and mechanism when exact positions are unavailable.",
     ]
-    if multi_edit:
-        limitations.insert(1, JOINT_ON_TARGET_CAVEAT)
-    return limitations
 
 
-def build_design_records(records: list[dict], weights: RubricWeights | None = None,
-                         empirical: dict | None = None) -> dict:
+def build_design_records(records: list[dict], empirical: dict | None = None) -> dict:
     """Build the design records from annotated enumeration records.
 
-    `records` contains on-target and bystander `EditRecord` dictionaries with source details.
-    `empirical` optionally maps a guide ID to measurements produced for this run. A non-empty entry
-    assigns `empirically_measured`; published studies and predictions do not assign that level.
+    records:   enumeration EditRecords as dicts, on-target and bystander, with provenance.
+    empirical: optional {guide_id: [measurement, ...]}. Attaching real measurements moves a
+               candidate to empirically_measured. Nothing else can: not published work, not a model.
     """
-    weights = weights or RubricWeights()
     empirical = empirical or {}
-    scores = {s.guide_id: s for s in score_guides(records, weights)}
 
     by_guide: dict[str, list[dict]] = {}
     for r in records:
@@ -111,10 +196,9 @@ def build_design_records(records: list[dict], weights: RubricWeights | None = No
         bystanders = [r for r in recs if r["on_target_or_bystander"] == "bystander"]
         prov = recs[0]["provenance"]
         ch_hits = prov.get("ch_driver_offtargets", [])
-        score = scores.get(guide_id)
         base = on_target[0]
 
-        # Compare every intended edit so a joint target such as -123/-124 remains one design.
+        # Compare every intended edit, not just the first, so a pair like -123/-124 stays intact.
         by_edit = []
         for a in on_target:
             mech = _MECHANISM_BY_OFFSET.get(abs(a["promoter_offset"]))
@@ -128,16 +212,6 @@ def build_design_records(records: list[dict], weights: RubricWeights | None = No
                                    list(hbg_registry.STRENGTH_ORDER))
         empirical_support = empirical.get(guide_id, [])
         tier = evidence.evidence_tier(best_rel, empirical_support)
-        measured_in = "this_run" if tier == evidence.EMPIRICALLY_MEASURED else "literature"
-
-        # If a published study evaluated the same guide, compare its candidate-site list with the
-        # current CRISPOR list. Both lists come from search methods rather than measurements. A site
-        # absent from the CRISPOR list identifies a search-coverage gap.
-        published_panel = None
-        panel = offtarget_reference.panel_for(prov.get("protospacer") or "")
-        if panel is not None:
-            published_panel = offtarget_reference.compare_to_panel(
-                prov.get("offtarget_sites_low_mismatch", []), panel)
 
         off_kinds = offtarget_kinds.classify_offtargets(prov.get("offtarget", {}))
         off_triggers = offtarget_kinds.assay_triggers(off_kinds)
@@ -158,33 +232,8 @@ def build_design_records(records: list[dict], weights: RubricWeights | None = No
                             "promoter_offset": b["promoter_offset"],
                             "predicted_rate": b.get("predicted_rate"),
                             "genomic_plus": _edit_str(b)["genomic_plus"]} for b in bystanders],
-            "model_disagreement": {"status": "single_predictor",
-                                   "note": "BE-DICT is the only configured outcome predictor; no cross-predictor comparison was run"},
         }
-        if len(on_target) > 1:
-            joint_evaluated = (
-                score is not None
-                and score.terms.get("efficiency_basis") == "joint_on_target_rate"
-            )
-            joint_prov = next(
-                (record.get("provenance") or {} for record in on_target
-                 if "joint_on_target_rate" in (record.get("provenance") or {})),
-                prov,
-            )
-            joint_rate = score.on_target_efficiency if joint_evaluated else None
-            predicted_edit_spectrum.update({
-                "joint_on_target_rate": joint_rate,
-                "joint_on_target_rate_provenance": {
-                    "allele_keys": joint_prov.get("joint_on_target_allele_keys")
-                                   or [_allele_key(a) for a in on_target],
-                    "method": joint_prov.get("joint_on_target_method") or JOINT_ON_TARGET_METHOD,
-                    "model": joint_prov.get("joint_on_target_model") or base.get("model_name"),
-                    "predictor_runs": joint_prov.get("predictor_runs"),
-                    "confidence": (joint_prov.get("joint_on_target_confidence")
-                                   if joint_evaluated else NOT_EVALUATED),
-                    "caveat": joint_prov.get("joint_on_target_caveat") or JOINT_ON_TARGET_CAVEAT,
-                },
-            })
+        predicted_edit_spectrum.update(_joint_edit_summary(on_target))
 
         out.append({
             "record_type": "hbg_design_record",
@@ -203,29 +252,22 @@ def build_design_records(records: list[dict], weights: RubricWeights | None = No
             "registry_match": {
                 "relationship": best_rel,
                 "evidence_strength": best_strength,
-                "measured_in": measured_in,
                 "by_edit": by_edit,
-                "note": ("Edit relationship and evidence level are reported separately. Published "
-                         "work, including an exact HSPC edit, can assign analog_supported; "
-                         "empirically_measured requires a measurement attached to this run."),
+                "note": ("Edit relationship and evidence strength are reported separately. "
+                         "The empirically_measured tier is reserved for measurements attached "
+                         "to this record."),
             },
             "predicted_edit_spectrum": predicted_edit_spectrum,
-            "off_target": {"kinds": off_kinds, "assay_triggers": off_triggers,
-                           "published_panel": published_panel},
+            "off_target": {"kinds": off_kinds, "assay_triggers": off_triggers},
             "hbg_paralog_flags": flags,
             "ch_annotation": {"driver_offtargets": ch_annot,
                               "note": "for review and monitoring; no estimate is produced"},
             "empirical_support": empirical_support,
             "required_validation": _validation_checklist(bystanders, off_triggers, flags, ch_annot),
-            "scoring": {
-                "note": "Tiebreaker only; review the evidence level and required assays first.",
-                **(score.as_dict() if score else {}),
-            },
             "provenance": {"guide_id": guide_id, "model_name": base.get("model_name"),
                            "predictor_runs": prov.get("predictor_runs"),
                            "protospacer": prov.get("protospacer"), "pam": prov.get("pam"),
                            "strand": prov.get("strand")},
-            "limitations": _limitations(multi_edit=len(on_target) > 1),
         })
 
     return {
@@ -233,11 +275,11 @@ def build_design_records(records: list[dict], weights: RubricWeights | None = No
         "schema_version": SCHEMA_VERSION,
         "count": len(out),
         "records": out,
+        "limitations": _limitations(),
         "reproducibility": {
             "generated_at": environment.run_stamp(),
             "repo": environment.repo_state(),
             "genome_build": anchors.GENOME_BUILD,
             "models": sorted({r.get("model_name") for r in records if r.get("model_name")}),
-            "config": {"rubric_weights": weights.as_dict()},
         },
     }

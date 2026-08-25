@@ -313,7 +313,7 @@ def _crispron_protospacers(path: Path, sheet: str) -> set[str]:
         if len(target_30nt) != 30:
             raise ValueError(f"invalid CRISPRon 30-nt target in {sheet}")
         # Sun et al. define this field as 4-nt 5' flank + 20-nt protospacer + 3-nt PAM +
-        # 3-nt 3' flank. Only the explicit 20-nt guide-matched sequence is compared here.
+        # 3-nt 3' flank.  Only the explicit 20-nt sequence identity is used for this audit.
         guides.add(target_30nt[4:24])
     return guides
 

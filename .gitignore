@@ -1,4 +1,4 @@
-# --- Environment files and credentials ---
+# --- env / secrets ---
 .env
 .env.*
 !.env.example
@@ -9,32 +9,24 @@
 api_keys*
 credentials*
 secrets*
-# --- Local or licensed data ---
+# --- local data and validation runs ---
 data/*
 !data/README.md
+# Keep the runtime paths explicit because validation checks refer to these boundaries directly.
 data/inputs/*
+data/inputs/d5_config.json
 data/inputs/d5_fastq/
 data/outputs/*
-validation/sources/*
-!validation/sources/SOURCES.md
-validation/d5_outcomes/*
-!validation/d5_outcomes/QC_SUMMARY.md
-validation/*
-!validation/README.md
-!validation/validation-protocol.md
-!validation/dataset_registry.md
-!validation/SPLIT_PROPOSAL.md
-!validation/han_overlap_map.json
-!validation/HAN_OVERLAP_MAP.md
+validation/
 # --- local research and generated review material ---
 BASE_EDIT_SAFETY_CORE_FLAT.txt
 review/
 papers/
 curation_results/
 documentation/
-# --- Operating-system files ---
+# --- os cruft ---
 .DS_Store
-# --- Python-generated files ---
+# --- python ---
 __pycache__/
 *.py[cod]
 .venv/

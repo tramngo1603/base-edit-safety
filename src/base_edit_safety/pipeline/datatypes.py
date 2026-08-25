@@ -3,9 +3,9 @@
 The flow is: a CandidateGuide (no editor picked yet) becomes a Guide (editor picked), a predictor
 turns that into an EditSpectrum, and the spectrum reduces to one EditRecord per edited position.
 
-Every record stores both allele orientations. One reference base is insufficient because papers write HBG
+Every record stores both allele orientations. One ref_base would not be enough: papers write HBG
 promoter alleles on the gene's own strand, genome files write them on the plus strand, and HBG1 and
-HBG2 are minus-strand genes. See `docs/coordinates.md`.
+HBG2 are minus-strand genes. See docs/coordinates.md.
 """
 from __future__ import annotations
 
@@ -37,16 +37,17 @@ EDIT_TARGET_BASE = {"ABE": "G", "CBE": "T"}
 MODEL_PREDICTED = "model_predicted"
 NOT_EVALUATED = "not_evaluated"
 
-# A design-level joint rate is derived from the predictor's complete haplotypes, never from the
-# individual position rates. These strings travel with the value so a later record does not turn
-# a model output into an unlabeled measurement.
+# A design-level joint rate is derived from complete predictor haplotypes rather than per-position
+# marginals. These strings keep that method attached to the downstream value.
 JOINT_ON_TARGET_METHOD = "sum_haplotypes_containing_all_intended_edits"
-JOINT_ON_TARGET_CAVEAT = "model-predicted joint frequency, not measured."
+JOINT_ON_TARGET_CAVEAT = (
+    "Joint value is derived from predicted haplotypes containing every intended edit."
+)
 
 
 @dataclass
 class EditRecord:
-    """Represent one predicted edit at one genomic position."""
+    """One predicted edit at one genomic position. Every step of the pipeline passes these around."""
 
     genome_build: str
     chrom: str
@@ -86,7 +87,7 @@ class Guide:
     strand: Literal["+", "-"]
     genome_build: str
     chrom: str
-    gene: str                              # explicit value; not inferred from HBG1/HBG2 spacing
+    gene: str                              # always stated, never worked out from paralog spacing
     gene_strand: Literal["+", "-"]
     tss_1based: int                        # transcription start site of `gene`
     editor_class: Literal["ABE", "CBE"]
@@ -135,8 +136,8 @@ class Guide:
 class CandidateGuide:
     """A guide found by the guide-design tool, before an editor is chosen.
 
-    It stores its genomic location and the tool's off-target results. Call `for_editor()` before
-    predicting edited sequences.
+    It knows where it sits on the genome and what the tool said about its off-targets. Call
+    for_editor() to pair it with an editor before predicting what the edit looks like.
     """
 
     guide_id: str
@@ -153,7 +154,7 @@ class CandidateGuide:
     offtarget_sites: list = field(default_factory=list)  # kept in memory, not all written out
 
     def has_editable_base(self, editor_class: str) -> bool:
-        """Return whether the guide has an editable base inside the supported window."""
+        """True if this editor has something to edit inside the editing window."""
         source = EDIT_SOURCE_BASE[editor_class]
         return any(self.protospacer[p - 1] == source for p in EDIT_WINDOW if p - 1 < len(self.protospacer))
 
@@ -179,7 +180,7 @@ class CandidateGuide:
 
 @dataclass(frozen=True)
 class OutcomeHaplotype:
-    """Store one predicted output sequence and its predicted frequency."""
+    """One sequence the editor might produce, and how likely the model thinks it is."""
 
     output_seq: str
     pred_score: float
@@ -187,7 +188,7 @@ class OutcomeHaplotype:
 
 @dataclass
 class EditSpectrum:
-    """Store a predictor's possible output sequences and frequencies for one guide."""
+    """What a predictor returned for one guide: the possible outcomes and their probabilities."""
 
     guide: Guide
     model_name: str
@@ -201,7 +202,7 @@ class EditSpectrum:
         return [i + 1 for i in range(min(len(ref), len(out))) if ref[i] != out[i]]
 
     def per_position_rate(self) -> dict[int, float]:
-        """Return each position's edit frequency summed across predicted output sequences."""
+        """Chance each editable position ends up edited, added up over all the outcomes."""
         rates: dict[int, float] = {p: 0.0 for p in self.guide.editable_positions()}
         for hap in self.haplotypes:
             for pos in self.edited_positions(hap):
@@ -210,11 +211,7 @@ class EditSpectrum:
         return rates
 
     def joint_edit_rate(self, proto_positions: set[int]) -> float:
-        """Model-predicted frequency of haplotypes containing every requested edit.
-
-        This sums complete predicted output sequences containing all requested edits. It is not
-        reconstructed from separate position-level rates, and it is not a measurement.
-        """
+        """Predicted frequency of complete haplotypes containing every requested edit."""
         if not proto_positions:
             raise ValueError("joint edit rate needs at least one protospacer position")
         invalid = proto_positions - set(self.guide.editable_positions())
@@ -240,15 +237,16 @@ def spectrum_to_records(
 
     A position counts as on-target when it lands on a position this tool targets, matched either by
     promoter offset (on_target_offset, for a single guide) or by genomic coordinate
-    (`on_target_coords`, when enumerating against the coordinate table). Other editable positions
-    are bystanders.
+    (on_target_coords, when enumerating against the whole table). Everything else is a bystander.
 
     A per-position rate above 1 means the predictor's probabilities do not add up, which raises
     unless allow_overunity is set.
 
-    Positions outside `EDIT_WINDOW` are not sent to the predictor. They use `predicted_rate=None` and
-    `confidence=NOT_EVALUATED`. A numeric zero is reserved for a position the predictor evaluated and
-    assigned zero. Keeping the unevaluated row makes this distinction visible.
+    Positions outside EDIT_WINDOW are never sent to the predictor, so there is no rate to report for
+    them. They are emitted with predicted_rate None and confidence NOT_EVALUATED rather than a zero,
+    because a zero here would be indistinguishable from the predictor having looked and found nothing.
+    They are emitted whether or not they are the intended target, so the gap is visible in the output
+    instead of being silently absent.
     """
     guide = spectrum.guide
     rates = spectrum.per_position_rate()
@@ -297,8 +295,8 @@ def spectrum_to_records(
         offset = guide.promoter_offset(proto_pos)
         coord = guide.genomic_coord(proto_pos)
         position_is_on_target = is_on_target(proto_pos)
-        # Omit an evaluated bystander with predicted rate zero. Keep an unevaluated position so the
-        # output distinguishes "not evaluated" from a predicted zero.
+        # A predicted zero inside the window is a real answer, and a bystander with one is not worth
+        # a row. Outside the window there is no answer at all, so the row stays and says so.
         if evaluated and rate <= 0 and not position_is_on_target:
             continue
         confidence = MODEL_PREDICTED if evaluated else NOT_EVALUATED

@@ -1,11 +1,12 @@
-"""Verify HBG1/HBG2 promoter coordinates against independent fixed test data.
+"""External-verification canary for the HBG1/HBG2 promoter coordinates.
 
-The fixed values were checked against the UCSC hg38 API in August 2026. `anchors.py` must reproduce
-them. A failure indicates a change in `anchors.py`, the transcription-start-site constants, or the
-reference assembly and requires source review before the expected values change.
+Every value asserted here was checked independently in the 2026-08 external review against the live
+UCSC hg38 API, then hardcoded. anchors.py has to reproduce them. If an assertion in this file fails,
+a coordinate has shifted: do NOT edit the number to make it pass. Find what moved (anchors.py, the
+TSS constants, or the underlying assembly), work out why, and fix the cause.
 
-The fixed tests require no network. One optional test fetches two guide-matched sequences
-from UCSC and is skipped when the service is unavailable.
+The offline block runs everywhere and needs no network. The one network-gated block re-derives two
+protospacer positions from the live UCSC reference; it is skipped, never failed, on offline runs.
 """
 from __future__ import annotations
 
@@ -18,8 +19,9 @@ from base_edit_safety import anchors
 
 
 # offset -> (HBG1 plus-strand pos, HBG2 plus-strand pos, plus-strand ref base). Independently
-# checked against api.genome.ucsc.edu (hg38) in August 2026 and copied here as fixed numbers. These
-# are not recomputed from the TSS, so changing HBG1_TSS or HBG2_TSS causes the test to fail.
+# verified in the 2026-08 external review against api.genome.ucsc.edu (hg38) and copied here as
+# fixed numbers. These are NOT recomputed from the TSS, so an edit to HBG1_TSS/HBG2_TSS trips this
+# test instead of silently moving every position with it.
 EXTERNALLY_VERIFIED = {
     113: (5_249_970, 5_254_894, "T"),
     114: (5_249_971, 5_254_895, "G"),
@@ -35,8 +37,8 @@ EXTERNALLY_VERIFIED = {
 def _anchor_by_offset() -> dict[int, anchors.AnchorPosition]:
     by_offset: dict[int, anchors.AnchorPosition] = {}
     for pos in anchors.IN_SCOPE:
-        # Each checked offset is unique within IN_SCOPE. Reject a duplicate instead of replacing the
-        # earlier row in the dictionary.
+        # Every offset the review verified is unique within IN_SCOPE; guard that so a future
+        # duplicate offset can't silently shadow the row this canary meant to check.
         assert pos.promoter_offset not in by_offset, \
             f"duplicate IN_SCOPE offset {pos.promoter_offset}"
         by_offset[pos.promoter_offset] = pos
@@ -63,18 +65,19 @@ def test_tss_separation_is_the_verified_4924():
     assert anchors.HBG2_TSS - anchors.HBG1_TSS == 4924
 
 
-# --- Optional network check for the Mayuranathan -198 guide-matched sequence ----------------------
+# --- Network-gated: re-derive the Mayuranathan -198 protospacer from the live UCSC reference ------
 #
 # This 20-mer is the GRCh38 reference-derived -198 protospacer (Mayuranathan 2023, also reported by
-# Ravi). It appears once per HBG gene copy on the plus strand at the coordinates below. This test
-# fetches those bases from UCSC and skips when network access is unavailable.
+# Ravi). The external review confirmed it appears once per paralog on the plus strand, starting at
+# the coordinates below. This block re-fetches exactly those bases from UCSC so a silent assembly or
+# coordinate shift is caught against the live reference. It is skipped, not failed, when offline.
 MAYURANATHAN_198_PROTOSPACER = "GTGGGGAAGGGGCCCCCAAG"
 MAYURANATHAN_198_STARTS = {"HBG1": 5_250_049, "HBG2": 5_254_973}
 
 
 def _network_available(host: str = "api.genome.ucsc.edu", port: int = 443,
                        timeout: float = 2.0) -> bool:
-    """Return whether UCSC is reachable and BES_OFFLINE is unset."""
+    """True only if UCSC is reachable and the run has not been forced offline via BES_OFFLINE."""
     if os.environ.get("BES_OFFLINE"):
         return False
     try:
@@ -96,9 +99,9 @@ def test_mayuranathan_198_protospacer_is_at_the_verified_ucsc_coordinates():
     n = len(MAYURANATHAN_198_PROTOSPACER)
     for gene, start in MAYURANATHAN_198_STARTS.items():
         try:
-            # Disable the cache so the test checks the current UCSC response.
+            # use_cache=False so this always checks the live reference, not a stored copy.
             window = reference.fetch_window("chr11", start, start + n - 1, use_cache=False)
-        except (URLError, OSError) as exc:  # skip when the external service is unavailable
+        except (URLError, OSError) as exc:  # transient network failure: skip, never fail
             pytest.skip(f"UCSC fetch failed for {gene}: {exc}")
         assert window.plus_sequence == MAYURANATHAN_198_PROTOSPACER, (
             f"{gene}: UCSC plus sequence at chr11:{start} is {window.plus_sequence!r}, "

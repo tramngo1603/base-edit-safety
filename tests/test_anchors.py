@@ -60,9 +60,9 @@ def test_variant_db_status_is_per_gene():
     # A dbSNP id on an unverified row is marked as such, so it cannot be read as confirmation.
     assert by_key[("HBG1", 175)].variant_db_status == anchors.UNVERIFIED
     assert "no ClinVar record" in by_key[("HBG1", 175)].provenance["dbsnp_note"]
-    assert "dbsnp_note" not in by_key[("HBG2", 175)].provenance   # HBG2 -175 is db_confirmed
+    assert "dbsnp_note" not in by_key[("HBG2", 175)].provenance   # that one is db_confirmed
 
-    # Neither gene has a -113 database record, so neither status can claim one.
+    # Neither gene has a -113 record, so neither may claim one.
     assert by_key[("HBG1", 113)].variant_db_status == anchors.UNVERIFIED
     assert by_key[("HBG2", 113)].variant_db_status == anchors.UNVERIFIED
     assert "dbsnp" not in by_key[("HBG2", 113)].provenance

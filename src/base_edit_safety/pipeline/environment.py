@@ -1,8 +1,8 @@
-"""Record the tools, references, and code state used by a run.
+"""Records what a run depended on, so an output file can be traced back to what produced it.
 
 That means tool paths and git commits where they can be found, the genome build and index, the
-editors, number of predictor runs, and reference-window checksums. A metadata lookup failure is
-recorded as unavailable instead of stopping the scientific workflow.
+editors, how many predictor runs were averaged, and checksums of the reference windows. None of it
+is essential to the run, so nothing here raises: if a lookup fails, that shows up in the output.
 """
 from __future__ import annotations
 
@@ -30,9 +30,10 @@ def git_commit(path: str | None) -> str | None:
 def tool_environment(name: str, repo_root: str | None = None,
                      python_executable: str | None = None, genome: str | None = None,
                      **extra) -> dict:
-    """Return paths, genome index, and Git revision for one external tool.
+    """What one external tool was: its paths, its genome index, and its git commit if there is one.
 
-    A failed lookup is written as unavailable instead of being omitted.
+    A failed lookup never breaks the run. It is written into the output as unavailable rather than
+    quietly left out.
     """
     env: dict = {"name": name}
     if repo_root is not None:
@@ -50,7 +51,7 @@ def tool_environment(name: str, repo_root: str | None = None,
 
 def reproducibility(tools: list[dict], editors: dict, ensemble_runs: int | None,
                     reference_windows: dict) -> dict:
-    """Build the reproducibility metadata block for an output file."""
+    """Put the whole picture together for an output file's meta block."""
     return {
         "genome_build": anchors.GENOME_BUILD,
         "tools": tools,

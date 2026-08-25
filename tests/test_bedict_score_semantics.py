@@ -1,4 +1,4 @@
-"""Scale BE-DICT scores uniformly and record score totals for excluded guides."""
+"""Uniform BE-DICT score normalization with explicit malformed-mass exclusions."""
 from __future__ import annotations
 
 from dataclasses import replace
@@ -13,10 +13,9 @@ from base_edit_safety.adapters.bedict import (
 )
 from base_edit_safety.config import BedictConfig
 from base_edit_safety.pipeline.datatypes import Guide, spectrum_to_records
-from base_edit_safety.pipeline.enumerate_guides import _raw_mass_distribution
 
 
-PROTO = "CTTGACCAATAGCCTTGACA"
+PROTO = "GCTAACGAACGTACGATCAA"
 GUIDE = Guide(
     guide_id="HBG1_m113_ABE8e",
     protospacer=PROTO,
@@ -134,19 +133,3 @@ def test_batch_exclusion_is_returned_with_raw_mass_instead_of_silently_dropped(m
     assert exclusion["normalization_applied"] is None
     assert exclusion["status"] == "excluded_malformed_raw_mass"
     assert "guide excluded as malformed" in exclusion["reason"]
-
-
-def test_run_distribution_accounts_for_included_and_excluded_guides():
-    distribution = _raw_mass_distribution([
-        {"guide_id": "g2", "raw_mass": 1.1, "status": "included"},
-        {"guide_id": "g1", "raw_mass": 0.7, "status": "excluded_malformed_raw_mass"},
-        {"guide_id": "g3", "raw_mass": 1.2, "status": "included"},
-    ])
-
-    assert distribution["guide_count"] == 3
-    assert distribution["included_guide_count"] == 2
-    assert distribution["excluded_guide_count"] == 1
-    assert [row["guide_id"] for row in distribution["guides"]] == ["g1", "g2", "g3"]
-    assert distribution["summary"]["minimum"] == 0.7
-    assert distribution["summary"]["maximum"] == 1.2
-    assert sum(row["guide_count"] for row in distribution["histogram"]) == 3

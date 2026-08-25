@@ -1,12 +1,6 @@
-# External scientific tools are installed separately under their own licenses. This repository
-# calls them through `src/base_edit_safety/adapters/` and does not include their source or weights.
-# Review each tool's license and access requirements before use.
+# The prediction tools this repo calls. You install each one yourself, under its own license.
+# They are called through src/base_edit_safety/adapters/; their source and weights are never
+# copied in here. Review each tool's installation and license terms before use.
 #
-# BE-DICT       predicts base-editing outcomes; MIT license; required for prediction
-# CRISPOR       designs guides and searches for sequence-matched off-target sites; see its bundled
-#               licenses; required for guide enumeration
-# AlphaGenome   predicts regulatory consequences; non-commercial terms and an API key are required;
-#               optional
-# AlphaMissense provides precomputed coding-variant scores under CC-BY-4.0; not called by the current
-#               promoter workflow
-# boostDM-CH    supplies the bounded driver-gene set under CC-BY-NC; its scores are not redistributed
+# BE-DICT          predicts base-editing outcomes (MIT)                      required
+# CRISPOR          guide design and off-target search (mixed / free)         required

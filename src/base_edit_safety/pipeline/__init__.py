@@ -1,1 +1,1 @@
-"""Steps and data types that turn a promoter window into design records."""
+"""The steps that turn a promoter window into design records, plus the types they pass around."""

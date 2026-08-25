@@ -1,8 +1,9 @@
-"""Import fixed D1/D3/D4/D5 test data without network access or prediction code."""
+"""Network-free fixture tests for the D1/D3/D4/D5 ingestion boundary."""
 from __future__ import annotations
 
 import csv
 from dataclasses import replace
+from datetime import date
 import gzip
 import hashlib
 import json
@@ -20,6 +21,36 @@ from base_edit_safety.ingestion.common import (
     verify_source_file,
 )
 from base_edit_safety.ingestion.xlsx import iter_rows, sheet_names
+
+
+def _write_synthetic_d5_config(
+    path: Path,
+    *,
+    report_date: str | None = "2030-01-02",
+) -> d5.D5Config:
+    payload = {
+        "guide_sequence": "ACGTTGCAACGATCGTACGA",
+        "loci": {
+            "HBG1": {
+                "outer_forward_primer": "TGCAGATCTACCG",
+                "outer_reverse_primer": "AACCGTTAAGGCTAC",
+                "inner_forward_primer": "GATCCGTAACGTT",
+                "inner_reverse_primer": "CGTACCTAGGATC",
+            },
+            "HBG2": {
+                "outer_forward_primer": "AGTCGATGCTCCA",
+                "outer_reverse_primer": "AACCGTTAAGGCTAC",
+                "inner_forward_primer": "GATCCGTAACGTT",
+                "inner_reverse_primer": "CGTACCTAGGATC",
+            },
+        },
+        "run_qc_notes": {"RUN-SENSITIVE": "synthetic technical note"},
+        "sensitivity_runs": ["RUN-SENSITIVE"],
+    }
+    if report_date is not None:
+        payload["report_date"] = report_date
+    path.write_text(json.dumps(payload), encoding="utf-8")
+    return d5.load_config(path)
 
 
 def _column_name(index: int) -> str:
@@ -254,11 +285,13 @@ def test_d4_bedict_split_manifest_reads_sequence_identity_only(tmp_path: Path):
 
 
 def test_d5_reference_and_crispresso_normalizers(tmp_path: Path):
-    spec = d5.LOCI["HBG1"]
+    config = _write_synthetic_d5_config(tmp_path / "d5_config.json")
+    spec = config.loci["HBG1"]
+    guide_sequence = config.guide_sequence
     amplicon = (
         spec.inner_reverse_primer
         + "AAAA"
-        + d5.reverse_complement(d5.GUIDE_SEQUENCE)
+        + d5.reverse_complement(guide_sequence)
         + "CCCC"
         + d5.reverse_complement(spec.inner_forward_primer)
     )
@@ -277,10 +310,18 @@ def test_d5_reference_and_crispresso_normalizers(tmp_path: Path):
         cache_filename=fixture_filename,
         sequence_sha256=hashlib.sha256(sequence.encode("ascii")).hexdigest(),
     )
-    reference = d5.derive_amplicon(fixture_spec, tmp_path)
-    mapped_end_reference = d5.derive_mapped_end_reference(fixture_spec, tmp_path)
+    reference = d5.derive_amplicon(
+        fixture_spec, tmp_path, guide_sequence=guide_sequence
+    )
+    mapped_end_reference = d5.derive_mapped_end_reference(
+        fixture_spec, tmp_path, guide_sequence=guide_sequence
+    )
     with pytest.raises(ValueError, match="reference-sequence checksum mismatch"):
-        d5.derive_amplicon(replace(fixture_spec, sequence_sha256="0" * 64), tmp_path)
+        d5.derive_amplicon(
+            replace(fixture_spec, sequence_sha256="0" * 64),
+            tmp_path,
+            guide_sequence=guide_sequence,
+        )
     assert reference.sequence_plus == amplicon
     assert mapped_end_reference.sequence_plus == sequence
     assert mapped_end_reference.start_0based == 1000
@@ -290,16 +331,22 @@ def test_d5_reference_and_crispresso_normalizers(tmp_path: Path):
         mapped_end_reference.sequence_plus[
             mapped_end_reference.guide_start_0based:mapped_end_reference.guide_end_0based_exclusive
         ]
-        == d5.reverse_complement(d5.GUIDE_SEQUENCE)
+        == d5.reverse_complement(guide_sequence)
     )
     assert reference.guide_strand == "-"
-    assert reference.sequence_plus[reference.guide_start_0based:reference.guide_end_0based_exclusive] == d5.reverse_complement(d5.GUIDE_SEQUENCE)
+    assert (
+        reference.sequence_plus[
+            reference.guide_start_0based:reference.guide_end_0based_exclusive
+        ]
+        == d5.reverse_complement(guide_sequence)
+    )
 
     window_length = d5.ANALYSIS_WINDOW_LENGTH
     long_sequence = "A" * window_length + "C" + "T" * window_length
     small_reference = d5.AmpliconReference(
         locus="HBG1", contig="HBG1_amplicon", build=d5.REFERENCE_BUILD, chrom="chr11",
-        start_0based=100, end_0based_exclusive=441, sequence_plus=long_sequence,
+        start_0based=100, end_0based_exclusive=100 + len(long_sequence),
+        sequence_plus=long_sequence,
         guide_start_0based=1, guide_end_0based_exclusive=3, guide_strand="-",
         source_cache="fixture", source_sha256="0" * 64,
         source_url="https://not-requested.invalid/reference",
@@ -342,8 +389,10 @@ def test_d5_reference_and_crispresso_normalizers(tmp_path: Path):
                 "Aligned_Sequence\tReference_Sequence\t#Reads\t%Reads\tn_deleted\tn_inserted\tn_mutated\n"
                 f"AGCT\tAGCT\t10\t100\t0\t0\t0\n",
             )
-    run = d5.RunSpec("SRR1", "PRJ1", "SAM1", "SRX1", "editor", "HBG1", 1, "cell", "assay",
-                     "r1.fastq.gz", "r2.fastq.gz", "a", "b")
+    run = d5.RunSpec(
+        "RUN-001", "STUDY-001", "SAMPLE-001", "EXPERIMENT-001", "editor", "HBG1", 1,
+        "cell", "assay", "r1.fastq.gz", "r2.fastq.gz", "a", "b",
+    )
     position_rows, minimum_aligned_depth, minimum_base_call_depth = d5.normalize_positions(
         run, small_reference, window_dirs, tmp_path / "positions.tsv"
     )
@@ -393,7 +442,8 @@ def test_ingestion_modules_do_not_import_prediction_or_scoring_code():
     assert "base_edit_safety.scoring" not in text
 
 
-def test_d5_qc_summary_is_technical_only():
+def test_d5_qc_summary_is_technical_only(tmp_path: Path):
+    config = _write_synthetic_d5_config(tmp_path / "d5_config.json")
     rendered = d5.render_qc_summary(
         [
             {
@@ -404,24 +454,40 @@ def test_d5_qc_summary_is_technical_only():
                 "distal_crispresso_alignment_fraction": 0.7,
                 "minimum_protospacer_base_call_depth": 1_500,
                 "allele_rows": 20, "qc_result": "pass", "qc_failures": "",
+                "mapped_end_gate_rerun_scope": "outcome_blind",
             }
-        ]
+        ],
+        config,
     )
     assert "SRR1" in rendered
-    assert "measured-read ingestion and technical QC only" in rendered
+    assert "loaded no editing-frequency" in rendered
     assert "staged F1/R1 flank-inclusive geometry" in rendered
     assert "80.00%" in rendered
+    assert "Generated: 2030-01-02" in rendered
+
+
+def test_d5_config_uses_execution_date_without_override(tmp_path: Path):
+    config = _write_synthetic_d5_config(
+        tmp_path / "d5_config.json", report_date=None
+    )
+    assert config.effective_report_date == date.today().isoformat()
+
+
+def test_d5_config_missing_file_has_clear_error(tmp_path: Path):
+    with pytest.raises(d5.D5ConfigError, match="runtime configuration was not found"):
+        d5.load_config(tmp_path / "missing.json")
 
 
 def test_d5_outcome_blind_qc_recheck_changes_only_gate_fields(tmp_path: Path):
+    config = _write_synthetic_d5_config(tmp_path / "d5_config.json")
     run = d5.RunSpec(
-        "SRR25936811", "PRJ1", "SAM1", "SRX1", "editor", "HBG1", 1,
+        "RUN-SENSITIVE", "STUDY-001", "SAMPLE-001", "EXPERIMENT-001", "editor", "HBG1", 1,
         "cell", "assay", "r1.fastq.gz", "r2.fastq.gz", "a", "b",
     )
     reference = d5.AmpliconReference(
         locus="HBG1", contig="HBG1_mapped_end_gate", build=d5.REFERENCE_BUILD,
-        chrom="chr11", start_0based=100, end_0based_exclusive=761,
-        sequence_plus="A" * 661, guide_start_0based=133,
+        chrom="chr11", start_0based=100, end_0based_exclusive=740,
+        sequence_plus="A" * 640, guide_start_0based=133,
         guide_end_0based_exclusive=153, guide_strand="-", source_cache="fixture",
         source_url="https://not-requested.invalid/reference", source_sha256="0" * 64,
         source_sequence_sha256="1" * 64,
@@ -433,8 +499,8 @@ def test_d5_outcome_blind_qc_recheck_changes_only_gate_fields(tmp_path: Path):
         "read_pairs": 500,
         "read_ends": 1_000,
         "minimum_protospacer_base_call_depth": 999,
-        "position_rows": 431,
-        "amplicon_length": 431,
+        "position_rows": 307,
+        "amplicon_length": 307,
         "target_allele_accounted_reads": 10,
         "distal_allele_accounted_reads": 11,
         "target_crispresso_reads_aligned": 10,
@@ -452,12 +518,25 @@ def test_d5_outcome_blind_qc_recheck_changes_only_gate_fields(tmp_path: Path):
             "properly_paired_read_ends": 700,
         },
         run_dir,
+        config,
     )
     assert updated["primary_mapped_end_fraction"] == 0.8
     assert updated["qc_failures"] == "protospacer_depth_below_minimum"
     assert updated["untouched_technical_field"] == "preserved"
     assert updated["mapped_end_reference_geometry"] == d5.MAPPED_END_REFERENCE_GEOMETRY
-    assert updated["mapped_end_reference_length"] == 661
+    assert updated["mapped_end_reference_length"] == 640
     assert updated["mapped_end_gate_rerun_scope"] == "outcome_blind"
-    assert updated["qc_note"] == "multicopy HBG1 F1-primer burden (technical)"
+    assert updated["qc_note"] == "synthetic technical note"
     assert updated["held_out_sensitivity_flag"] is True
+
+
+def test_d5_mapped_end_rerun_refuses_partial_run_selection(tmp_path: Path):
+    with pytest.raises(ValueError, match="must cover all 20 runs uniformly"):
+        d5.rerun_mapped_end_qc(
+            tmp_path,
+            manifest_path=tmp_path / "not-read.tsv",
+            fastq_dir=tmp_path,
+            cache_dir=tmp_path,
+            output_dir=tmp_path / "out",
+            only_runs={"RUN-001"},
+        )

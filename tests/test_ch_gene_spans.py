@@ -1,11 +1,11 @@
-"""Check the twelve CH-driver gene spans against one Ensembl release.
+"""The twelve CH-driver gene spans are frozen, so an upstream refresh cannot change them quietly.
 
 These boundaries decide whether an off-target counts as landing in a driver gene. They are not stable
 across Ensembl releases: four of the twelve differ against release 115, nine against release 110, by
-up to 586 bp. The fixed release and test data prevent an unreviewed boundary change.
+up to 586 bp. Without a pinned release and a fixture, a refresh would silently move flags.
 
-If a value changes, identify its Ensembl release, update the release and fixed test data together,
-and review any resulting flag changes.
+If one of these fails, that is not a bug to paper over. Work out which release the new value comes
+from, update the pin and the fixture together, and check what it does to the flags.
 """
 from __future__ import annotations
 
@@ -50,7 +50,7 @@ def test_spans_are_well_formed():
 
 
 def test_the_one_observed_off_target_still_falls_in_dnmt3a():
-    """Keep the recorded CH-overlap coordinate inside the fixed DNMT3A span."""
+    """The real run's only CH hit. If a span moves, this is where it shows up first."""
     assert annotation.gene_at("chr2", 25_264_110) == "DNMT3A"
 
 

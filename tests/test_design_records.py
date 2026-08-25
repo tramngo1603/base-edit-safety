@@ -8,7 +8,7 @@ _FORBIDDEN = ("clonal", "expansion", "leukemia", "leukaemia", "mds", "lifetime",
 
 def _rec(guide_id, gene, offset, role, rate, *, ref="T", alt="C", sref="A", salt="G",
          pos=5_249_970, editor="ABE", offtarget=None, ch=None, co_target=None):
-    prov = {"guide_id": guide_id, "editor": "ABE8e", "protospacer": "CTTGACCAATAGCCTTGACA",
+    prov = {"guide_id": guide_id, "editor": "ABE8e", "protospacer": "GCTAACGAACGTACGATCAA",
             "pam": "AGG", "strand": "-", "predictor_runs": 5}
     if offtarget is not None:
         prov["offtarget"] = offtarget
@@ -22,7 +22,8 @@ def _rec(guide_id, gene, offset, role, rate, *, ref="T", alt="C", sref="A", salt
             "promoter_sense_ref": sref, "promoter_sense_alt": salt,
             "gene": gene, "gene_strand": "-", "promoter_offset": offset,
             "editor_class": editor, "on_target_or_bystander": role, "predicted_rate": rate,
-            "model_name": "BE-DICT-bystander:ABE8e", "consequence": "deferred", "provenance": prov}
+            "model_name": "BE-DICT-bystander:ABE8e", "consequence": "not_evaluated",
+            "provenance": prov}
 
 
 def _records():
@@ -42,12 +43,12 @@ def test_evidence_tier_enforcement():
     rm = rec["registry_match"]
     assert rm["relationship"] == hbg_registry.EXACT_EDIT       # -113 ABE is a known HPFH edit
     assert rm["evidence_strength"] == "published_hspc"         # kept, not blurred into a weaker match
-    assert rm["measured_in"] == "literature"                   # published, not measured here
+    assert "measured_in" not in rm                              # a registry match is not a measurement
     assert rec["evidence_tier"] == evidence.ANALOG_SUPPORTED   # a registry match, with no measurement
     rs2 = build_design_records(_records(),
                                empirical={"HBG1_m113_ABE": [{"assay": "amplicon", "edit_rate": 0.4}]})
     assert rs2["records"][0]["evidence_tier"] == evidence.EMPIRICALLY_MEASURED
-    assert rs2["records"][0]["registry_match"]["measured_in"] == "this_run"
+    assert rs2["records"][0]["empirical_support"]
 
 
 def test_no_measurement_means_no_measured_tier():
@@ -64,21 +65,18 @@ def test_design_record_schema():
     rec = build_design_records(_records())["records"][0]
     required = {"record_type", "schema_version", "candidate", "evidence_tier", "registry_match",
                 "predicted_edit_spectrum", "off_target", "hbg_paralog_flags", "ch_annotation",
-                "empirical_support", "required_validation", "scoring", "provenance",
-                "limitations"}
+                "empirical_support", "required_validation", "provenance"}
     assert required <= set(rec)
+    assert "scoring" not in rec and "limitations" not in rec
     assert [e["promoter_offset"] for e in rec["candidate"]["target"]["intended_edits"]] == [113]
 
 
-def test_offtarget_blind_spots_are_record_level_limitations():
-    limitations = build_design_records(_records())["records"][0]["limitations"]
-    required = (
-        "Off-target candidates come from a Cas9-style search of the reference genome. It finds "
-        "mismatch-only sites: no bulged sites and no population-variant-created sites. Measured "
-        "assays (GUIDE-seq / CHANGE-seq-BE) detect bulged sites; population-variant off-targets "
-        "need a variant-aware module that does not exist in v1."
-    )
-    assert any(limitation.startswith(required) for limitation in limitations)
+def test_offtarget_blind_spots_are_record_set_limitations():
+    limitations = build_design_records(_records())["limitations"]
+    coverage = " ".join(limitations).lower()
+    assert "reference genome" in coverage
+    assert "bulges" in coverage
+    assert "population variants" in coverage
 
 
 def test_offtarget_kinds_stay_separate():
@@ -95,6 +93,7 @@ def test_paralog_flags_set():
     assert pf["flagged"] is True
     assert any("also hits the paralog" in f for f in pf["flags"])
     assert pf["required_confirmation"]
+    assert all("published_protocols" not in item for item in pf["required_confirmation"])
 
 
 def test_required_validation_checklist():
@@ -128,14 +127,14 @@ def test_reproducibility_block_present():
     repro = build_design_records(_records())["reproducibility"]
     assert "generated_at" in repro
     assert "commit" in repro["repo"] and "dirty" in repro["repo"]
-    assert "rubric_weights" in repro["config"]
+    assert "config" not in repro
 
 
-def test_score_sits_under_scoring_not_at_the_top():
+def test_record_has_no_composite_score_or_rank():
     rec = build_design_records(_records())["records"][0]
-    assert "safety_score" not in rec            # the score is nested under its explanation
-    scoring = rec["scoring"]
-    assert "tiebreaker" in scoring["note"].lower() and "safety_score" in scoring
+    assert "scoring" not in rec
+    assert "safety_score" not in rec
+    assert "rank" not in rec
 
 
 def test_a_design_with_two_edits_keeps_both():
@@ -179,10 +178,11 @@ def test_every_citation_states_its_role_and_whether_it_was_read():
 
 
 def test_coleman_is_still_unread_and_doerfler_is_not():
-    """Preserve both citations and the review status recorded for each one.
+    """Both were dropped when the worksheet compressed parentheticals. Only one has been read since.
 
-    The full-text review of Doerfler 2021 supports two positions on each dependency branch. Coleman
-    1993 and the six primary sources behind its phase claim remain unreviewed.
+    Doerfler 2021 has now been read at full text, which is what let it be split two-and-two rather
+    than sitting on four positions equally. Coleman 1993 is still unread, and its phase claim rests
+    on a compilation whose six underlying primaries are also unread.
     """
     status = {c["pmid"]: c["audit_status"]
               for e in hbg_registry.REGISTRY for c in e.citations if "pmid" in c}
@@ -198,24 +198,24 @@ def test_synthetic_positions_do_not_claim_to_be_hpfh_alleles():
 
 def test_mechanism_evidence_is_recorded_and_never_assumed():
     by_id = {e.entry_id: e for e in hbg_registry.REGISTRY if e.offsets}
-    # Each of the three reviewed papers provides binding tests outside cells only.
+    # The three that have been read all rest on in vitro binding alone.
     for entry_id in ("hpfh_-198_ABE", "synthetic_-123_ABE", "synthetic_-124_ABE", "hpfh_-114_CBE"):
         assert by_id[entry_id].mechanism_evidence == hbg_registry.IN_VITRO_BINDING_ONLY
-    # Entries without a reviewed paper must retain the `NOT_REVIEWED` status.
+    # The unread ones say so rather than defaulting to something reassuring.
     for entry_id in ("hpfh_-175_ABE", "hpfh_-117_CBE", "hpfh_-113_ABE"):
         assert by_id[entry_id].mechanism_evidence == hbg_registry.NOT_REVIEWED
 
 
 def test_the_octamer_paper_carries_no_tal1_claim():
-    """Keep the octamer and TAL1 claims attached to their respective sources."""
+    """PMID 2449926 proposes an octamer. TAL1 belongs to 25971621 and must not migrate."""
     for c in hbg_registry._CITATIONS[(175, "T", "C")]:
         if c["pmid"] == "2449926":
             assert "tal1" not in c["role"].lower()
-            assert "octamer" in c.get("note", "").lower()
+            assert "OCTAMER" in c.get("note", "")
 
 
-def test_promoter_program_list_has_expected_entries_and_excludes_enhancer_programs():
-    """Require the recorded HBG1/HBG2 promoter programs and exclude enhancer programs.
+def test_promoter_program_list_is_complete_as_audited():
+    """Two HBG1/HBG2 promoter programs were missing, and one entry was stale.
 
     exa-cel is deliberately excluded from the count: it targets the BCL11A enhancer, not the HBG
     promoter, so it is a comparator rather than a member of this list.
@@ -229,19 +229,19 @@ def test_promoter_program_list_has_expected_entries_and_excludes_enhancer_progra
 def test_discontinued_programs_are_not_presented_as_running():
     by_id = {e.entry_id: e for e in hbg_registry.REGISTRY}
     assert by_id["reni_cel_edit301"].program_status == "discontinued_2024_12"
-    assert "does not state a safety or efficacy result" in by_id["reni_cel_edit301"].note
-    # Program state and evidence category are separate fields.
+    assert "DISCONTINUED" in by_id["reni_cel_edit301"].note
+    # The human evidence survives the sponsor's decision, so the strength tier does not drop.
     assert by_id["reni_cel_edit301"].strength == "clinical"
 
 
 def test_beam_101_still_does_not_assert_an_editor_class():
-    """Leave editor class unset while the reported source remains unreviewed."""
+    """An unreviewed source must not promote the editor-class field."""
     by_id = {e.entry_id: e for e in hbg_registry.REGISTRY}
     assert by_id["beam_101"].editor_class is None
     assert "risto-cel" in by_id["beam_101"].label
 
 
-def test_unreviewed_programs_keep_every_citation_marked_unreviewed():
+def test_unreviewed_program_sources_remain_unreviewed():
     by_id = {e.entry_id: e for e in hbg_registry.REGISTRY}
     for entry_id in ("cs_101", "otq923"):
         for c in by_id[entry_id].citations:

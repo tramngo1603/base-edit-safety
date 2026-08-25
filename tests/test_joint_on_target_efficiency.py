@@ -1,4 +1,4 @@
-"""Use complete joint edited sequences for multi-edit efficacy, not a position-level maximum."""
+"""NEW-1: multi-edit efficacy is the complete intended haplotype, never a marginal max."""
 from __future__ import annotations
 
 import copy
@@ -16,7 +16,6 @@ from base_edit_safety.pipeline.datatypes import (
     OutcomeHaplotype,
     spectrum_to_records,
 )
-from base_edit_safety.scoring.rubric import score_guides
 
 
 PROTO = "GGCAAGGCTGGCCAACCCAT"
@@ -101,28 +100,23 @@ def test_joint_rate_requires_the_intended_allele_not_merely_any_change_at_each_p
     assert spectrum.joint_edit_rate(PAIR_POSITIONS) == 0.0
 
 
-def test_multi_edit_band_consumes_joint_rate_not_max_or_min():
-    score = score_guides(_pair_records())[0]
+def test_design_record_uses_joint_rate_without_reconstructing_it_from_marginals():
+    spectrum = build_design_records(_pair_records())["records"][0]["predicted_edit_spectrum"]
 
-    assert score.on_target_efficiency == 0.20
-    assert score.on_target_efficiency != 0.45
-    assert score.on_target_efficiency != 0.35
-    assert score.efficacy_band == "PRECLINICAL_ACTIVITY_ONLY"
-    assert score.terms["efficiency_basis"] == "joint_on_target_rate"
+    assert spectrum["joint_on_target_rate"] == 0.20
+    assert spectrum["joint_on_target_rate"] != 0.45
+    assert spectrum["joint_on_target_rate"] != 0.35
 
 
 def test_single_edit_fallback_is_unchanged_and_adds_no_joint_field():
     one_coord = {PAIR_GUIDE.genomic_coord(4)}
     records = records_to_dicts(spectrum_to_records(_spectrum(), on_target_coords=one_coord))
-    score = score_guides(records)[0]
 
-    assert score.on_target_efficiency == 0.45
-    assert score.efficacy_band == "MEETS_CLINICAL_PRECEDENT"
-    assert score.terms["efficiency_basis"] == "single_edit_rate"
+    assert next(record for record in records
+                if record["on_target_or_bystander"] == "on_target")["predicted_rate"] == 0.45
     assert all("joint_on_target_rate" not in record["provenance"] for record in records)
     design = build_design_records(records)["records"][0]
     assert "joint_on_target_rate" not in design["predicted_edit_spectrum"]
-    assert JOINT_ON_TARGET_CAVEAT not in design["limitations"]
 
 
 def test_multi_edit_design_record_keeps_marginals_and_allele_keyed_joint_provenance():
@@ -130,7 +124,7 @@ def test_multi_edit_design_record_keeps_marginals_and_allele_keyed_joint_provena
     spectrum = design["predicted_edit_spectrum"]
     joint_provenance = spectrum["joint_on_target_rate_provenance"]
 
-    assert design["schema_version"] == SCHEMA_VERSION == "2"
+    assert design["schema_version"] == SCHEMA_VERSION == "3"
     assert [row["predicted_rate"] for row in spectrum["on_target"]] == [0.45, 0.35]
     assert spectrum["joint_on_target_rate"] == 0.20
     assert joint_provenance["allele_keys"] == [
@@ -142,7 +136,6 @@ def test_multi_edit_design_record_keeps_marginals_and_allele_keyed_joint_provena
     assert joint_provenance["predictor_runs"] == 5
     assert joint_provenance["confidence"] == "model_predicted"
     assert joint_provenance["caveat"] == JOINT_ON_TARGET_CAVEAT
-    assert JOINT_ON_TARGET_CAVEAT in design["limitations"]
     assert all("allele_key" in row for row in design["registry_match"]["by_edit"])
 
 
@@ -153,11 +146,10 @@ def test_multi_edit_without_joint_data_is_not_evaluated_instead_of_using_a_margi
             if key.startswith("joint_on_target_"):
                 del record["provenance"][key]
 
-    score = score_guides(records)[0]
+    spectrum = build_design_records(records)["records"][0]["predicted_edit_spectrum"]
 
-    assert score.on_target_efficiency is None
-    assert score.efficacy_band == "NOT_EVALUATED"
-    assert score.terms["efficiency_basis"] == "joint_on_target_rate_not_evaluated"
+    assert spectrum["joint_on_target_rate"] is None
+    assert spectrum["joint_on_target_rate_provenance"]["confidence"] == "not_evaluated"
 
 
 def test_partial_joint_provenance_is_not_enough_to_evaluate_a_multi_edit_design():
@@ -167,11 +159,8 @@ def test_partial_joint_provenance_is_not_enough_to_evaluate_a_multi_edit_design(
         if key.startswith("joint_on_target_"):
             del on_target[1]["provenance"][key]
 
-    score = score_guides(records)[0]
     design = build_design_records(records)["records"][0]
 
-    assert score.on_target_efficiency is None
-    assert score.terms["efficiency_basis"] == "joint_on_target_rate_not_evaluated"
     assert design["predicted_edit_spectrum"]["joint_on_target_rate"] is None
     assert design["predicted_edit_spectrum"]["joint_on_target_rate_provenance"]["confidence"] == \
         "not_evaluated"
@@ -187,7 +176,7 @@ def test_joint_provenance_must_name_each_intended_allele_once():
         record["provenance"]["joint_on_target_allele_keys"] = duplicated
 
     with pytest.raises(ValueError, match="allele keys do not match"):
-        score_guides(records)
+        build_design_records(records)
 
 
 @pytest.mark.parametrize(
@@ -195,7 +184,7 @@ def test_joint_provenance_must_name_each_intended_allele_once():
     [
         ("joint_on_target_model", "model provenance"),
         ("predictor_runs", "positive predictor run count"),
-        ("joint_on_target_caveat", "model-predicted-not-measured caveat"),
+        ("joint_on_target_caveat", "required provenance note"),
     ],
 )
 def test_joint_rate_requires_complete_model_provenance(missing_key: str, message: str):
@@ -204,7 +193,7 @@ def test_joint_rate_requires_complete_model_provenance(missing_key: str, message
         del record["provenance"][missing_key]
 
     with pytest.raises(ValueError, match=message):
-        score_guides(records)
+        build_design_records(records)
 
 
 def test_joint_rate_above_a_marginal_is_rejected():
@@ -213,7 +202,7 @@ def test_joint_rate_above_a_marginal_is_rejected():
         record["provenance"]["joint_on_target_rate"] = 0.36
 
     with pytest.raises(ValueError, match="exceeds an intended edit's marginal"):
-        score_guides(records)
+        build_design_records(records)
 
 
 def test_enumeration_schema_bumped_for_joint_provenance_contract():

@@ -1,9 +1,10 @@
-"""Cross-table consistency checks for allele keys, sources, and coordinates.
+"""Cross-table invariants. Each one exists because it was violated at least once.
 
-The allele-coverage check verifies that distinct alleles cannot overwrite one another. The source
-access limit is enforced by
+All five invariants from the implementation brief are covered here. The two that needed the citation
+tables re-keyed by allele are live now that section 4 has landed: the allele-coverage check sits with
+the other keying tests, and the verification ceiling is enforced by
 `test_a_claim_may_not_assert_more_than_its_access_allows`, which compares each claim's `audit_status`
-with the recorded source access level.
+against how far into the source anyone actually got.
 """
 from __future__ import annotations
 
@@ -15,12 +16,13 @@ from base_edit_safety import anchors, bystanders, hbg_registry
 from base_edit_safety.bystanders import ABSENT, PRESENT, UNKNOWN, UNRESOLVED, bystander_function
 
 
-# --- Keep more than one DNA change at the same offset separate ----------------------------------
+# --- invariant: one offset can hold several alleles, and they must never merge ------------------
 
 def test_minus_110_resolves_to_exactly_one_entry_per_allele():
     """-110 A>G is an ABE bystander; -110 A>C is an out-of-scope NF-Y transversion.
 
-    An offset-only dictionary would overwrite one allele. The allele key must keep both distinct.
+    Keyed by offset alone these collide and one silently wins. This is the case that forced the
+    re-key, so it gets its own test.
     """
     assert bystanders.rule_for(110, "A", "G") is not None
     assert bystanders.rule_for(110, "A", "C") is None
@@ -29,7 +31,7 @@ def test_minus_110_resolves_to_exactly_one_entry_per_allele():
     assert len(excluded) == 1
     assert (excluded[0].promoter_sense_ref, excluded[0].promoter_sense_alt) == ("A", "C")
 
-    # The two records are in different tables and describe different edits.
+    # the two live in different tables and describe different edits
     assert not any(e.promoter_sense_alt == "G" for e in excluded)
 
 
@@ -42,7 +44,7 @@ def test_no_allele_appears_in_both_in_scope_and_out_of_scope():
 
 
 def test_every_table_is_keyed_by_allele_not_offset():
-    """Require every table to preserve a second allele at the same offset."""
+    """If any table still collapses to offset, a second allele there would be lost silently."""
     keys = [r.key for r in bystanders.RULES]
     assert len(keys) == len(set(keys)), "duplicate (offset, ref, alt) in the bystander table"
     # -114 carries C>T here and C>A / C>G in the excluded table: three alleles, one offset
@@ -50,7 +52,7 @@ def test_every_table_is_keyed_by_allele_not_offset():
     assert offsets.count(-114) + offsets.count(114) >= 3
 
 
-# --- Apply a conditional rule only when its required edit is present -----------------------------
+# --- invariant: a conditional rule may not be applied to a record lacking the condition ---------
 
 def test_a_conditional_rule_never_fires_without_its_condition():
     for rule in bystanders.RULES:
@@ -85,35 +87,36 @@ def test_every_rule_states_a_confidence_and_a_source():
     for rule in bystanders.RULES:
         assert rule.confidence, f"{rule.offset} {rule.ref}>{rule.alt} has no confidence"
         assert rule.note, f"{rule.offset} {rule.ref}>{rule.alt} has no note"
-        assert rule.source_pmid, f"{rule.offset} {rule.ref}>{rule.alt} has no source PMID"
+        assert rule.source_pmid, f"{rule.offset} {rule.ref}>{rule.alt} cites nothing"
 
 
 def test_the_medium_confidence_calls_stay_medium():
-    """Keep motif-only adverse classifications at their recorded medium confidence."""
+    """These have needed re-flagging twice across sessions. Pin them so they cannot flatten."""
     for offset in (112, 110):
         rule = bystanders.rule_for(offset, "A", "G")
-        assert "medium" in rule.confidence, (
-            f"-{offset} adverse uses motif structure and has not been tested with -113A>G; "
-            f"the functional class must remain medium confidence"
+        assert "MEDIUM" in rule.confidence, (
+            f"-{offset} adverse rests on motif structure alone and has never been tested with "
+            f"-113A>G; its class must not be recorded as high confidence"
         )
-    # Supplementary Table 12 supplies the guide used to derive the -173 and -181 coordinates. Keep
-    # the coordinate method and published sequence in each rule.
+    # -173 and -181 were interpolated until Supp Table 12 supplied the spacer. They are now read off
+    # the sequence, so they must NOT slide back to a hedge, and must cite the spacer.
     for offset in (173, 181):
         rule = bystanders.rule_for(offset, "A", "G")
-        assert "derived directly" in rule.confidence, f"-{offset} lacks its coordinate method"
+        assert "CONFIRMED" in rule.confidence, f"-{offset} lost its confirmation"
+        assert "interpolated" not in rule.confidence.replace("rather than interpolated", ""), offset
         assert any("AGATATTTGCATTGAGATAG" in g for g in rule.observed_in_guide), (
             f"-{offset} must cite the published spacer it was derived from"
         )
 
 
-def test_110_records_the_no_change_result_for_isolated_110():
-    """Retain the reported no-change result for -110A>G tested alone."""
+def test_110_records_its_contrary_isolated_null():
+    """Doerfler tested -110A>G alone and found nothing. That must stay visible on the row."""
     rule = bystanders.rule_for(110, "A", "G")
-    assert "measured no HbF change" in rule.note
+    assert "null" in rule.note.lower() or "NULL" in rule.note
     assert "34341563" in rule.source_pmid
 
 
-# --- Derive a shared entry ID only when both HBG genes have the same status ----------------------
+# --- invariant: an entry id may only be derived where both paralogs agree ------------------------
 
 def test_entry_id_prefix_is_only_derived_where_the_two_statuses_agree():
     for pos in anchors.IN_SCOPE:
@@ -126,7 +129,7 @@ def test_entry_id_prefix_is_only_derived_where_the_two_statuses_agree():
 
 
 def test_a_divergent_row_raises_rather_than_picking_one_paralog():
-    """Reject one shared identifier when the two HBG genes have different statuses."""
+    """The old code read HBG1's status alone. A divergent row must now be loud."""
     divergent = dataclasses.replace(anchors.IN_SCOPE[0],
                                     hbg1_status=anchors.SYNTHETIC,
                                     hbg2_status=anchors.DB)
@@ -140,16 +143,18 @@ def test_synthetic_positions_are_named_synthetic():
         assert f"synthetic_-{offset}_" in " ".join(ids), offset
 
 
-# --- Check the gene-name mapping and its source-review state -------------------------------------
+# --- invariant: the naming convention is recorded, not implicit ----------------------------------
 
-def test_the_gamma_naming_convention_cites_hgnc_and_marks_review_pending():
+def test_the_gamma_naming_convention_is_stated_and_marked_uncited():
     conv = anchors.GAMMA_GENE_NAMING
     assert conv["Agamma"] == "HBG1" and conv["Ggamma"] == "HBG2"
-    assert "HGNC" in conv["status"]
-    assert "review pending" in conv["status"]
+    assert "no authority cited" in conv["status"], (
+        "the Agamma/Ggamma mapping underpins every per-gene claim in the repo and has no source; "
+        "that must stay visible until one is cited"
+    )
 
 
-# --- Citation-to-allele consistency ---------------------------------------------------------------
+# --- the two invariants that need section 4 first -------------------------------------------------
 
 def test_no_citation_references_an_allele_absent_from_the_tables():
     known = {(p.promoter_offset, p.promoter_sense_ref, p.promoter_sense_alt)
@@ -163,10 +168,10 @@ def test_no_citation_references_an_allele_absent_from_the_tables():
         assert key in known
 
 
-# --- Study-system structure, engraftment evidence, and disrupted motifs --------------------------
+# --- section 4: architecture, durability, lost motif ---------------------------------------------
 
 def test_architecture_is_recorded_on_the_claim_not_the_paper():
-    """Store the experimental system on each claim when one paper covers two systems.
+    """One PMID can span several systems, so architecture cannot live on the citation.
 
     Wienert 2015 is the case that forces this: MEL with a human BAC, and K562 with the Ggamma body
     deleted. Half its claims come from each.
@@ -201,7 +206,7 @@ def test_a_mechanism_cannot_be_projected_onto_a_paralog_that_was_not_intact():
 
 
 def test_the_transplant_axis_separates_two_rows_that_share_a_tier():
-    """Separate transplantation evidence for two entries with the same general evidence level."""
+    """Ravi and Mayuranathan would both read published_hspc on materially different evidence."""
     assert hbg_registry.durability_for(124, "T", "C") == hbg_registry.NO_ENGRAFTMENT_DATA
     assert hbg_registry.durability_for(113, "A", "G") == hbg_registry.XENOTRANSPLANT
     by_id = {e.entry_id: e for e in hbg_registry.REGISTRY}
@@ -213,7 +218,7 @@ def test_lost_motif_defaults_to_not_reviewed_never_to_absent():
         assert pos.lost_motif, f"-{pos.promoter_offset} has an empty lost_motif"
     unchecked = [p.promoter_offset for p in anchors.IN_SCOPE
                  if p.lost_motif == anchors.LOST_MOTIF_NOT_REVIEWED]
-    assert unchecked, "every position claims a reviewed lost_motif despite incomplete source review"
+    assert unchecked, "every position claims a checked lost_motif, which nobody has done"
     # the two confirmed cases, both found in a supplement rather than a main text
     by_offset = {p.promoter_offset: p for p in anchors.IN_SCOPE}
     assert "GATA1" in by_offset[175].lost_motif
@@ -253,10 +258,10 @@ def _revcomp(s):
 
 
 def test_every_published_spacer_is_where_the_table_says_it_is():
-    """Derive recorded offsets from each Mayuranathan Supplementary Table 12 guide sequence.
+    """Each spacer from Mayuranathan Supp Table 12, located in GRCh38, gives its recorded offsets.
 
-    This source resolved the earlier interpolation at -173 and -181. A coordinate change must still
-    reproduce every recorded offset from the sequence.
+    This is what moved -173 and -181 off "interpolated". If a coordinate ever drifts, the offsets
+    stop deriving and these rows go back to being inferences.
     """
     plus, lo = _window()
     for name, g in bystanders.PUBLISHED_SPACERS.items():
@@ -277,17 +282,13 @@ def test_every_published_spacer_is_where_the_table_says_it_is():
             )
 
 
-def test_the_repos_113_protospacer_is_mayuranathans_published_one():
-    """Match the stored -113 guide sequence and coordinate to the published guide."""
-    published = bystanders.PUBLISHED_SPACERS["sgRNA -113"]
-    assert published["spacer"] == "CTTGACCAATAGCCTTGACA"
-    assert published["five_prime_hbg1"] == 5_249_977
-    # the four positions Han and Ravi both report are exactly this spacer's editable A's
-    assert set(published["offsets"].values()) == {-116, -113, -112, -110}
+def test_locally_configured_spacer_is_not_embedded_in_the_package():
+    assert "sgRNA -113" not in bystanders.PUBLISHED_SPACERS
+    assert all(row.get("ours") != "19rev" for row in bystanders.GUIDE_IDENTITIES.values())
 
 
 def test_the_175_spacer_spans_the_catastrophic_positions_too():
-    """Require the -175 guide to report its overlap with -187 and -189."""
+    """sgRNA -175 reaches -187 and -189 at A17 and A19, which is worth knowing before using it."""
     offsets = bystanders.PUBLISHED_SPACERS["sgRNA -175"]["offsets"]
     assert offsets[17] == -187 and offsets[19] == -189
     catastrophic = {c.offset for c in bystanders.CATASTROPHIC}
@@ -297,25 +298,17 @@ def test_the_175_spacer_spans_the_catastrophic_positions_too():
 # --- guide identity, established from the two papers' supplements ---------------------------------
 
 def test_our_guides_are_the_guides_the_papers_measured():
-    """Match 19 stored guide sequences to Ravi's screened set, including both preferred designs.
-
-    A measured rate can be linked to a design only while its guide sequence matches the publication.
-    """
+    """Selected built-in identities retain their published crosswalks."""
     ident = bystanders.GUIDE_IDENTITIES
-    assert ident["AGGCAAGGCTGGCCAACCCA"]["ours"] == "60forw"      # PREFERRED tier
+    assert ident["AGGCAAGGCTGGCCAACCCA"]["ours"] == "60forw"
     assert ident["AGGCAAGGCTGGCCAACCCA"]["ravi"] == "gRNA 10"
     assert ident["GGCAAGGCTGGCCAACCCAT"]["ours"] == "61forw"
-    # the -113 guide is the same molecule in three places
-    m113 = ident["CTTGACCAATAGCCTTGACA"]
-    assert m113["ours"] == "19rev" and m113["ravi"] == "gRNA 2"
-    assert m113["mayuranathan"] == "sgRNA -113"
-    assert bystanders.PUBLISHED_SPACERS["sgRNA -113"]["spacer"] == "CTTGACCAATAGCCTTGACA"
 
 
 def test_the_catastrophic_check_fires_on_the_guide_that_demonstrated_it():
-    """Match 122forw to Mayuranathan's sgRNA -187/189 and report its high-impact positions.
+    """122forw IS Mayuranathan's sgRNA -187/189, the guide that abolished HbF induction.
 
-    The guide remains in the enumerated set, so the overlap check must flag it.
+    It sits in our enumerated set as an ordinary candidate. The check must catch it.
     """
     from base_edit_safety.pipeline.datatypes import Guide, EDIT_WINDOW
     guide = Guide(guide_id="HBG1_122forw_ABE8e", protospacer="ATTGAGATAGTGTGGGGAAG", pam="NGG",
@@ -328,7 +321,7 @@ def test_the_catastrophic_check_fires_on_the_guide_that_demonstrated_it():
 
 def test_a_clear_guide_reports_no_exposure():
     from base_edit_safety.pipeline.datatypes import Guide, EDIT_WINDOW
-    guide = Guide(guide_id="HBG1_19rev_ABE8e", protospacer="CTTGACCAATAGCCTTGACA", pam="AGG",
+    guide = Guide(guide_id="synthetic_clear", protospacer="GCTAACGAACGTACGATCAA", pam="AGG",
                   strand="-", genome_build="GRCh38", chrom="chr11", gene="HBG1", gene_strand="-",
                   tss_1based=anchors.HBG1_TSS, editor_class="ABE", editor_name="ABE8e",
                   edit_from="A", edit_to="G", proto_5p_genomic=5_249_977)

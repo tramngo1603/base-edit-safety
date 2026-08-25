@@ -1,4 +1,4 @@
-"""Check clinical HBG-promoter program coverage and supporting source fields."""
+"""Completeness and provenance checks for clinical HBG-promoter programs."""
 
 from base_edit_safety import hbg_registry
 
@@ -25,8 +25,8 @@ def test_rm_001_and_yolt_204_are_cited_clinical_programs():
     }
 
 
-def test_unreviewed_rm_001_and_yolt_204_sources_cannot_create_same_motif_matches():
-    """Do not use an unreviewed BCL11A assignment when matching candidates."""
+def test_unopened_rm_001_and_yolt_204_sources_cannot_create_same_motif_matches():
+    """An unverified BCL11A assignment must not become operational matching data."""
     by_id = {entry.entry_id: entry for entry in hbg_registry.REGISTRY}
     guarded_ids = {"rm_001", "yolt_204"}
 
@@ -74,7 +74,12 @@ def test_editor_class_requires_a_full_text_read_citation():
 
 
 def test_every_clinical_entry_has_a_trial_registration_or_explicit_unread_sponsor_ref():
-    """Require a trial identifier or a sponsor source marked as not reviewed."""
+    """A 'clinical' strength claim must be backed by at least one trial-registration reference, or
+    else by an explicitly unread sponsor placeholder (audit_status NEVER_REVIEWED) that names it
+    needs a dated, specific source. RM-001 is the sole entry that qualifies only via the sponsor
+    branch: no registry ID was verified for it, so it carries an unopened sponsor_material ref
+    instead of a trial_registration. This stops a 'clinical' label from ever standing on nothing.
+    """
     clinical = [e for e in hbg_registry.REGISTRY if e.strength == "clinical"]
     assert clinical, "no clinical entries found; the filter or STRENGTH_ORDER changed"
     for entry in clinical:
@@ -87,6 +92,6 @@ def test_every_clinical_entry_has_a_trial_registration_or_explicit_unread_sponso
             for citation in entry.citations
         )
         assert has_trial_registration or has_unread_sponsor, (
-            f"{entry.entry_id}: strength 'clinical' needs a trial registration or a sponsor "
-            f"source marked NEVER_REVIEWED"
+            f"{entry.entry_id}: strength 'clinical' needs a trial_registration ref or an explicit "
+            f"unread (NEVER_REVIEWED) sponsor ref; it has neither"
         )

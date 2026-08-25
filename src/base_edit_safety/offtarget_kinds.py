@@ -1,9 +1,15 @@
-"""Keep four kinds of off-target activity separate.
+"""The kinds of off-target a base editor can produce, and which ones this repo actually checks.
 
-CRISPOR checks only DNA sites whose sequence resembles the guide. Those sites are candidates, not
-measured edits. The workflow marks three other kinds as `not_assessed_here`: DNA activity specific
-to the base editor, DNA activity by the editing enzyme without its guide, and unintended RNA edits.
-Each unchecked kind names a laboratory test used to measure it.
+"Off-target" covers several different things, and a Cas9-style sequence search answers only one of
+them. This module keeps them apart. For the kinds nothing here checks, it says so and names the
+assay that would, so a sequence search is never mistaken for a measured result.
+
+  spacer_homology_cas_style   sites that look like the protospacer, found by a Cas9-style tool
+                              (CRISPOR) on the reference genome. Candidates, not measurements.
+  base_editor_context         off-targets specific to the editor and its editing window. Measured
+                              with CHANGE-seq-BE, GUIDE-seq2, or similar. Not computed here.
+  guide_independent_deaminase deaminase activity that happens without the guide. Not computed here.
+  rna_off_target              RNA editing (C>U / A>I) across the transcriptome. Not computed here.
 """
 from __future__ import annotations
 
@@ -16,7 +22,11 @@ NOT_ASSESSED = "not_assessed_here"
 
 
 def classify_offtargets(offtarget_summary: dict | None) -> dict:
-    """Sort results by off-target kind and mark the three unchecked kinds."""
+    """Sort a guide's off-target findings into the four kinds.
+
+    Only the sequence-match kind gets filled in, from the Cas9-style tool. The other three are
+    marked as not checked, each with the assay that would check it.
+    """
     summary = offtarget_summary or {}
     return {
         SPACER_HOMOLOGY: {
@@ -39,7 +49,7 @@ def classify_offtargets(offtarget_summary: dict | None) -> dict:
 
 
 def assay_triggers(kinds: dict) -> list[dict]:
-    """List one required assay for each unchecked off-target category."""
+    """List the assays this guide still needs. Every unchecked kind adds one."""
     triggers = []
     for kind in (BASE_EDITOR_CONTEXT, GUIDE_INDEPENDENT_DEAMINASE, RNA_OFF_TARGET):
         entry = kinds.get(kind, {})

@@ -1,6 +1,6 @@
 """Runs BE-DICT. This file is executed by BE-DICT's own interpreter, not the pipeline's.
 
-It therefore imports only BE-DICT and the standard library, not this package. It reads a
+That is why it imports nothing from this package: only BE-DICT and the standard library. It reads a
 JSON request, runs the ensemble of models on CPU, and writes a JSON response holding the possible
 output sequences and their probabilities.
 
@@ -10,8 +10,8 @@ import json
 import os
 import sys
 
-# BE-DICT uses aliases removed from the current NumPy release. Define them before importing BE-DICT;
-# the change applies only to this process.
+# BE-DICT predates the current numpy and still uses aliases numpy has since removed. Put them back
+# before importing it. This only affects this process, not the installed package.
 import numpy as _np
 
 for _name, _builtin in {"bool": bool, "int": int, "float": float, "object": object, "str": str}.items():
@@ -27,7 +27,7 @@ def main() -> int:
     editor = request["editor"]
     conversion = (request["edit_from"], request["edit_to"])
     edit_window = tuple(request["edit_window"])
-    sequences = request["sequences"]          # list of `seq_id` and `inp_seq` mappings
+    sequences = request["sequences"]          # [{"seq_id": ..., "inp_seq": ...}]
     runs = int(request.get("runs", 5))
 
     import pandas as pd
@@ -36,10 +36,10 @@ def main() -> int:
     from haplotype.predict_model import BEDICT_HaplotypeModel
 
     device = get_device(False)  # CPU
-    # BE-DICT uses this setting to generate output sequences within the supported edit window.
+    # Upstream uses this config to generate possible haplotypes within the supported edit window.
     seqconfig_dataproc = SeqProcessConfig(20, (1, 20), edit_window, 1)
     processor = HaplotypeSeqProcessor(editor, conversion, seqconfig_dataproc)
-    # BE-DICT separately uses the full guide-matched sequence to create its numeric model input.
+    # This separate upstream config spans the full protospacer when generating model tensors.
     seqconfig_datatensgen = SeqProcessConfig(20, (1, 20), (1, 20), 1)
     model = BEDICT_HaplotypeModel(processor, seqconfig_datatensgen, device)
 

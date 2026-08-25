@@ -3,9 +3,10 @@
 The pipeline needs the surrounding sequence to build guides and to set reference alleles. Sequence
 comes from UCSC on the first run and lands in data/inputs/ (gitignored), so later runs stay offline.
 
-UCSC hg38 denotes the GRCh38 primary assembly for chromosome 11. GRCh38 patch releases p1-p14 add
-fix or alternate scaffolds without shifting primary-chromosome coordinates or sequence. A p1-p14
-check found no patch over either promoter window.
+UCSC hg38 ≡ GRCh38 primary assembly for chr11. GRCh38 patch releases p1-p14 add fix/novel patch
+scaffolds and never shift primary-chromosome coordinates or sequence, so both promoter windows are
+coordinate-stable across all patches; the full p1-p14 enumeration found no patch over either window.
+See docs/context/GRCH38_PATCH_CHECK.md.
 """
 from __future__ import annotations
 
@@ -81,7 +82,7 @@ def fetch_window(
 
 
 def sequence_checksum(seq: str) -> str:
-    """Return a short SHA-256 value that identifies the sequence used by a run."""
+    """Short sha256 of a sequence, so an output can say which sequence it used."""
     return hashlib.sha256(seq.encode()).hexdigest()[:16]
 
 
@@ -90,7 +91,7 @@ def window_provenance(chrom: str, start_1based: int, end_1based: int,
     """What is in the cache for a window, without going to the network.
 
     Returns the cache key, whether it is cached, and if so its fetch time, sequence checksum, and
-    length. Older cache entries return ``fetched_utc=None`` because their original fetch
+    length. Legacy cache entries honestly return ``fetched_utc=None`` because their original fetch
     time was not recorded and cannot be reconstructed.
     """
     key = f"{genome_build}_{_ucsc_chrom(chrom)}_{start_1based}_{end_1based}.json"

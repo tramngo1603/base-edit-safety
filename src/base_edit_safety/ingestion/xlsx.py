@@ -1,9 +1,9 @@
-"""Read tabular cells from OOXML ``.xlsx`` workbooks without an added package.
+"""Small, dependency-free reader for tabular cells in OOXML ``.xlsx`` workbooks.
 
 The validation inputs are publisher-supplied workbooks, while the core project intentionally has
 no Python dependencies.  This reader covers the cell encodings used by those workbooks (shared
 strings, inline strings, booleans, cached formula values, and numeric/string cells).  Formatting,
-charts, macros, and formula evaluation are not read by this module.
+charts, macros, and formula evaluation are outside the ingestion contract.
 """
 from __future__ import annotations
 

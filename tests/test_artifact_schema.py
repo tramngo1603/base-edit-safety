@@ -1,7 +1,7 @@
-"""Reject output written under an incompatible field-set version.
+"""An output file written by a different build must not load.
 
-These tests cover fields that identify an incompatible enumeration file and verify that later steps
-cannot load it.
+A stale enumeration file can outlive the code that created it. These tests pin the guard that
+rejects that file before its records enter a later analysis.
 """
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from base_edit_safety.io import outputs
 
 
 def _current_doc(**overrides) -> dict:
-    """Return a minimal document that matches the current required fields."""
+    """A document shaped the way the current writer shapes one."""
     doc = {
         "artifact_schema_version": outputs.ARTIFACT_SCHEMA_VERSION,
         "scope": outputs.SCOPE,
@@ -61,7 +61,7 @@ def test_empty_reproducibility_is_caught():
 
 
 def test_the_artifact_we_actually_had_is_rejected_on_every_count():
-    """Reconstruct an older file with four independent incompatibility markers."""
+    """The real file, reconstructed from what it contained. Four independent tells at once."""
     stale = {
         "disclaimer": "PREDICTED SHORTLIST FOR WET-LAB CONFIRMATION ...",
         "claim_disclaim": {"what_this_is": "..."},

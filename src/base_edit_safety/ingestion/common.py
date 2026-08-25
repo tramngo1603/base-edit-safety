@@ -1,7 +1,7 @@
-"""Shared file and table operations for importing validation data.
+"""Shared primitives for validation-data ingestion.
 
 This package deliberately has no dependency on predictor adapters, scoring, or validation
-metrics. Its outputs contain measurements and their source records only.
+metrics.  Its outputs are measurements and provenance records only.
 """
 from __future__ import annotations
 
@@ -21,7 +21,7 @@ from urllib.request import urlopen
 
 @dataclass(frozen=True)
 class SourceFile:
-    """Identify one source file and the checksum expected after download."""
+    """One immutable acquisition-ledger entry."""
 
     dataset_id: str
     accession: str
@@ -40,7 +40,7 @@ def sha256_file(path: str | Path, *, chunk_size: int = 1024 * 1024) -> str:
 
 
 def verify_source_file(source: SourceFile, path: str | Path) -> str:
-    """Return the local checksum only when it matches the fixed source record."""
+    """Return the local digest only when it matches the pinned acquisition record."""
     observed = sha256_file(path)
     if observed != source.sha256:
         raise ValueError(
@@ -75,7 +75,7 @@ def write_tsv(
     fieldnames: Iterable[str],
     rows: Iterable[Mapping[str, object]],
 ) -> int:
-    """Write a UTF-8 TSV in a repeatable order and return its data-row count."""
+    """Write a deterministic UTF-8 TSV and return the written data-row count."""
     destination = Path(path)
     destination.parent.mkdir(parents=True, exist_ok=True)
     columns = tuple(fieldnames)
@@ -138,7 +138,7 @@ def download_source(
 
 
 def bytes_opener(payload: bytes):
-    """Return a file opener that lets fixed test data run without network access."""
+    """Return a network-free opener useful in fixture tests."""
 
     def _open(_url: str) -> BinaryIO:
         return io.BytesIO(payload)

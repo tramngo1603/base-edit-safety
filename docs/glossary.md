@@ -16,8 +16,7 @@ how this repository uses each term; they are not clinical definitions.
 - **CH (clonal hematopoiesis) driver gene:** a gene associated with expansion of a blood-cell clone
   when particular acquired variants occur. This tool reports gene overlap only; it does not estimate
   a person's risk.
-- **Concordance:** agreement between a prediction and a measurement. The validation documents use
-  this term for a defined metric, not as a general claim that the tool is correct.
+- **Concordance:** agreement between a prediction and a measurement.
 - **Editing window:** the positions within a guide-targeted sequence for which an editor or predictor
   supports an edit.
 - **Evidence level:** one of `predicted_only`, `analog_supported`, or `empirically_measured`. The
@@ -27,8 +26,8 @@ how this repository uses each term; they are not clinical definitions.
   sequence. Position-by-position edit rates do not show which edits occur together.
 - **Held-out set:** data reserved for a final evaluation and not used to choose thresholds, weights,
   or rules. The tuning set is the separate data used during development.
-- **Hand-verified reference set (golden set):** cases for which a reviewer records the expected result
-  directly from a primary source. The validation code uses the field name `golden_set`.
+- **Hand-checked reference set:** examples whose expected result has been checked directly against a
+  primary source. The validation code keeps the older field name `golden_set`.
 - **Locus:** a named region of the genome. In this project, HBG1 and HBG2 are distinct loci.
 - **Off-target site:** a genomic location other than the intended target that a guide or editor may
   affect. A predicted site is a candidate for testing, not a measured edit.
@@ -39,14 +38,12 @@ how this repository uses each term; they are not clinical definitions.
 - **Protospacer:** the genomic sequence matched by the guide, next to the PAM.
 - **Provenance:** the source, tool version, code version, reference build, and other details needed to
   trace where a value came from.
-- **Protocol lock (freeze):** the point after which the dataset assignment, thresholds, and code
-  version cannot change for that protocol version.
+- **Protocol lock (freeze):** the point after which dataset roles, pass marks, and the tested code
+  version cannot change without starting a new protocol version.
 - **QC (quality control):** technical checks on source identity, file integrity, sample mapping, and
   required metadata. Passing QC does not establish biological performance.
 - **Reference build:** a named version of the reference genome. This project uses the GRCh38 primary
   assembly for its HBG coordinates.
-- **Stratum:** a group reported separately during evaluation, such as results for one assay, cell
-  type, or editor.
-- **Source-overlap group:** held-out points whose source paper also informed a rule being evaluated.
-  These points are reported separately because they are not fully independent of rule development.
-- **Synthetic fixture:** test data created for software checks. It is not a biological measurement.
+- **Source-overlap group:** reserved-data points whose source paper also informed a project rule.
+  They are shown separately because they are not fully independent of rule development.
+- **Sample test file (synthetic fixture):** small, invented data used to check the software.

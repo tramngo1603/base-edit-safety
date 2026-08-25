@@ -1,8 +1,6 @@
-"""Check parsing, validation, and ranking against fixed synthetic files.
+"""Parsing and validation against hand-written synthetic fixture files.
 
-The fixtures are written by hand with the same structure as tool output, but they contain synthetic
-values (see `tests/fixtures/README.md`). These tests do not install a tool, start a subprocess, or use
-the network.
+Nothing here installs a tool, starts a subprocess, or touches the network.
 """
 import csv
 import json
@@ -14,29 +12,28 @@ from base_edit_safety.adapters.bedict import BedictBystanderPredictor, _validate
 from base_edit_safety.adapters.crispor import AmbiguousTargetMapping, CrisporGuideDesigner
 from base_edit_safety.config import BedictConfig, CrisporConfig
 from base_edit_safety.io.reference import ReferenceWindow
-from base_edit_safety.pipeline.datatypes import Guide, spectrum_to_records
-from base_edit_safety.scoring.rubric import score_guides
+from base_edit_safety.pipeline.datatypes import Guide, reverse_complement, spectrum_to_records
 
 FIXTURES = pathlib.Path(__file__).parent / "fixtures"
 
-# HBG1 proximal-promoter window, GRCh38 plus strand (same window used in test_crispor_mapping).
+SYNTHETIC_PROTO = "GCTAACGAACGTACGATCAA"
+SYNTHETIC_TARGET = SYNTHETIC_PROTO + "AGG"
+
+# Synthetic sequence with the same coordinate geometry used by the mapping assertions.
 HBG1_WIN = ReferenceWindow(
     genome_build="GRCh38", chrom="chr11", start_1based=5_249_937, end_1based=5_250_067,
-    plus_sequence=(
-        "GACTATTGGTCAAGTTTGCCTTGTCAAGGCTATTGGTCAAGGCAAGGCTGGCCAACCCATGG"
-        "GTGGAGTTTAGCCAGGGACCGTTTCAGACAGATATTTGCATTGAGATAGTGTGGGGAAGGGGCCCCCAA"
-    ),
+    plus_sequence=reverse_complement("A" * 90 + SYNTHETIC_TARGET + "C" * 18),
 )
 
 GUIDE_M113 = Guide(
-    guide_id="HBG1_m113_ABE", protospacer="CTTGACCAATAGCCTTGACA", pam="AGG", strand="-",
+    guide_id="HBG1_m113_ABE", protospacer=SYNTHETIC_PROTO, pam="AGG", strand="-",
     genome_build="GRCh38", chrom="chr11", gene="HBG1", gene_strand="-", tss_1based=5_249_857,
     editor_class="ABE", editor_name="ABE8e", edit_from="A", edit_to="G", proto_5p_genomic=5_249_977,
 )
 
 
 def _predictor():
-    # Pass a placeholder configuration so construction does not require an installed predictor.
+    # a config is passed in so __init__ does not go looking for a real predictor
     return BedictBystanderPredictor(config=BedictConfig("x", "y"))
 
 
@@ -60,7 +57,7 @@ def test_bedict_response_parses_to_expected_records():
     assert by_role["on_target"].promoter_offset == 113
     assert abs(by_role["on_target"].predicted_rate - 0.25) < 1e-9   # position 8: 0.20 + 0.05
     assert abs(by_role["bystander"].predicted_rate - 0.20) < 1e-9   # position 5: 0.15 + 0.05
-    # Scored records are inside the window; other records state that the position was not evaluated.
+    # Every scored record sits inside the window; the rest say the predictor was never asked.
     assert all(3 <= r.provenance["protospacer_position"] <= 10 for r in scored)
     unscored = [r for r in records if r.confidence == "not_evaluated"]
     assert unscored and all(r.predicted_rate is None for r in unscored)
@@ -98,7 +95,7 @@ def test_crispor_guide_row_maps_and_summarizes_offtargets():
 
 
 def test_crispor_ambiguous_target_is_rejected():
-    # Reject a target found twice in the window instead of selecting the first match.
+    # A target that shows up twice in the window must not quietly map to the first hit.
     target = "ACGTACGTACGTACGTACGTAGG"  # 20 nt protospacer + AGG PAM
     win = ReferenceWindow("GRCh38", "chr11", 1, 200,
                           plus_sequence="TTTTT" + target + "TTTTT" + target + "TTTTT")
@@ -106,41 +103,3 @@ def test_crispor_ambiguous_target_is_rejected():
            "offtargetCount": "0", "targetGenomeGeneLocus": "x"}
     with pytest.raises(AmbiguousTargetMapping):
         _designer()._row_to_candidate(row, win, "HBG1")
-
-
-# --- ranking rubric on a representative record set -------------------------------------------------
-
-def _rec(guide_id, offset, role, rate, hist=None, ch=None):
-    return {
-        "gene": "HBG1", "editor_class": "ABE", "promoter_offset": offset,
-        "on_target_or_bystander": role, "predicted_rate": rate,
-        "provenance": {
-            "guide_id": guide_id,
-            "offtarget": {"offtarget_count": str(sum((hist or {}).values()) + 1),
-                          "mit_specificity": "40", "mm_histogram": hist or {},
-                          "cfd_weighted_burden": 0.0, "paralog_count": 1},
-            "ch_driver_offtargets": ch or [],
-        },
-    }
-
-
-def test_ranking_is_tier_first_and_decomposed():
-    ch_hit = [{"ch_driver_gene": "DNMT3A", "mismatch_count": "1", "feature": "exon",
-               "chrom": "chr2", "start": "25264110"}]
-    recs = (
-        [_rec("clean", 113, "on_target", 0.45, {"2": 1})]
-        + [_rec("dirty_ch", 113, "on_target", 0.50, {}, ch=ch_hit)]   # most efficient, but CH-gated
-        + [_rec("weak", 175, "on_target", 0.10, {"4": 5})]            # below activity threshold
-    )
-    scores = {s.guide_id: s for s in score_guides(recs)}
-    assert scores["dirty_ch"].ch_gate is True
-    assert scores["dirty_ch"].tier_label == "CH_DRIVER_FLAGGED"
-    assert scores["clean"].rank < scores["dirty_ch"].rank            # tier beats raw efficiency
-    assert scores["weak"].tier_label == "BELOW_EVIDENCED_ACTIVITY"
-    for s in scores.values():                                        # the terms are all there
-        assert {"offtarget_penalty", "bystander_penalty", "efficacy_band"} <= set(s.terms)
-
-
-def test_ranking_rejects_malformed_histogram():
-    with pytest.raises(ValueError, match="malformed off-target histogram"):
-        score_guides([_rec("bad", 113, "on_target", 0.4, {"two": 1})])

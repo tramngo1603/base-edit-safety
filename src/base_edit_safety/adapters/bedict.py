@@ -1,9 +1,9 @@
 """Calls BE-DICT to predict what a base editor does to a guide, including its bystander edits.
 
-BE-DICT is MIT-licensed and must be installed in a separate Python environment. Its dependency
-versions conflict with this package's versions, so the adapter calls it as a separate process. This
-repository does not copy BE-DICT source code or weights. Configure its location with the environment
-variables listed in `config.py`.
+BE-DICT is MIT-licensed and you install it yourself, in its own Python environment. Its dependencies
+clash with this repo's, so the adapter runs it as a separate process rather than importing it, and
+never copies its source or weights here. Tell it where the tool lives with the environment variables
+listed in config.py.
 """
 from __future__ import annotations
 
@@ -22,8 +22,8 @@ _RUNNER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "_bedict_runn
 # Which editor to assume when a guide does not name one.
 DEFAULT_EDITOR = {"ABE": "ABE8e", "CBE": "BE4max"}
 
-# Normalize BE-DICT scores for every included guide. A total outside these inclusive bounds marks a
-# malformed response that is excluded and recorded. These bounds check score format; they are not
+# Normalize BE-DICT scores uniformly for every guide. Totals outside these inclusive bounds identify
+# a malformed response that is excluded and recorded. These check score format; they are not
 # efficacy or ranking thresholds.
 NORMALIZATION_APPLIED = "uniform_v1"
 RAW_MASS_MIN = 0.75
@@ -31,7 +31,7 @@ RAW_MASS_MAX = 1.25
 
 
 class MalformedHaplotypeMass(ValueError):
-    """Raised when a guide's total raw BE-DICT score is outside the allowed range."""
+    """A guide whose raw BE-DICT score mass is outside the allowed normalization range."""
 
     def __init__(self, guide: Guide, raw_mass: float):
         self.guide = guide
@@ -42,7 +42,7 @@ class MalformedHaplotypeMass(ValueError):
         )
 
     def exclusion_record(self, editor: str) -> dict:
-        """Return a machine-readable record for a guide excluded from a batch."""
+        """Machine-readable ledger entry retained when the guide is excluded from a batch."""
         return {
             "guide_id": self.guide.guide_id,
             "gene": self.guide.gene,
@@ -59,7 +59,7 @@ class MalformedHaplotypeMass(ValueError):
 
 @dataclass(frozen=True)
 class BedictPredictionBatch:
-    """Store valid edit spectra and malformed-guide exclusion records from one call."""
+    """Valid spectra and the explicit ledger of malformed guides excluded from the same call."""
 
     spectra: dict[str, EditSpectrum]
     exclusions: list[dict]
@@ -68,11 +68,11 @@ class BedictPredictionBatch:
 def _validated_haplotypes(
     guide: Guide, raw: list[dict]
 ) -> tuple[list[OutcomeHaplotype], float]:
-    """Validate scores and divide each guide's scores by their total.
+    """Validate raw scores and uniformly normalize every guide by its total score mass.
 
-    The return value includes the input total and the scaled complete-sequence scores. A total
-    outside the allowed range raises a specific error, which the batch caller records as an
-    exclusion.
+    The raw mass is returned alongside the normalized haplotypes so it can remain visible in every
+    derived record. A mass outside the inclusive allowed range raises a typed error that the
+    batch caller records as an exclusion; it is never normalized or silently dropped.
     """
     n = len(guide.protospacer)
     raw_haplotypes: list[OutcomeHaplotype] = []
@@ -95,7 +95,8 @@ def _validated_haplotypes(
     if raw_mass < RAW_MASS_MIN or raw_mass > RAW_MASS_MAX:
         raise MalformedHaplotypeMass(guide, raw_mass)
 
-    # Apply this division when `raw_mass` equals 1.0 as well, so every guide follows the same rule.
+    # This division is deliberately applied even when raw_mass is exactly 1.0: every included
+    # guide follows one auditable score semantic rather than a conditional normalization policy.
     haplotypes = [
         OutcomeHaplotype(output_seq=hap.output_seq, pred_score=hap.pred_score / raw_mass)
         for hap in raw_haplotypes
@@ -120,11 +121,11 @@ class BedictBystanderPredictor:
         return batch.spectra[guide.guide_id]
 
     def predict_many(self, guides: list[Guide]) -> BedictPredictionBatch:
-        """Predict outcomes for a batch of guides, using one predictor call per editor.
+        """Predict outcomes for many guides, with one call out to the predictor per editor.
 
-        Guides are grouped by editor because each editor uses a separate predictor. The return value
-        always includes excluded guides, so callers can distinguish an exclusion from a missing
-        result.
+        Guides are grouped by editor because each editor has its own set of models, and the runner
+        then scores all of that editor's sequences in one go. The result makes exclusions a required
+        part of the return value so callers cannot mistake a missing spectrum for a silent drop.
         """
         by_editor: dict[str, list[Guide]] = {}
         for guide in guides:

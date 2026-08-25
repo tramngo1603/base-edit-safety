@@ -1,15 +1,15 @@
-"""Import D5 HBG amplicon reads and convert CRISPResso2 outcomes to common fields.
+"""D5 HBG amplicon ingestion and CRISPResso2-class outcome normalization.
 
 The module only processes measured reads.  It imports no prediction or scoring code and exposes no
-comparison operation.  Paired 150-bp reads do not overlap across the 431/435-bp nested amplicons,
-so they are first aligned as pairs with Bowtie2 and then supplied to CRISPResso2 through its BAM
-interface.
+comparison operation. Paired reads are aligned to the inner nested-amplicon reference for
+CRISPResso2 normalization and separately to the flank-inclusive reference for the mapped-end gate.
 """
 from __future__ import annotations
 
 import argparse
 import csv
 from dataclasses import asdict, dataclass
+from datetime import date
 import gzip
 import hashlib
 import json
@@ -26,7 +26,7 @@ from .common import sha256_file, write_tsv
 
 DATASET_ID = "D5"
 REFERENCE_BUILD = "GRCh38/hg38"
-GUIDE_SEQUENCE = "CTTGACCAATAGCCTTGACA"
+DEFAULT_CONFIG_PATH = Path("data/inputs/d5_config.json")
 CRISPRESSO_IMAGE = (
     "pinellolab/crispresso2:v2.3.4@"
     "sha256:b7e7971a87769aa584d31d21e199a9abca5f641c4f889c2e807cb6324fc8ce0c"
@@ -36,16 +36,10 @@ ANALYSIS_WINDOW_LENGTH = 150
 NORMALIZATION_SCHEMA_VERSION = "1.4"
 MAPPED_END_GATE_SCHEMA_VERSION = "1.0"
 MAPPED_END_REFERENCE_GEOMETRY = "staged_F1_R1_flank_inclusive"
-QC_REPORT_DATE = "2026-08-16"
 
-RUN_QC_NOTES = {
-    "SRR25936811": "multicopy HBG1 F1-primer burden (technical)",
-}
-HELD_OUT_SENSITIVITY_RUNS = frozenset(RUN_QC_NOTES)
-
-# These technical input checks are not prediction-performance thresholds. They do not use a
-# predictor or biological outcome. Minimum read depth is checked at every guide-matched position,
-# without reference to an expected edit rate.
+# These are ingestion-operability gates, not model-performance thresholds.  They do not use a
+# predictor or a reported biological outcome.  The minimum depth is checked at every protospacer
+# position, not against an expected edit rate.
 MIN_MAPPED_END_FRACTION = 0.70
 MIN_PROTOSPACER_DEPTH = 1_000
 
@@ -62,34 +56,119 @@ class LocusSpec:
     inner_reverse_primer: str
 
 
-LOCI = {
-    "HBG1": LocusSpec(
-        locus="HBG1",
-        cache_filename="hg38_chr11_5247857_5251857.json",
-        sequence_sha256="02cf185405ae05c0b028ecccef148e5dbe1ba64b428123130ae1d6e054610544",
-        cache_url=(
+@dataclass(frozen=True)
+class D5Config:
+    guide_sequence: str
+    loci: dict[str, LocusSpec]
+    run_qc_notes: dict[str, str]
+    sensitivity_runs: frozenset[str]
+    report_date: str | None = None
+
+    @property
+    def effective_report_date(self) -> str:
+        return self.report_date or date.today().isoformat()
+
+
+class D5ConfigError(RuntimeError):
+    """Raised when the local D5 runtime configuration is absent or malformed."""
+
+
+_LOCUS_REFERENCES = {
+    "HBG1": {
+        "cache_filename": "hg38_chr11_5247857_5251857.json",
+        "sequence_sha256": "02cf185405ae05c0b028ecccef148e5dbe1ba64b428123130ae1d6e054610544",
+        "cache_url": (
             "https://api.genome.ucsc.edu/getData/sequence?genome=hg38;chrom=chr11;"
             "start=5247856;end=5251857"
         ),
-        outer_forward_primer="TATTACTGCGCTGAAACTGTGGCT",
-        outer_reverse_primer="ATTGATAACCTCAGACGTTCCAGA",
-        inner_forward_primer="CCTGGACCTATGCCTAAAACA",
-        inner_reverse_primer="ATTCTTCATCCCTAGCCAGCCGC",
-    ),
-    "HBG2": LocusSpec(
-        locus="HBG2",
-        cache_filename="hg38_chr11_5252781_5256781.json",
-        sequence_sha256="bffd94832ea846ac333654f1c75b72afa87cd106f55aa4128f993556dc82dbc5",
-        cache_url=(
+    },
+    "HBG2": {
+        "cache_filename": "hg38_chr11_5252781_5256781.json",
+        "sequence_sha256": "bffd94832ea846ac333654f1c75b72afa87cd106f55aa4128f993556dc82dbc5",
+        "cache_url": (
             "https://api.genome.ucsc.edu/getData/sequence?genome=hg38;chrom=chr11;"
             "start=5252780;end=5256781"
         ),
-        outer_forward_primer="GCACTGAAACTGTTGCTTTATAGG",
-        outer_reverse_primer="ATTGATAACCTCAGACGTTCCAGA",
-        inner_forward_primer="CCTGGACCTATGCCTAAAACA",
-        inner_reverse_primer="ATTCTTCATCCCTAGCCAGCCGC",
-    ),
+    },
 }
+_PRIMER_FIELDS = (
+    "outer_forward_primer",
+    "outer_reverse_primer",
+    "inner_forward_primer",
+    "inner_reverse_primer",
+)
+
+
+def load_config(path: str | Path = DEFAULT_CONFIG_PATH) -> D5Config:
+    """Load dataset-specific values from the ignored local runtime configuration."""
+    config_path = Path(path)
+    if not config_path.is_file():
+        raise D5ConfigError(
+            f"D5 runtime configuration was not found at {config_path}. "
+            "Create the ignored data/inputs/d5_config.json file or pass --config."
+        )
+    try:
+        payload = json.loads(config_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise D5ConfigError(f"could not read D5 runtime configuration {config_path}: {exc}") from exc
+    if not isinstance(payload, dict):
+        raise D5ConfigError("D5 runtime configuration must be a JSON object")
+
+    guide_sequence = payload.get("guide_sequence")
+    if not isinstance(guide_sequence, str) or re.fullmatch(r"[ACGT]{20}", guide_sequence) is None:
+        raise D5ConfigError("guide_sequence must be exactly 20 uppercase A/C/G/T bases")
+
+    configured_loci = payload.get("loci")
+    if not isinstance(configured_loci, dict) or set(configured_loci) != set(_LOCUS_REFERENCES):
+        raise D5ConfigError(
+            f"loci must contain exactly {sorted(_LOCUS_REFERENCES)}"
+        )
+    loci: dict[str, LocusSpec] = {}
+    for locus, reference_fields in _LOCUS_REFERENCES.items():
+        primer_fields = configured_loci[locus]
+        if not isinstance(primer_fields, dict):
+            raise D5ConfigError(f"loci.{locus} must be a JSON object")
+        primers: dict[str, str] = {}
+        for field in _PRIMER_FIELDS:
+            sequence = primer_fields.get(field)
+            if not isinstance(sequence, str) or re.fullmatch(r"[ACGT]+", sequence) is None:
+                raise D5ConfigError(f"loci.{locus}.{field} must contain uppercase A/C/G/T bases")
+            primers[field] = sequence
+        loci[locus] = LocusSpec(locus=locus, **reference_fields, **primers)
+
+    run_qc_notes = payload.get("run_qc_notes", {})
+    if not isinstance(run_qc_notes, dict) or any(
+        not isinstance(run, str) or not isinstance(note, str)
+        for run, note in run_qc_notes.items()
+    ):
+        raise D5ConfigError("run_qc_notes must map run identifiers to text notes")
+
+    sensitivity_runs = payload.get("sensitivity_runs", [])
+    if (
+        not isinstance(sensitivity_runs, list)
+        or any(not isinstance(run, str) for run in sensitivity_runs)
+        or len(sensitivity_runs) != len(set(sensitivity_runs))
+    ):
+        raise D5ConfigError("sensitivity_runs must be a list of unique run identifiers")
+
+    report_date = payload.get("report_date")
+    if report_date is not None:
+        if not isinstance(report_date, str):
+            raise D5ConfigError("report_date must be an ISO date or null")
+        try:
+            parsed_report_date = date.fromisoformat(report_date)
+        except ValueError as exc:
+            raise D5ConfigError("report_date must be an ISO date or null") from exc
+        if parsed_report_date.isoformat() != report_date:
+            raise D5ConfigError("report_date must use YYYY-MM-DD format")
+
+    return D5Config(
+        guide_sequence=guide_sequence,
+        loci=loci,
+        run_qc_notes=dict(run_qc_notes),
+        sensitivity_runs=frozenset(sensitivity_runs),
+        report_date=report_date,
+    )
 
 
 @dataclass(frozen=True)
@@ -154,8 +233,9 @@ def _derive_primer_bounded_reference(
     cache_dir: str | Path,
     *,
     flank_inclusive: bool,
+    guide_sequence: str,
 ) -> AmpliconReference:
-    """Build a primer-bounded reference after checking every inner and outer primer position."""
+    """Derive one primer-bounded reference after validating the full nested geometry."""
     cache_path = Path(cache_dir) / spec.cache_filename
     observed_cache_sha256 = sha256_file(cache_path)
     source = json.loads(cache_path.read_text(encoding="utf-8"))
@@ -201,7 +281,7 @@ def _derive_primer_bounded_reference(
         reference_end = inner_right + len(spec.inner_forward_primer)
         contig = f"{spec.locus}_amplicon"
     amplicon = sequence[reference_left:reference_end]
-    guide_on_plus = reverse_complement(GUIDE_SEQUENCE)
+    guide_on_plus = reverse_complement(guide_sequence)
     guide_start = _unique_index(amplicon, guide_on_plus, "reverse-complemented guide")
     return AmpliconReference(
         locus=spec.locus,
@@ -212,7 +292,7 @@ def _derive_primer_bounded_reference(
         end_0based_exclusive=cache_start + reference_end,
         sequence_plus=amplicon,
         guide_start_0based=guide_start,
-        guide_end_0based_exclusive=guide_start + len(GUIDE_SEQUENCE),
+        guide_end_0based_exclusive=guide_start + len(guide_sequence),
         guide_strand="-",
         source_cache=str(cache_path),
         source_url=spec.cache_url,
@@ -221,19 +301,31 @@ def _derive_primer_bounded_reference(
     )
 
 
-def derive_amplicon(spec: LocusSpec, cache_dir: str | Path) -> AmpliconReference:
-    """Derive the F2/R2 inner amplicon used to put outcome counts on one scale."""
-    return _derive_primer_bounded_reference(spec, cache_dir, flank_inclusive=False)
+def derive_amplicon(
+    spec: LocusSpec,
+    cache_dir: str | Path,
+    *,
+    guide_sequence: str,
+) -> AmpliconReference:
+    """Derive the F2/R2 inner amplicon used only for outcome normalization."""
+    return _derive_primer_bounded_reference(
+        spec, cache_dir, flank_inclusive=False, guide_sequence=guide_sequence
+    )
 
 
 def derive_mapped_end_reference(
-    spec: LocusSpec, cache_dir: str | Path
+    spec: LocusSpec,
+    cache_dir: str | Path,
+    *,
+    guide_sequence: str,
 ) -> AmpliconReference:
-    """Build the outer-primer F1/R1 reference used for the read-mapping check."""
-    return _derive_primer_bounded_reference(spec, cache_dir, flank_inclusive=True)
+    """Derive the staged F1/R1 flank-inclusive reference used uniformly by the mapping gate."""
+    return _derive_primer_bounded_reference(
+        spec, cache_dir, flank_inclusive=True, guide_sequence=guide_sequence
+    )
 
 
-def read_run_manifest(path: str | Path) -> list[RunSpec]:
+def read_run_manifest(path: str | Path, *, loci: set[str] | frozenset[str]) -> list[RunSpec]:
     runs: list[RunSpec] = []
     with Path(path).open("r", encoding="utf-8", newline="") as handle:
         for row in csv.DictReader(handle, delimiter="\t"):
@@ -260,7 +352,7 @@ def read_run_manifest(path: str | Path) -> list[RunSpec]:
     if len(accessions) != len(set(accessions)):
         raise ValueError("duplicate D5 run accession in manifest")
     for run in runs:
-        if run.locus not in LOCI:
+        if run.locus not in loci:
             raise ValueError(f"unsupported locus in D5 manifest: {run.locus}")
     return runs
 
@@ -432,6 +524,7 @@ def run_crispresso(
     run_dir: Path,
     *,
     threads: int,
+    guide_sequence: str,
 ) -> dict[str, Path]:
     bam = _relative_to_workspace(bam_path, workspace)
     output = _relative_to_workspace(run_dir, workspace)
@@ -466,7 +559,7 @@ def run_crispresso(
         if window.contains_protospacer:
             arguments.extend(
                 [
-                    "--guide_seq", GUIDE_SEQUENCE,
+                    "--guide_seq", guide_sequence,
                     "--guide_name", "sgHBG-1",
                     "--base_editor_output",
                     "--conversion_nuc_from", "C",
@@ -633,9 +726,9 @@ def normalize_positions(
             nucleotide_percentages = {
                 base: pct_by_base[base][local_position] for base in required
             }
-            # CRISPResso represents a deletion at a reference position with the `-` row. Include it
-            # in per-position depth and non-reference frequency rather than treating deletion-bearing
-            # reads as missing coverage. Older fixed test tables without
+            # CRISPResso represents a deletion at a reference position with the ``-`` row.  Keep
+            # it in the per-position depth and non-reference frequency rather than silently
+            # treating deletion-bearing reads as absent coverage.  Older fixture tables without
             # that row remain readable and normalize to zero deletions.
             nucleotide_counts["-"] = (
                 int(float(count_by_base["-"][local_position])) if "-" in count_by_base else 0
@@ -677,7 +770,7 @@ def normalize_positions(
                 else min(min_guide_base_call_depth, base_call_depth)
             )
         # The amplicon is reference-forward while sgHBG-1 maps to the minus strand.  Therefore the
-        # specified sense-strand C>T conversion is represented as G>A on this sequence.
+        # strand-normalized canonical C>T conversion is represented as G>A on this sequence.
         conversion_frequency = ""
         if reference_base == "G" and depth:
             conversion_frequency = nucleotide_counts["A"] / depth
@@ -789,10 +882,10 @@ def _mapped_end_gate_fields(reference: AmpliconReference) -> dict[str, Any]:
     }
 
 
-def _run_qc_annotations(run_accession: str) -> dict[str, Any]:
+def _run_qc_annotations(run_accession: str, config: D5Config) -> dict[str, Any]:
     return {
-        "qc_note": RUN_QC_NOTES.get(run_accession, ""),
-        "held_out_sensitivity_flag": run_accession in HELD_OUT_SENSITIVITY_RUNS,
+        "qc_note": config.run_qc_notes.get(run_accession, ""),
+        "held_out_sensitivity_flag": run_accession in config.sensitivity_runs,
     }
 
 
@@ -800,8 +893,9 @@ def renormalize_existing_run(
     run: RunSpec,
     reference: AmpliconReference,
     run_dir: Path,
+    config: D5Config,
 ) -> dict[str, Any]:
-    """Refresh the common result tables from fixed CRISPResso files without rereading FASTQs."""
+    """Refresh normalized tables from pinned CRISPResso artifacts without rereading FASTQs."""
     qc_path = run_dir / "run_qc.json"
     prior = json.loads(qc_path.read_text(encoding="utf-8"))
     if prior.get("run_accession") != run.run_accession:
@@ -846,6 +940,7 @@ def renormalize_existing_run(
             "normalization_schema_version": NORMALIZATION_SCHEMA_VERSION,
             "qc_result": "pass" if not failures else "fail",
             "qc_failures": ";".join(failures),
+            **_run_qc_annotations(run.run_accession, config),
         }
     )
     qc_path.write_text(json.dumps(prior, indent=2) + "\n", encoding="utf-8")
@@ -861,6 +956,7 @@ def process_run(
     output_dir: Path,
     *,
     threads: int,
+    config: D5Config,
 ) -> dict[str, Any]:
     run_dir = output_dir / "runs" / run.run_accession
     input_qc = validate_fastq_pair(run, fastq_dir)
@@ -878,7 +974,13 @@ def process_run(
     )
     counts = bam_counts(workspace, mapped_end_bam)
     crispresso_dirs = run_crispresso(
-        workspace, run, reference, bam_path, run_dir, threads=threads
+        workspace,
+        run,
+        reference,
+        bam_path,
+        run_dir,
+        threads=threads,
+        guide_sequence=config.guide_sequence,
     )
     window_mapping: dict[str, int | float] = {}
     for window_name, crispresso_dir in crispresso_dirs.items():
@@ -928,9 +1030,10 @@ def process_run(
         "analysis_window_length": ANALYSIS_WINDOW_LENGTH,
         "normalization_schema_version": NORMALIZATION_SCHEMA_VERSION,
         "generated_bams_retained": False,
+        "mapped_end_gate_rerun_scope": "full_ingestion",
         "qc_result": "pass" if not failures else "fail",
         "qc_failures": ";".join(failures),
-        **_run_qc_annotations(run.run_accession),
+        **_run_qc_annotations(run.run_accession, config),
     }
     (run_dir / "run_qc.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     return result
@@ -945,7 +1048,8 @@ QC_FIELDS = [
     "guide_end_0based_exclusive", "mapped_end_gate_schema_version",
     "mapped_end_reference_geometry", "mapped_end_reference_start_0based",
     "mapped_end_reference_end_0based_exclusive", "mapped_end_reference_length",
-    "mapped_end_reference_sequence_sha256", "read_pairs", "read_ends", "md5_status",
+    "mapped_end_reference_sequence_sha256", "mapped_end_gate_rerun_scope",
+    "read_pairs", "read_ends", "md5_status",
     "mapped_read_ends", "primary_mapped_read_ends", "properly_paired_read_ends",
     "target_crispresso_reads_input", "target_crispresso_reads_after_preprocessing",
     "target_crispresso_reads_aligned", "target_crispresso_alignment_fraction",
@@ -961,15 +1065,25 @@ QC_FIELDS = [
 ]
 
 
-def render_qc_summary(results: list[dict[str, Any]]) -> str:
-    """Render the technical QC summary without including measured outcome tables."""
+def render_qc_summary(results: list[dict[str, Any]], config: D5Config) -> str:
+    """Render the small committed QC surface; measured outcome tables remain ignored."""
     pass_count = sum(row["qc_result"] == "pass" for row in results)
+    outcome_blind = bool(results) and all(
+        row.get("mapped_end_gate_rerun_scope") == "outcome_blind" for row in results
+    )
+    scope = (
+        "Scope: technical QC only. The mapped-end rerun loaded no editing-frequency, "
+        "allele-sequence, prediction, score, or concordance field."
+        if outcome_blind
+        else "Scope: measured-read ingestion and technical QC; no tool prediction or "
+        "measured-versus-predicted comparison was loaded."
+    )
     lines = [
         "# D5 amplicon outcomes — QC summary",
         "",
-        f"Generated: {QC_REPORT_DATE}",
+        f"Generated: {config.effective_report_date}",
         "",
-        "Scope: measured-read ingestion and technical QC only; no tool predictions were loaded or compared.",
+        scope,
         "",
         f"- Runs processed: {len(results)} ({pass_count} pass, {len(results) - pass_count} fail)",
         "- Primary mapped-end reference: staged F1/R1 flank-inclusive geometry, applied "
@@ -985,7 +1099,7 @@ def render_qc_summary(results: list[dict[str, Any]]) -> str:
         lines.append(
             "| {run_accession} | {editor} | {locus} | {replicate} | {read_pairs:,} | "
             "{mapped:.2%} | {target:.2%} | {distal:.2%} | {depth:,} | {alleles:,} | "
-            "{qc_result} | {qc_failures} | {display_qc_note} | {sensitivity} |".format(
+            "{qc_result} | {display_failures} | {display_qc_note} | {sensitivity} |".format(
                 **row,
                 mapped=float(row["primary_mapped_end_fraction"]),
                 target=float(row["target_crispresso_alignment_fraction"]),
@@ -996,20 +1110,30 @@ def render_qc_summary(results: list[dict[str, Any]]) -> str:
                     "flagged" if bool(row.get("held_out_sensitivity_flag")) else "—"
                 ),
                 display_qc_note=row.get("qc_note") or "—",
+                display_failures=(
+                    f"`{row['qc_failures']}`" if row.get("qc_failures") else "—"
+                ),
             )
         )
     lines.extend(
         [
             "",
             "Full normalized position, allele, log, and run-QC artifacts are gitignored below this directory.",
-            "Registry QC status remains `stub`; changing it requires the protocol's documented review.",
+            "Registry QC status remains `stub`; changing it requires a separate registry review.",
             "",
         ]
     )
     return "\n".join(lines)
 
 
-def _write_qc_artifacts(destination: Path, results: list[dict[str, Any]]) -> None:
+def _write_qc_artifacts(
+    destination: Path,
+    results: list[dict[str, Any]],
+    config: D5Config,
+) -> None:
+    outcome_blind = bool(results) and all(
+        row.get("mapped_end_gate_rerun_scope") == "outcome_blind" for row in results
+    )
     write_tsv(destination / "run_qc.tsv", QC_FIELDS, results)
     summary = {
         "dataset_id": DATASET_ID,
@@ -1039,13 +1163,15 @@ def _write_qc_artifacts(destination: Path, results: list[dict[str, Any]]) -> Non
         "scope_guard": (
             "mapped-end rerun was outcome-blind; no editing-frequency or allele-sequence field "
             "was loaded"
+            if outcome_blind
+            else "full measured-read ingestion; no prediction comparison performed"
         ),
     }
     (destination / "summary.json").write_text(
         json.dumps(summary, indent=2) + "\n", encoding="utf-8"
     )
     (destination / "QC_SUMMARY.md").write_text(
-        render_qc_summary(results), encoding="utf-8"
+        render_qc_summary(results, config), encoding="utf-8"
     )
 
 
@@ -1055,8 +1181,9 @@ def _recheck_existing_qc(
     input_qc: dict[str, Any],
     counts: dict[str, int],
     run_dir: Path,
+    config: D5Config,
 ) -> dict[str, Any]:
-    """Repeat technical QC checks from summary counts without opening outcome files."""
+    """Recheck every QC gate from technical aggregates without opening outcome artifacts."""
     qc_path = run_dir / "run_qc.json"
     prior = json.loads(qc_path.read_text(encoding="utf-8"))
     if prior.get("run_accession") != run.run_accession:
@@ -1085,7 +1212,7 @@ def _recheck_existing_qc(
             "qc_result": "pass" if not failures else "fail",
             "qc_failures": ";".join(failures),
             "mapped_end_gate_rerun_scope": "outcome_blind",
-            **_run_qc_annotations(run.run_accession),
+            **_run_qc_annotations(run.run_accession, config),
         }
     )
     qc_path.write_text(json.dumps(prior, indent=2) + "\n", encoding="utf-8")
@@ -1102,21 +1229,23 @@ def rerun_mapped_end_qc(
     threads: int = 4,
     only_runs: set[str] | None = None,
     docker_stage_parent: str | Path | None = None,
+    config_path: str | Path = DEFAULT_CONFIG_PATH,
 ) -> list[dict[str, Any]]:
     """Outcome-blind mapped-end/QC rerun against staged F1/R1 flank-inclusive references."""
     root = Path(workspace).resolve()
     source_fastq = Path(fastq_dir).resolve()
     destination = Path(output_dir).resolve()
+    if only_runs is not None:
+        raise ValueError("the D5 mapped-end QC rerun must cover all 20 runs uniformly")
+    config = load_config(config_path)
     references = {
-        locus: derive_mapped_end_reference(spec, cache_dir) for locus, spec in LOCI.items()
+        locus: derive_mapped_end_reference(
+            spec, cache_dir, guide_sequence=config.guide_sequence
+        )
+        for locus, spec in config.loci.items()
     }
-    runs = read_run_manifest(manifest_path)
-    if only_runs:
-        unknown = only_runs - {run.run_accession for run in runs}
-        if unknown:
-            raise ValueError(f"requested run(s) absent from manifest: {sorted(unknown)}")
-        runs = [run for run in runs if run.run_accession in only_runs]
-    if len(runs) != 20 and only_runs is None:
+    runs = read_run_manifest(manifest_path, loci=set(config.loci))
+    if len(runs) != 20:
         raise ValueError(f"uniform D5 mapped-end rerun requires 20 runs, found {len(runs)}")
 
     results: list[dict[str, Any]] = []
@@ -1141,7 +1270,7 @@ def rerun_mapped_end_qc(
             remove_generated_bams(run_dir, run.run_accession)
             results.append(
                 _recheck_existing_qc(
-                    run, references[run.locus], input_qc, counts, run_dir
+                    run, references[run.locus], input_qc, counts, run_dir, config
                 )
             )
     else:
@@ -1191,11 +1320,12 @@ def rerun_mapped_end_qc(
                         input_qc,
                         counts,
                         published_run,
+                        config,
                     )
                 )
                 for filename in (run.fastq_r1, run.fastq_r2):
                     (stage_fastq / filename).unlink()
-    _write_qc_artifacts(destination, results)
+    _write_qc_artifacts(destination, results, config)
     return results
 
 
@@ -1210,14 +1340,22 @@ def run_pipeline(
     only_runs: set[str] | None = None,
     docker_stage_parent: str | Path | None = None,
     resume: bool = False,
+    config_path: str | Path = DEFAULT_CONFIG_PATH,
 ) -> list[dict[str, Any]]:
     root = Path(workspace).resolve()
     destination = Path(output_dir).resolve()
-    references = {locus: derive_amplicon(spec, cache_dir) for locus, spec in LOCI.items()}
-    mapped_end_references = {
-        locus: derive_mapped_end_reference(spec, cache_dir) for locus, spec in LOCI.items()
+    config = load_config(config_path)
+    references = {
+        locus: derive_amplicon(spec, cache_dir, guide_sequence=config.guide_sequence)
+        for locus, spec in config.loci.items()
     }
-    runs = read_run_manifest(manifest_path)
+    mapped_end_references = {
+        locus: derive_mapped_end_reference(
+            spec, cache_dir, guide_sequence=config.guide_sequence
+        )
+        for locus, spec in config.loci.items()
+    }
+    runs = read_run_manifest(manifest_path, loci=set(config.loci))
     if only_runs:
         unknown = only_runs - {run.run_accession for run in runs}
         if unknown:
@@ -1242,12 +1380,13 @@ def run_pipeline(
                 Path(fastq_dir),
                 destination,
                 threads=threads,
+                config=config,
             )
             for run in runs
         ]
     else:
-        # If Docker Desktop cannot mount a macOS Desktop checkout, stage one compressed pair at a
-        # time under a Docker-visible temporary directory,
+        # Docker Desktop may not be permitted to mount a macOS Desktop checkout.  In that case,
+        # stage one compressed pair at a time under a Docker-visible private temporary directory,
         # then publish each completed run into the requested ignored output tree.
         stage_parent = Path(docker_stage_parent).resolve()
         stage_parent.mkdir(parents=True, exist_ok=True)
@@ -1291,7 +1430,7 @@ def run_pipeline(
                         )
                     ):
                         prior = renormalize_existing_run(
-                            run, references[run.locus], published_run
+                            run, references[run.locus], published_run, config
                         )
                     required_outputs = [
                         published_run / "position_frequencies.tsv",
@@ -1320,6 +1459,7 @@ def run_pipeline(
                     stage_fastq,
                     stage_output,
                     threads=threads,
+                    config=config,
                 )
                 results.append(result)
                 shutil.copytree(
@@ -1329,7 +1469,7 @@ def run_pipeline(
                 )
                 for filename in (run.fastq_r1, run.fastq_r2):
                     (stage_fastq / filename).unlink()
-    _write_qc_artifacts(destination, results)
+    _write_qc_artifacts(destination, results, config)
     return results
 
 
@@ -1340,6 +1480,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--fastq-dir", default="data/inputs/d5_fastq")
     parser.add_argument("--cache-dir", default="data/inputs/reference_cache")
     parser.add_argument("--output-dir", default="validation/d5_outcomes")
+    parser.add_argument("--config", default=str(DEFAULT_CONFIG_PATH))
     parser.add_argument("--threads", type=int, default=4)
     parser.add_argument("--run", action="append", dest="runs")
     parser.add_argument(
@@ -1364,6 +1505,7 @@ def main(argv: list[str] | None = None) -> int:
         "threads": args.threads,
         "only_runs": None if not args.runs else set(args.runs),
         "docker_stage_parent": args.docker_stage_parent,
+        "config_path": args.config,
     }
     if args.mapped_end_qc_only:
         rerun_mapped_end_qc(args.workspace, **common)

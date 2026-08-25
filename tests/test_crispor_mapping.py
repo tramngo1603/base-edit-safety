@@ -6,14 +6,15 @@ forward-strand and a reverse-strand guide are checked.
 from base_edit_safety.adapters.crispor import CrisporGuideDesigner
 from base_edit_safety.config import CrisporConfig
 from base_edit_safety.io.reference import ReferenceWindow
+from base_edit_safety.pipeline.datatypes import reverse_complement
 
-# HBG1 proximal-promoter window, GRCh38 plus strand, chr11:5,249,937-5,250,067.
+PROTO = "GCTAACGAACGTACGATCAA"
+TARGET = PROTO + "AGG"
+
+# Synthetic 131-base window with TARGET at the same minus-strand geometry used by the assertions.
 HBG1_WIN = ReferenceWindow(
     genome_build="GRCh38", chrom="chr11", start_1based=5_249_937, end_1based=5_250_067,
-    plus_sequence=(
-        "GACTATTGGTCAAGTTTGCCTTGTCAAGGCTATTGGTCAAGGCAAGGCTGGCCAACCCATGG"
-        "GTGGAGTTTAGCCAGGGACCGTTTCAGACAGATATTTGCATTGAGATAGTGTGGGGAAGGGGCCCCCAA"
-    ),
+    plus_sequence=reverse_complement("A" * 90 + TARGET + "C" * 18),
 )
 
 DESIGNER = CrisporGuideDesigner(config=CrisporConfig("x", "y", "hg38", "z"))
@@ -28,8 +29,7 @@ def _row(guide_id, target_seq):
 
 
 def test_reverse_strand_guide_maps_to_high_coord_5p_end():
-    # The -113 ABE guide: protospacer CTTGACCAATAGCCTTGACA, PAM AGG, minus strand.
-    cand = DESIGNER._row_to_candidate(_row("19rev", "CTTGACCAATAGCCTTGACAAGG"), HBG1_WIN, "HBG1")
+    cand = DESIGNER._row_to_candidate(_row("19rev", TARGET), HBG1_WIN, "HBG1")
     assert cand.strand == "-"
     assert cand.proto_5p_genomic == 5_249_977
     # protospacer position 8 -> genomic 5,249,970 = HBG1 -113
@@ -49,13 +49,13 @@ def test_forward_strand_guide_maps_to_low_coord_5p_end():
 
 
 def test_offtarget_metadata_attached():
-    cand = DESIGNER._row_to_candidate(_row("19rev", "CTTGACCAATAGCCTTGACAAGG"), HBG1_WIN, "HBG1")
+    cand = DESIGNER._row_to_candidate(_row("19rev", TARGET), HBG1_WIN, "HBG1")
     assert cand.offtarget["offtarget_count"] == "100"
     assert cand.offtarget["mit_specificity"] == "45"
     assert cand.offtarget["source"] == "CRISPOR"
 
 
 def test_editable_base_detection():
-    cand = DESIGNER._row_to_candidate(_row("19rev", "CTTGACCAATAGCCTTGACAAGG"), HBG1_WIN, "HBG1")
+    cand = DESIGNER._row_to_candidate(_row("19rev", TARGET), HBG1_WIN, "HBG1")
     assert cand.has_editable_base("ABE")  # has A in window
     assert cand.has_editable_base("CBE")  # has C in window

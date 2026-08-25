@@ -1,12 +1,11 @@
 # Example workflow
 
-This page describes the public workflow shape without publishing a current ranking, a measured
-validation result, or a held-out outcome.
+This walkthrough shows how a guide/editor analysis moves through the project.
 
-## 1. Configure external tools
+## 1. Configure the external tools
 
-Copy `.env.example` to the ignored `.env` file and set the local BE-DICT and CRISPOR paths. The
-optional AlphaGenome credential should preferably be supplied through the process environment.
+Copy `.env.example` to `.env` and set the local BE-DICT and CRISPOR paths. The `.env` file stays
+local.
 
 ## 2. Enumerate candidate edits
 
@@ -14,14 +13,13 @@ optional AlphaGenome credential should preferably be supplied through the proces
 python -m base_edit_safety.pipeline.enumerate_guides
 ```
 
-The enumerator fetches the fixed GRCh38 HBG1/HBG2 windows, asks CRISPOR for guides and sequence-match
-off-targets, asks BE-DICT for predicted allele spectra, and writes
+The command reads the fixed GRCh38 HBG1/HBG2 windows, obtains guide and sequence-match candidates
+from CRISPOR, and obtains edit predictions from BE-DICT. It writes
 `data/outputs/enumeration_HBG1_HBG2.json`.
 
-Each emitted record carries the candidate identity, locus and strand, intended or bystander allele,
-prediction status, separated off-target categories, HBG gene-copy flags, and source/tool details.
-Malformed or unsupported predictions are represented as explicit exclusions or `not_evaluated`
-states instead of being converted to zero without a record of the missing prediction.
+Each record includes the guide, editor, locus, strand, intended and bystander alleles, off-target
+categories, HBG1/HBG2 duplication flags, and tool details. Missing or unsupported predictions are
+marked as `not_evaluated`.
 
 ## 3. Build review records
 
@@ -29,9 +27,8 @@ states instead of being converted to zero without a record of the missing predic
 python -m base_edit_safety.pipeline.design_records
 ```
 
-This writes `data/outputs/design_records_HBG1_HBG2.json`. A design record groups the relevant edit
-records and presents evidence tier, registry relationship, locus-specific hazards, clonal-
-hematopoiesis overlap flags, uncertainty, and the assays needed to resolve it.
+This writes `data/outputs/design_records_HBG1_HBG2.json`. Each design record groups its edit
+predictions, evidence labels, locus checks, gene-overlap flags, and suggested follow-up assays.
 
-Generated files remain ignored because they may contain machine paths or unpublished predictions.
-Use the synthetic fixtures under `tests/fixtures/` for code review and automated tests.
+Generated files stay under the ignored `data/` workspace. The small examples in `tests/fixtures/`
+are available for code review and automated tests.

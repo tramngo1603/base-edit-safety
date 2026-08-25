@@ -1,8 +1,8 @@
-"""Assign one of three evidence levels to a candidate.
+"""How much evidence stands behind a candidate.
 
-Each candidate has exactly one state. It remains `predicted_only` unless it matches an HBG registry
-entry (`analog_supported`) or the caller attaches a measurement from the current run
-(`empirically_measured`). A prediction cannot substitute for a missing measurement.
+Every candidate lands in exactly one of three states. A missing measurement never quietly becomes a
+model number: a candidate stays `predicted_only` unless it matches the HBG registry
+(`analog_supported`) or someone attached real measurements from this run (`empirically_measured`).
 """
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ _ANALOG_RELATIONSHIPS = frozenset({"exact_edit", "same_motif", "nearby"})
 def evidence_tier(registry_relationship: str | None, empirical_measurements) -> str:
     """Pick the tier for one candidate.
 
-    Prefer a measurement from this run, then a registry match, then prediction-only evidence.
+    Real measurements win. Failing that, a registry match. Failing that, predicted only.
     """
     if empirical_measurements:
         return EMPIRICALLY_MEASURED

@@ -49,8 +49,9 @@ def test_cotargeting_and_offtargets_represented(records):
     assert any(r.provenance.get("offtarget", {}).get("offtarget_count") for r in records)
 
 
-def test_consequence_left_for_later(records):
-    assert all(r.consequence == "deferred" for r in records)
+def test_consequence_is_explicitly_not_evaluated(records):
+    assert all(r.consequence == "not_evaluated" for r in records)
+    assert all(r.provenance.get("consequence_source") == "not_evaluated" for r in records)
 
 
 def test_ch_flag_populated_and_promoter_edits_not_drivers(records):

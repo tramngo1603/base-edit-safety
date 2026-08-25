@@ -1,16 +1,15 @@
-"""Enumerate guides across both promoter windows and predict their edited sequences.
+"""Finds every guide across both promoter windows and predicts what each one edits.
 
 For the HBG1 and HBG2 promoter windows this runs the external guide-design tool, which also does a
 genome-wide off-target search. For every guide the editor can act on, it predicts the edit outcomes,
 turns those into per-position EditRecords, and marks which positions this tool was aiming for. It
 then attaches the off-target summary, notes whether the guide also hits the paralog, flags
-off-targets that land in CH-driver genes, leaves the consequence field for the optional annotation
-step, and writes the records to `data/outputs`.
+off-targets that land in CH-driver genes, marks consequence prediction as not evaluated, and writes
+everything to data/outputs.
 """
 from __future__ import annotations
 
 from collections import defaultdict
-import math
 import sys
 
 from .. import anchors
@@ -20,91 +19,24 @@ from ..adapters.bedict import (
     RAW_MASS_MIN,
     BedictBystanderPredictor,
 )
-from ..adapters.consequence import mark_consequence_deferred
 from ..adapters.crispor import CrisporGuideDesigner
 from ..annotation import annotate_records as annotate_ch, ch_driver_offtargets
 from ..io import outputs
 from ..io import reference
 from . import environment
-from .datatypes import EditRecord, spectrum_to_records
+from .datatypes import NOT_EVALUATED, EditRecord, spectrum_to_records
 
-# Store per-site coordinates for sites with up to three mismatches. Four-mismatch sites account for
-# 142 of 155 sites in one guide and receive a weight of 0.002 in the rubric. The retained coordinates
-# support comparisons with published panels and site-specific assays; summary counts still include
-# the four-mismatch sites.
+# Keep coordinates for the lower-mismatch candidates most likely to receive individual review.
+# The full mismatch histogram remains in the CRISPOR summary.
 PERSIST_SITES_UP_TO_MISMATCHES = 3
 
-# Fixed promoter windows from -210 to -80 relative to the transcription start site on GRCh38. See
-# `docs/coordinates.md`.
+# The promoter windows, -210 to -80 from the cap site, on GRCh38. These coordinates are the point of
+# this tool, not a placeholder to generalize later. See docs/coordinates.md.
 WINDOWS = {
     "HBG1": ("chr11", 5_249_937, 5_250_067),
     "HBG2": ("chr11", 5_254_861, 5_254_991),
 }
 EDITOR_NAME = {"ABE": "ABE8e", "CBE": "BE4max"}
-
-
-def _percentile(sorted_values: list[float], fraction: float) -> float:
-    """Linearly interpolated percentile over an already sorted, non-empty sequence."""
-    position = (len(sorted_values) - 1) * fraction
-    lower = math.floor(position)
-    upper = math.ceil(position)
-    if lower == upper:
-        return sorted_values[lower]
-    weight = position - lower
-    return sorted_values[lower] * (1.0 - weight) + sorted_values[upper] * weight
-
-
-def _raw_mass_distribution(guides: list[dict]) -> dict:
-    """Summarize the predictor's input score totals and scaled values for one run."""
-    ordered_guides = sorted(guides, key=lambda row: row["guide_id"])
-    values = sorted(float(row["raw_mass"]) for row in ordered_guides)
-    if not values:
-        return {
-            "normalization_applied": NORMALIZATION_APPLIED,
-            "allowed_raw_mass": {"minimum": RAW_MASS_MIN, "maximum": RAW_MASS_MAX},
-            "guide_count": 0,
-            "included_guide_count": 0,
-            "excluded_guide_count": 0,
-            "summary": None,
-            "histogram": [],
-            "guides": [],
-        }
-
-    mean = math.fsum(values) / len(values)
-    population_stddev = math.sqrt(
-        math.fsum((value - mean) ** 2 for value in values) / len(values)
-    )
-    histogram_specs = [
-        ("<0.75", lambda value: value < 0.75),
-        ("[0.75,0.90)", lambda value: 0.75 <= value < 0.90),
-        ("[0.90,0.95)", lambda value: 0.90 <= value < 0.95),
-        ("[0.95,1.00)", lambda value: 0.95 <= value < 1.00),
-        ("[1.00,1.05)", lambda value: 1.00 <= value < 1.05),
-        ("[1.05,1.10)", lambda value: 1.05 <= value < 1.10),
-        ("[1.10,1.25]", lambda value: 1.10 <= value <= 1.25),
-        (">1.25", lambda value: value > 1.25),
-    ]
-    return {
-        "normalization_applied": NORMALIZATION_APPLIED,
-        "allowed_raw_mass": {"minimum": RAW_MASS_MIN, "maximum": RAW_MASS_MAX},
-        "guide_count": len(ordered_guides),
-        "included_guide_count": sum(row["status"] == "included" for row in ordered_guides),
-        "excluded_guide_count": sum(row["status"] != "included" for row in ordered_guides),
-        "summary": {
-            "minimum": values[0],
-            "q1": _percentile(values, 0.25),
-            "median": _percentile(values, 0.50),
-            "q3": _percentile(values, 0.75),
-            "maximum": values[-1],
-            "mean": mean,
-            "population_stddev": population_stddev,
-        },
-        "histogram": [
-            {"raw_mass_range": label, "guide_count": sum(predicate(value) for value in values)}
-            for label, predicate in histogram_specs
-        ],
-        "guides": ordered_guides,
-    }
 
 
 def _anchor_coords_by_gene_editor() -> dict[tuple[str, str], set[int]]:
@@ -117,7 +49,7 @@ def _anchor_coords_by_gene_editor() -> dict[tuple[str, str], set[int]]:
 
 
 def _low_mismatch_sites(sites: list[dict]) -> list[dict]:
-    """Return coordinates and comparison fields for sites with up to three mismatches."""
+    """The sites worth keeping coordinates for, trimmed to the fields a cross-check needs."""
     kept = []
     for s in sites:
         try:
@@ -134,7 +66,7 @@ def _low_mismatch_sites(sites: list[dict]) -> list[dict]:
 
 def run_enumeration(write: bool = True) -> list[EditRecord]:
     """Find every guide over both promoters and return all the annotated EditRecords."""
-    anchors.check_paralog_spacing()  # stop before prediction if a coordinate has shifted
+    anchors.check_paralog_spacing()  # stop here rather than downstream if a coordinate has shifted
     designer = CrisporGuideDesigner()
     predictor = BedictBystanderPredictor()
     anchor_coords = _anchor_coords_by_gene_editor()
@@ -142,8 +74,8 @@ def run_enumeration(write: bool = True) -> list[EditRecord]:
     # Find candidates per gene, and note which protospacers show up in both promoters.
     candidates_by_gene = {}
     protospacers_by_gene: dict[str, set[str]] = {}
-    ambiguous: list[str] = []   # guides excluded after mapping to more than one location
-    raw_mass_guides: list[dict] = []
+    ambiguous: list[str] = []   # guides that mapped to more than one spot: dropped, but reported
+    included_guide_count = 0
     malformed_guide_exclusions: list[dict] = []
     for gene, (chrom, start, end) in WINDOWS.items():
         cands = designer.design(chrom, start, end, gene)
@@ -165,25 +97,9 @@ def run_enumeration(write: bool = True) -> list[EditRecord]:
                     candidate_by_guide_id[guide.guide_id] = cand
 
         batch = predictor.predict_many(editor_guides)
-        for spectrum in batch.spectra.values():
-            raw_mass_guides.append({
-                "guide_id": spectrum.guide.guide_id,
-                "gene": spectrum.guide.gene,
-                "editor_class": spectrum.guide.editor_class,
-                "editor": spectrum.guide.editor_name,
-                "raw_mass": spectrum.provenance["raw_mass"],
-                "status": "included",
-            })
+        included_guide_count += len(batch.spectra)
         for exclusion in batch.exclusions:
             malformed_guide_exclusions.append(exclusion)
-            raw_mass_guides.append({
-                "guide_id": exclusion["guide_id"],
-                "gene": exclusion["gene"],
-                "editor_class": exclusion["editor_class"],
-                "editor": exclusion["editor"],
-                "raw_mass": exclusion["raw_mass"],
-                "status": exclusion["status"],
-            })
             print(f"EXCLUDED: {exclusion['reason']}", file=sys.stderr)
 
         for guide in editor_guides:
@@ -207,7 +123,9 @@ def run_enumeration(write: bool = True) -> list[EditRecord]:
                 }
             all_records.extend(records)
 
-    all_records = mark_consequence_deferred(all_records)
+    for record in all_records:
+        record.consequence = NOT_EVALUATED
+        record.provenance = {**record.provenance, "consequence_source": NOT_EVALUATED}
     all_records = annotate_ch(all_records)
 
     if write:
@@ -238,11 +156,11 @@ def run_enumeration(write: bool = True) -> list[EditRecord]:
                 "bystander_records": len(all_records) - on_target_n,
                 "ch_driver_set": "boostDM-CH 12-gene panel (CC-BY-NC)",
                 "ch_driver_offtarget_genes_hit": ch_genes_hit,
-                "ambiguous_candidate_count": len(ambiguous),   # number of excluded ambiguous guides
+                "ambiguous_candidate_count": len(ambiguous),   # this many guides were dropped
                 "ambiguous_candidates": ambiguous,
                 "normalization_applied": NORMALIZATION_APPLIED,
                 "raw_mass_allowed_range": [RAW_MASS_MIN, RAW_MASS_MAX],
-                "raw_mass_distribution": _raw_mass_distribution(raw_mass_guides),
+                "included_guide_count": included_guide_count,
                 "malformed_guide_exclusion_count": len(malformed_guide_exclusions),
                 "malformed_guide_exclusions": malformed_guide_exclusions,
                 "reproducibility": repro,
@@ -265,8 +183,7 @@ if __name__ == "__main__":
     print("off-targets landing in CH-driver genes (guide -> gene):")
     for (gene, gid, ch_gene), (chrom, start, mm) in sorted(ch_hits.items()):
         print(f"  {gid} ({gene}) -> off-target in {ch_gene} at {chrom}:{start} ({mm} mismatches)")
-    print(f"\ntotal records: {len(recs)}  |  on-target records: {len(on)}")
-    print("targeted positions that were hit (guide -> position):")
+    print("\ntargeted positions that were hit (guide -> position):")
     seen = set()
     for r in sorted(on, key=lambda r: (r.gene, r.promoter_offset)):
         key = (r.gene, r.promoter_offset, r.provenance.get("guide_id"))

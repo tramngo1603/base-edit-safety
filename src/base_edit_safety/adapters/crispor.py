@@ -1,13 +1,13 @@
 """Calls CRISPOR to find guides and search for their off-targets.
 
-CRISPOR must be installed separately with an indexed genome and under its own license. The core tool
-has its own terms, and its bundled aligners use the GPL. This adapter calls CRISPOR as a separate
-process. This repository does not copy its source, binaries, or genome. Configure its location with
-the environment variables listed in `config.py`.
+You install CRISPOR yourself, with its own indexed genome, under its own license (the core tool has
+its own terms; the aligners it bundles are GPL). This adapter runs it as a separate process and
+never copies its source, binaries, or genome here. Tell it where the tool lives with the environment
+variables listed in config.py.
 
-Each result first becomes a `CandidateGuide` without an editor. The adapter locates the guide-matched
-sequence and adjacent PAM in the reference window, determines its position and strand, and then
-attaches CRISPOR's off-target results.
+Each guide comes back as a CandidateGuide with no editor attached yet. For each one, the adapter
+locates the protospacer and PAM in the reference window to work out its position and strand, then
+attaches what CRISPOR said about its off-targets.
 """
 from __future__ import annotations
 
@@ -22,6 +22,10 @@ from ..pipeline.datatypes import reverse_complement
 from ..pipeline.datatypes import CandidateGuide
 
 PROTO_LEN = 20
+# Exhaustive sequence nomination keeps CRISPOR's NAG/NGA alternative-PAM candidates even when its
+# heuristic MIT score is below the command-line default of 1.0. The raw site scores remain
+# available for later review instead of being filtered during enumeration.
+MIN_ALT_PAM_SCORE = 0.0
 
 
 class AmbiguousTargetMapping(ValueError):
@@ -38,11 +42,11 @@ def _find_all(haystack: str, needle: str) -> list[int]:
 
 
 def _offtarget_likelihood_summary(sites: list[dict]) -> dict:
-    """Summarize off-target candidates by mismatch count and CRISPOR CFD score.
+    """Summarize a guide's sequence-match off-target candidates.
 
     A 0-mismatch site is the paralog, which the guide is meant to hit, so it is counted separately
-    and left out of the off-target totals. Return the candidate count per mismatch level and the
-    summed CFD score from CRISPOR. The ranking code applies its recorded weights.
+    and left out of the off-target totals. What comes back is the raw count per mismatch level and
+    the CFD-weighted total, both straight from CRISPOR.
     """
     histogram: dict[str, int] = {}
     cfd_burden = 0.0
@@ -69,14 +73,15 @@ def _offtarget_likelihood_summary(sites: list[dict]) -> dict:
 
 
 class CrisporGuideDesigner:
-    """Find guides in a window and ask CRISPOR for other sequence-matched genomic sites."""
+    """Finds guides in a window and asks CRISPOR where else in the genome each one could bind."""
 
     name = "CRISPOR"
 
     def __init__(self, config: CrisporConfig | None = None, pam: str = "NGG",
-                 tss_for_gene=None):
+                 tss_for_gene=None, min_alt_pam_score: float = MIN_ALT_PAM_SCORE):
         self.config = config or load_crispor_config()
         self.pam = pam
+        self.min_alt_pam_score = min_alt_pam_score
         # Map a gene symbol to its TSS; defaults to the values in anchors.py.
         if tss_for_gene is None:
             from .. import anchors
@@ -92,7 +97,7 @@ class CrisporGuideDesigner:
         for site in offtarget_rows:
             sites_by_guide.setdefault(site.get("guideId", ""), []).append(site)
         guides: list[CandidateGuide] = []
-        self.last_ambiguous: list[str] = []   # ambiguous matches are recorded instead of selecting one
+        self.last_ambiguous: list[str] = []   # flagged, not silently mapped to the first hit
         for row in rows:
             try:
                 guide = self._row_to_candidate(row, window, gene, sites_by_guide)
@@ -109,6 +114,7 @@ class CrisporGuideDesigner:
         return environment.tool_environment(
             self.name, repo_root=self.config.repo_root,
             python_executable=self.config.python_executable, genome=self.config.genome, pam=self.pam,
+            min_alt_pam_score=self.min_alt_pam_score,
         )
 
     def _run_crispor(self, window_seq: str, seq_id: str) -> tuple[list[dict], list[dict]]:
@@ -121,6 +127,7 @@ class CrisporGuideDesigner:
             cmd = [
                 self.config.python_executable, "crispor.py", self.config.genome,
                 in_fa, out_tsv, "-p", self.pam, "--noEffScores",
+                "--minAltPamScore", str(self.min_alt_pam_score),
                 "--genomeDir", self.config.genome_dir, "-o", off_tsv,
             ]
             completed = subprocess.run(

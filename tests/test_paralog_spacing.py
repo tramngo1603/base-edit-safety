@@ -1,11 +1,11 @@
 """HBG1 and HBG2 positions must stay 4,924 bp apart. If they do not, a row has shifted.
 
-The table below is copied independently from `docs/coordinates.md` so it can detect a typo in
-`anchors.py`.
+The table below is transcribed from docs/coordinates.md by hand, on purpose. It is the
+independent copy that would catch a typo in anchors.py.
 """
 from base_edit_safety import anchors
 
-# (promoter_offset, hbg1_pos, hbg2_pos), copied from docs/coordinates.md
+# (promoter_offset, hbg1_pos, hbg2_pos), read off docs/coordinates.md
 FROM_THE_DOC = [
     (198, 5_250_055, 5_254_979),
     (175, 5_250_032, 5_254_956),

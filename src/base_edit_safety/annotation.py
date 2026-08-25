@@ -1,12 +1,8 @@
-"""Flag an edit whose coordinate falls inside a listed CH driver gene.
+"""Annotate edits and candidate sites that overlap clonal-hematopoiesis driver genes.
 
-CH means clonal hematopoiesis. This module performs a location check against the 12-gene boostDM-CH
-panel. It reports the matched gene, coordinate, sequence mismatch count, and whether the site is in
-an exon or intron. It does not estimate a person's risk, disease rate, or time to an event.
-`tests/test_no_risk_field.py` enforces that limit.
-
-The boostDM-CH gene panel is CC-BY-NC. Gene boundaries come from the fixed Ensembl release recorded
-below. Scores for individual DNA changes are not included.
+The layer reports the gene, coordinate, feature, mismatch count, and mechanism context needed for
+review. It does not calculate a patient-level outcome. The gene set is the 12-gene boostDM-CH panel;
+the upstream per-mutation scores are not included here.
 """
 from __future__ import annotations
 
@@ -14,7 +10,7 @@ from typing import Optional
 
 from .pipeline.datatypes import EditRecord
 
-# boostDM-CH driver-gene panel (12 genes; scores from the source project are CC-BY-NC).
+# boostDM-CH driver-gene panel (12 genes; upstream scores are CC-BY-NC).
 CH_DRIVER_GENES = frozenset(
     {"ASXL1", "CHEK2", "DNMT3A", "GNAS", "IDH2", "MDM4", "PPM1D", "SF3B1", "SRSF2", "TET2",
      "TP53", "U2AF1"}
@@ -22,13 +18,13 @@ CH_DRIVER_GENES = frozenset(
 
 # GRCh38 gene spans, 1-based and inclusive, looked up in Ensembl by symbol.
 #
-# The release is fixed because gene boundaries can change between releases. Compared with release
-# 115, four of the twelve spans differ, including SRSF2 by 524 bp; compared with release 110, nine
-# differ by up to 586 bp. `tests/test_ch_gene_spans.py` pins these values so a release update requires
-# an explicit code change and matching fixed test data.
+# The release is pinned because these boundaries move. Against release 115, four of the twelve
+# differ, SRSF2 by 524 bp; against release 110, nine of twelve differ, by up to 586 bp. A silent
+# upstream refresh would therefore change which off-targets get flagged, with nothing in the diff to
+# show for it. tests/test_ch_gene_spans.py holds these values so a refresh has to be deliberate.
 #
-# Each span covers the full gene interval, including all transcripts and untranslated regions. This
-# allows one coordinate check to cover every listed transcript.
+# Each span is the full gene interval, all transcripts, UTRs included, which is what an overlap check
+# for "did this site land in a driver gene" wants.
 CH_GENE_SPANS_ENSEMBL_RELEASE = "116"
 CH_GENE_SPANS_ASSEMBLY = "GRCh38.p14"
 CH_GENE_SPANS = {
@@ -85,8 +81,8 @@ def annotate_records(records: list[EditRecord]) -> list[EditRecord]:
 def ch_driver_offtargets(offtarget_sites: list[dict]) -> list[dict]:
     """Keep the off-target sites whose coordinate falls in a CH-driver gene.
 
-    Each input site needs `chrom` and `start`. The optional `locusDesc` field supplies the feature
-    label. Return the matched gene with the search tool's mismatch and score fields.
+    Each input site needs chrom and start, and may carry locusDesc. Returns one short entry per
+    hit, with the gene and the search tool's own mismatch and score fields.
     """
     hits: list[dict] = []
     for site in offtarget_sites:
@@ -98,9 +94,9 @@ def ch_driver_offtargets(offtarget_sites: list[dict]) -> list[dict]:
             pos = int(start)
         except (TypeError, ValueError):
             continue
-        # Membership is decided by coordinate alone. A tool-provided location label such as
-        # A label such as "intergenic:TP53-WRAP53" names flanking genes. Use the coordinate, not
-        # that label, to set the overlap flag.
+        # Membership is decided by coordinate alone. The tool's locus name (for example
+        # "intergenic:TP53-WRAP53") can mention a gene the site only sits near, which would
+        # overstate the hit, so it is kept for reference but never used to set the flag.
         gene = gene_at(chrom, pos)
         if gene is not None:
             locus_desc = site.get("locusDesc", "") or ""
@@ -121,9 +117,9 @@ def ch_driver_offtargets(offtarget_sites: list[dict]) -> list[dict]:
     return hits
 
 
-# Coding changes have different meanings across the listed genes. The table separates genes linked
-# to loss of function from genes linked to changes at named residues. These are review categories,
-# not numerical scores.
+# What a coding edit would mean differs by driver gene, so the two are read together below. Most CH
+# drivers are tumor suppressors where breaking the protein is the concern; a few only matter at
+# specific residues. This is context for a reviewer, not a score.
 CH_DRIVER_MECHANISM = {
     "ASXL1": "lof_tumor_suppressor",
     "CHEK2": "lof_tumor_suppressor",
@@ -136,16 +132,17 @@ CH_DRIVER_MECHANISM = {
     "U2AF1": "spliceosome_hotspot",
     "IDH2": "gof_hotspot",                  # R140 / R172
     "GNAS": "gof_hotspot",                  # R201
-    "MDM4": "copy_number_or_overexpression_driver",   # a single-base change does not represent the
-                                                      # copy-number mechanism
+    "MDM4": "copy_number_or_overexpression_driver",   # driven by copy number, so a single base change
+                                                      # says little
 }
 
 
 def ch_consequence_class(gene: str, feature: str | None) -> dict:
     """Read the coordinate feature together with the gene's mechanism.
 
-    Distinguish genes where coding disruption is relevant from genes associated with specific
-    residues. The return value contains a category, not a numerical or clinical estimate.
+    Landing in an exon of a tumor suppressor is a different thing from landing in an exon of a gene
+    that only drives disease at one residue. This function labels that context without assigning a
+    patient-level outcome.
     """
     mechanism = CH_DRIVER_MECHANISM.get(gene, "unknown")
     feat = (feature or "unknown").lower()

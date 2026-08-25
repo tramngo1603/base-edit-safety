@@ -1,7 +1,0 @@
-dataset_id	assay	cell_type	guide_id	record_type	point_id	measured_value	editor_class	offset	ref	alt
-D5	targeted HBG amplicon sequencing	primary CD34+ HSPCs	held-bystander	bystander	h1	10	CBE	-114	C	T
-D5	targeted HBG amplicon sequencing	primary CD34+ HSPCs	held-bystander	bystander	h2	20	CBE	-115	C	T
-D5	targeted HBG amplicon sequencing	primary CD34+ HSPCs	held-bystander	bystander	h3	30	CBE	-113	C	T
-D5	targeted HBG amplicon sequencing	primary CD34+ HSPCs	held-bystander	bystander	h4	40	CBE	-111	C	T
-D5	targeted HBG amplicon sequencing	primary CD34+ HSPCs	held-outcome	on_target_outcome	o1	10	CBE			
-D5	targeted HBG amplicon sequencing	primary CD34+ HSPCs	held-outcome	on_target_outcome	o2	20	CBE			

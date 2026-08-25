@@ -1,12 +1,12 @@
 """The HBG1/HBG2 promoter coordinates and the edit positions this tool covers.
 
-The table below is copied from `docs/coordinates.md`. This module does not calculate coordinates; it
-stores the reviewed table and converts its rows into `EditRecord` objects.
+The table below is copied from docs/coordinates.md. Nothing here re-derives a coordinate;
+this module holds the table and turns it into EditRecords.
 
 Every position stores two versions of the same allele. Papers write HBG promoter alleles on the
 gene's own strand ("-198 T>C"); genome browsers and VCFs write them on the plus strand ("-198 A>G").
-HBG1 and HBG2 sit on the minus strand, so the two forms differ. Storing both prevents a strand
-orientation from being inferred later.
+HBG1 and HBG2 sit on the minus strand, so the two never agree, and keeping only one of them would
+guarantee a strand mix-up.
 
 Loading the table first checks that matching HBG1 and HBG2 positions stay 4,924 bp apart. If they
 don't, a row has shifted and the run stops.
@@ -18,20 +18,20 @@ from typing import Literal, Optional
 
 from .pipeline.datatypes import EditRecord
 
-# A-gamma denotes HBG1 and G-gamma denotes HBG2. Papers use the Greek names while this module
-# uses HBG gene symbols, so citation matching depends on this explicit mapping.
+# Agamma is HBG1 and Ggamma is HBG2. Every paper this repo cites uses the Greek names, and every
+# coordinate here uses the HBG names, so this mapping is load-bearing on every citation.
 #
 # authority = HGNC nomenclature: HBG1 = "hemoglobin subunit gamma 1" (Aγ);
 # HBG2 = "hemoglobin subunit gamma 2" (Gγ).
 # Sources: https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/HGNC:4831 and
 # https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/HGNC:4832
-# access_level=database_record; audit_status=NOT_REVIEWED; accessed=2026-08-12. The runtime status
-# below remains conservative because the cited records have not completed source review.
+# access_level=database_record; audit_status=NOT_REVIEWED; accessed=2026-08-12.
+# The runtime status remains conservative until these source records complete review.
 GAMMA_GENE_NAMING = {
     "Agamma": "HBG1",
     "Ggamma": "HBG2",
-    "status": "HGNC database records listed in source comments; source review pending",
-    "consequence_if_wrong": "HBG1 and HBG2 database identifiers and citations would be swapped",
+    "status": "project convention, no authority cited",
+    "consequence_if_wrong": "every per-gene rsID, ClinVar record and citation attribution inverts",
 }
 
 GENOME_BUILD = "GRCh38"
@@ -41,16 +41,17 @@ HBG1_TSS = 5_249_857
 HBG2_TSS = 5_254_781
 PARALOG_SPACING_BP = 4924  # HBG2_TSS - HBG1_TSS, on both GRCh38 and GRCh37
 
-# The default records that motif loss has not been reviewed; it does not claim that no motif is lost.
+# Default for lost_motif: nobody has checked, which is not the same as "there isn't one".
 LOST_MOTIF_NOT_REVIEWED = "not_reviewed"
 
 
 @dataclass(frozen=True)
 class AnchorPosition:
-    """Store one targeted promoter position for both HBG genes.
+    """One promoter position this tool targets, shared by both paralogs.
 
-    The targeted HBG1 and HBG2 promoter sequences use the same reference and alternate bases. Each
-    gene keeps its own variant-database status and rsID.
+    HBG1 and HBG2 use the same alleles because their proximal promoters are near-identical. What
+    differs per gene is whether a variant database lists the position, and under which rsID, so
+    those two are stored separately for each gene.
     """
 
     promoter_offset: int                 # distance upstream of the cap site, as a positive number
@@ -62,8 +63,9 @@ class AnchorPosition:
     mechanism: str                       # the motif the edit CREATES
     hbg1_status: str
     hbg2_status: str
-    # The motif the edit destroys. Reviewed examples can create one motif while disrupting another.
-    # The default therefore means "not reviewed" rather than "no disrupted motif."
+    # The motif the edit DESTROYS. Every mechanism examined so far had two consequences and this repo
+    # recorded one, and in both confirmed cases the second was in the paper's supplement rather than
+    # its main text. So the default is "nobody has looked", never "there isn't one".
     lost_motif: str = LOST_MOTIF_NOT_REVIEWED
     hbg1_rsid: Optional[str] = None
     hbg2_rsid: Optional[str] = None
@@ -77,20 +79,22 @@ class AnchorPosition:
         return HBG2_TSS + self.promoter_offset
 
 
-# How well a variant database supports each position, per `docs/coordinates.md`.
+# How well a variant database backs each position, per docs/coordinates.md.
 # db_confirmed   a ClinVar accession AND an rsID, both for this gene.
-# db_unverified  no ClinVar record for this gene. Two positions have a dbSNP rsID; a dbSNP
-#                submission is not a reviewed ClinVar record and does not promote
-#                the status.
+# db_unverified  no ClinVar record for this gene. A dbSNP rsID may still exist, and for two positions
+#                one does; dbSNP submission is not curation, so it does not promote the status. Fine
+#                as a target, not citable as a catalogued variant.
 # synthetic      a screen hit, not a natural HPFH allele.
 #
-# rs1261339811 and rs34153902 are dbSNP submissions for the stated gene and coordinate. An rsID for
-# one HBG gene is not assigned to the other HBG gene.
+# The earlier wording said "no record for this gene", which was wrong: rs1261339811 and rs34153902
+# were both sitting in dbSNP on the right gene at the right coordinate the whole time. An rsID is
+# never borrowed from the paralog under any status.
 #
-# All five `db_unverified` rows were searched by position on 2026-07-26. SPDI uses zero-based
-# coordinates and HGVS uses one-based coordinates, so the position search checked for a one-base
-# conversion error. It returned the same two rsIDs. HBG1 -113, HBG2 -113, and HBG2 -117 returned no
-# dbSNP record in that search. Repeat the search only when updating the recorded access date.
+# All five db_unverified rows were re-queried BY POSITION on 2026-07-26, because SPDI is 0-based
+# while HGVS is 1-based and an exact-HGVS string query could plausibly have missed records off by
+# one. It did not: the position query returns the same two rsIDs and nothing more. HBG1 -113,
+# HBG2 -113 and HBG2 -117 have no dbSNP record at all. That is a settled negative, not an untested
+# gap, and it does not need running again.
 DB = "db_confirmed"
 UNVERIFIED = "db_unverified"
 SYNTHETIC = "synthetic"
@@ -132,7 +136,7 @@ IN_SCOPE: list[AnchorPosition] = [
 
 @dataclass(frozen=True)
 class ExcludedPosition:
-    """Store a documented position excluded from prediction and the exclusion reason."""
+    """A position we know about and deliberately do not model, with the reason recorded."""
 
     promoter_offset: int
     genomic_plus_ref: str
@@ -143,7 +147,7 @@ class ExcludedPosition:
     note: str = ""
 
 
-# Keyed by (offset, ref, alt), because -110 exists twice: A>C here as an NF-Y
+# Keyed by (offset, ref, alt) like everything else, because -110 exists twice: A>C here as an NF-Y
 # transversion, and A>G in the bystander table as an ABE edit. Offset alone would collide.
 OUT_OF_SCOPE: list[ExcludedPosition] = [
     ExcludedPosition(110, "T", "G", "A", "C", "transversion",
@@ -153,12 +157,12 @@ OUT_OF_SCOPE: list[ExcludedPosition] = [
                      "Doerfler's cellular allele at this position. Not the repo's C>T."),
     ExcludedPosition(114, "G", "C", "C", "G", "transversion",
                      "Doerfler's EMSA oligo allele. Not the repo's C>T."),
-    # Ravi lists these as newly reported substitutions. Recording the exclusion makes the window
-    # boundary explicit; changing that boundary requires a separate review.
+    # Ravi lists these among that study's novel substitutions. Recorded rather than omitted so the
+    # omission is a decision instead of an oversight; widening the window is a separate call.
     ExcludedPosition(69, "G", "A", "C", "T", "outside_modelling_window",
-                     "Substitution first reported by Ravi 2022. Falls outside the -210 to -80 window."),
+                     "Ravi 2022 novel substitution. Falls outside the -210 to -80 window."),
     ExcludedPosition(70, "G", "A", "C", "T", "outside_modelling_window",
-                     "Substitution first reported by Ravi 2022. Falls outside the -210 to -80 window."),
+                     "Ravi 2022 novel substitution. Falls outside the -210 to -80 window."),
 ]
 
 
@@ -174,12 +178,13 @@ class OutsideWindowConversion:
     note: str
 
 
-# BE-DICT receives only positions inside the editing window, so it cannot predict a conversion
-# outside that window. These observations remain separate from predicted within-window bystanders.
+# BE-DICT is only asked about positions inside the editing window, so a conversion outside it can
+# never appear in a prediction. Filing these beside within-window bystanders would imply a
+# capability the tool does not have.
 OBSERVED_OUTSIDE_WINDOW: list[OutsideWindowConversion] = [
     OutsideWindowConversion(
         117, "G", "A", "CBE", "35147495",
-        "Ravi 2022 reports an observed -117 G>A CBE conversion outside the protospacer and "
+        "Ravi 2022 reports a real -117 G>A CBE conversion occurring outside the protospacer AND "
         "outside the editing window. Distinct from the -117 CBE anchor above, which is the intended "
         "within-window edit for a different guide. No prediction will ever contain this."),
 ]
@@ -188,8 +193,8 @@ OBSERVED_OUTSIDE_WINDOW: list[OutsideWindowConversion] = [
 def check_paralog_spacing() -> None:
     """Stop the run if matching HBG1/HBG2 positions are not exactly 4,924 bp apart.
 
-    This catches a shifted row, including an earlier -114/-113 off-by-one error. It does not identify
-    the gene copy, so HBG1 or HBG2 must not be assigned by adding or subtracting 4,924.
+    This catches a shifted row (it caught a -114/-113 off-by-one once). It does not tell you which
+    gene a position belongs to, so never work a gene out by adding or subtracting 4,924.
     """
     if HBG2_TSS - HBG1_TSS != PARALOG_SPACING_BP:
         raise AssertionError(
@@ -219,8 +224,8 @@ def _record_for_gene(pos: AnchorPosition, gene: str) -> EditRecord:
     if rsid:
         provenance["dbsnp"] = rsid
         if status == UNVERIFIED:
-            # An rsID records a dbSNP submission, not a reviewed ClinVar assertion. Preserve that
-            # distinction so the identifier is not treated as confirmation.
+            # An rsID here means somebody submitted the variant, not that anyone curated it. Saying
+            # so on the record stops a reader treating the id as confirmation.
             provenance["dbsnp_note"] = "dbSNP submission only; no ClinVar record for this gene"
     return EditRecord(
         genome_build=GENOME_BUILD,

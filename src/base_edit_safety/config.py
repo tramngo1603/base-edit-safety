@@ -1,7 +1,7 @@
 """Runtime configuration for external prediction tools.
 
-External prediction tools are installed separately and called through adapter modules. Environment
-variables provide their locations so machine-specific paths are not committed.
+You install the external predictors yourself, and thin adapters call them. You give their
+locations through environment variables, so no machine-specific path is committed.
 See requirements-external.txt for the tools and their licenses.
 """
 from __future__ import annotations
@@ -16,7 +16,7 @@ _DOTENV_PATH = _REPO_ROOT / ".env"
 
 
 def _setting(name: str) -> str | None:
-    """Read an environment setting, then check the project's ignored local ``.env`` file."""
+    """Read an environment setting, with the ignored project ``.env`` as a local fallback."""
     value = os.environ.get(name)
     if value:
         return value
@@ -78,7 +78,7 @@ def load_bedict_config() -> BedictConfig:
 
 
 def bedict_configured() -> bool:
-    """Return whether the external predictor is configured for integration tests."""
+    """True when the external predictor environment can be found (used to gate integration tests)."""
     try:
         load_bedict_config()
         return True
@@ -88,7 +88,7 @@ def bedict_configured() -> bool:
 
 @dataclass(frozen=True)
 class CrisporConfig:
-    """Store paths and genome settings for the installed guide-design tool.
+    """Where the installed guide-design tool and its genome directory live.
 
     repo_root         directory of the installed guide-design checkout (holds crispor.py).
     python_executable python interpreter of the environment it was installed into.
@@ -128,7 +128,7 @@ def load_crispor_config() -> CrisporConfig:
 
 
 def crispor_configured() -> bool:
-    """Return whether the guide-design tool is configured for integration tests."""
+    """True when the external guide-design tool can be found (used to gate integration tests)."""
     try:
         load_crispor_config()
         return True

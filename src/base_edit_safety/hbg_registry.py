@@ -1,15 +1,17 @@
-"""Compare candidates with documented HBG1/HBG2 edits and programs.
+"""A short list of HBG1/HBG2 edits that already have support, and how a candidate compares to them.
 
-The registry contains natural hereditary-persistence-of-fetal-hemoglobin (HPFH) promoter variants,
-published HBG-promoter editing in hematopoietic stem and progenitor cells (HSPCs), and clinical
-HBG1/HBG2 programs.
+The list holds three things: the natural HPFH promoter variants from anchors.py, published
+base-editing work at the HBG promoter in HSPCs, and the clinical HBG1/HBG2 programs.
 
-A candidate receives two separate labels. The relationship label is `exact_edit`, `same_motif`,
-`nearby`, or `no_match`. The evidence label states the support available for the matched entry.
-Keeping them separate prevents an exact published HSPC edit from being reported as a nearby match.
+A candidate gets two separate answers, not one blended score. The first is how it lines up
+structurally (exact_edit, same_motif, nearby, no_match). The second is how strong the matched
+entry's evidence is. Keeping them apart stops an exact match to a published HSPC edit from being
+reported as if it were a loose one.
 
-When an accessible source does not give an exact target position or motif, those fields remain
-unknown. Each citation records whether its source has been reviewed.
+Two things to know about the entries themselves. Clinical programs do not always publish their exact
+target position or motif, so those fields stay unknown unless the available source supports them.
+And citations here are trial registry or program identifiers; primary-literature DOIs are left out
+unless someone has checked them.
 """
 from __future__ import annotations
 
@@ -17,37 +19,39 @@ from dataclasses import dataclass
 
 from . import anchors
 
-# Ways a candidate can match an entry in this registry.
+# How a candidate lines up with the list, structurally.
 EXACT_EDIT = "exact_edit"
 SAME_MOTIF = "same_motif"
 NEARBY = "nearby"
 NO_MATCH = "no_match"
 
-# Evidence levels, ordered from least to most support. In `evidence.py`, the separate
-# `empirically_measured` label requires measurements from the current run.
+# Evidence strength, weakest to strongest. Kept separate from the evidence tier in evidence.py, so
+# something published elsewhere never turns into `empirically_measured`, which means measured here.
 STRENGTH_ORDER = ("none", "analog", "motif", "published_hspc", "clinical")
 
-# Evidence for a biological mechanism is separate from evidence that a variant exists. A mechanism
-# remains `NOT_REVIEWED` until its supporting paper has been checked.
-#   in_vitro_binding_only  binding tests outside cells, without a cell-based confirmation
-#   binding_plus_cellular  binding tests plus a cell-based test that excludes other explanations
-#   established            supported by the reviewed evidence defined for this registry
-#   not_reviewed           the supporting paper has not been checked for this claim
+# How well the named mechanism is actually supported, which is a separate question from how well the
+# variant's existence is supported. Every label checked so far turned out softer than it sounded, so
+# an unread label is recorded as NOT_REVIEWED and should be read as overstated until someone opens the
+# paper.
+#   in_vitro_binding_only  gel-shift or competition work, no cellular confirmation that discriminates
+#   binding_plus_cellular  in vitro binding plus a cellular assay that rules alternatives out
+#   established            the mechanism is not seriously in question
+#   not_reviewed           the paper behind the label has not completed source review
 IN_VITRO_BINDING_ONLY = "in_vitro_binding_only"
 BINDING_PLUS_CELLULAR = "binding_plus_cellular"
 ESTABLISHED = "established"
 NOT_REVIEWED = "not_reviewed"
 
-# Whether the cited paper has been reviewed for this registry.
+# Whether anyone has read the cited paper.
 FULL_TEXT_READ = "full_text_read"
 NEVER_REVIEWED = "never_reviewed"
 
 
 def _cite(pmid: str, role: str, audit: str = NOT_REVIEWED, note: str | None = None) -> dict:
-    """Return a citation with its claim role and review status.
+    """One citation, with what it is being asked to support and whether anyone has checked it.
 
-    `role` states the supported claim type so clinical context is not used as a substitute for a
-    variant description, phenotype comparison, or source review.
+    `role` is deliberately specific. "clinical" was doing too much work: it was carrying variant
+    descriptions, phenotype-concordance arguments, reviews and two-sibling correspondence alike.
     """
     entry = {"pmid": pmid, "role": role, "audit_status": audit}
     if note:
@@ -60,31 +64,30 @@ class RegistryEntry:
     entry_id: str
     label: str
     genes: tuple
-    modality: str                 # `base_editing` or `nuclease`
-    editor_class: str | None      # `ABE`, `CBE`, or `None` when the class is not confirmed
-    offsets: tuple                # positive promoter offsets; empty when no exact position is known
-    motif: str                    # named DNA-binding site, such as BCL11A or GATA1
-    strength: str                 # one of the values in `STRENGTH_ORDER`
-    citations: tuple              # source records created by `_cite`
+    modality: str                 # base_editing | nuclease
+    editor_class: str | None      # ABE | CBE | None (nucleases, or an unconfirmed editor class)
+    offsets: tuple                # promoter offsets as positive numbers, or () if not position-specific
+    motif: str                    # BCL11A | GATA1 | KLF1 | TAL1 | ...
+    strength: str                 # one of STRENGTH_ORDER
+    citations: tuple              # dicts from _cite()
     note: str
     mechanism_evidence: str = NOT_REVIEWED
-    program_status: str | None = None   # reported program state for clinical entries
+    program_status: str | None = None   # clinical entries only: active | discontinued_<date>
 
 
-# --- Experimental system for each claim ----------------------------------------------------------
+# --- What system a claim was made in -------------------------------------------------------------
 #
-# Store the experimental system on each claim, not once per paper. Wienert 2015 reports two systems.
-# Mayuranathan and Ravi each report an engineered cell line and unmodified primary cells.
+# Architecture belongs to the CLAIM, not the PMID. Wienert 2015 alone spans two systems, and half its
+# claims come from each. Mayuranathan and Ravi each span an engineered line and native primary cells.
 #
-# `intact_paralogs` records which HBG gene copies were present and unchanged. A mechanism studied
-# after HBG2 deletion cannot be assigned to HBG2. None of the five mechanism papers used an
-# unchanged, naturally occurring HBG region.
+# `intact_paralogs` is the load-bearing field: a mechanism shown in a system where HBG2 was deleted
+# cannot be projected onto HBG2. None of the five mechanism papers used an intact native locus.
 
 @dataclass(frozen=True)
 class LocusArchitecture:
     system: str
     description: str
-    intact_paralogs: tuple          # HBG genes that were present and unchanged
+    intact_paralogs: tuple          # which of HBG1/HBG2 were present and unmodified
     native: bool = False
 
 
@@ -108,12 +111,12 @@ PRIMARY_CD34_TRANSPLANT = LocusArchitecture(
     "primary CD34+ HSPCs with xenotransplantation", "native locus; engraftment demonstrated",
     intact_paralogs=("HBG1", "HBG2"), native=True)
 
-# Source access level. A claim cannot exceed what the accessed material supports.
+# How far anyone got into a source. A claim may not assert more than its access allows.
 ACCESS_ORDER = ("not_accessed", "abstract_only", "database_record", "full_text")
 FULL_TEXT, ABSTRACT_ONLY, NOT_ACCESSED = "full_text", "abstract_only", "not_accessed"
 
-# Engraftment evidence is separate from general evidence strength. Ravi and Mayuranathan both have
-# `published_hspc` strength, but only one includes transplantation.
+# Durability is a separate axis from strength. Ravi and Mayuranathan would both read published_hspc
+# while only one of them transplanted, which is the whole reason this axis exists.
 NO_ENGRAFTMENT_DATA = "no_engraftment_data"
 XENOTRANSPLANT = "xenotransplant_engraftment_shown"
 
@@ -121,7 +124,7 @@ XENOTRANSPLANT = "xenotransplant_engraftment_shown"
 def _claim(pmid: str, role: str, access: str = NOT_ACCESSED, audit: str = NOT_REVIEWED,
            architecture: LocusArchitecture | None = None, engraftment: bool = False,
            note: str | None = None) -> dict:
-    """Return one assertion with its study system, source access, and review status."""
+    """One assertion, the system it was shown in, and how far anyone got into the source."""
     entry = {"pmid": pmid, "role": role, "access_level": access, "audit_status": audit,
              "demonstrates_engraftment": engraftment}
     if architecture is not None:
@@ -146,15 +149,16 @@ def _registry_ref(identifier: str, role: str, audit: str = NOT_REVIEWED,
     return entry
 
 
-# --- Claims for each DNA change -----------------------------------------------------------------
+# --- Claims per allele ---------------------------------------------------------------------------
 #
-# Use `(offset, reference base, alternate base)` as the key. At -114, different sources study C>T,
-# C>A, and C>G. An offset-only key would attach evidence for one DNA change to another.
+# Keyed by (offset, sense ref, sense alt), not by offset. -114 carries C>T here, C>A as Doerfler's
+# cellular allele and C>G as its EMSA oligo; filing all three under "-114" attaches a paper about one
+# allele to a claim about another.
 
-# Doerfler supports two positions on each dependency branch, rather than all four positions equally.
+# Doerfler splits two and two rather than sitting on four positions equally.
 _DOERFLER_TESTED = lambda branch: _claim(
     "34341563", f"qualified_variant_specific_{branch}", FULL_TEXT, FULL_TEXT_READ, DOERFLER_FUSED,
-    note="Retained only for the tested dependency branch, with the fusion-promoter limitation. "
+    note="Retained only for the dependency branch actually tested, with the fusion-promoter caveat. "
          "Not proof of KLF1 binding, KLF1-ZBTB7A competition, or direct GATA1-versus-BCL11A "
          "displacement.")
 _DOERFLER_FRAMEWORK = _claim(
@@ -164,8 +168,8 @@ _DOERFLER_FRAMEWORK = _claim(
 _CITATIONS = {
     (198, "T", "C"): (
         _claim("2430647", "human_haplotype_report", FULL_TEXT, FULL_TEXT_READ,
-               note="One reported chromosome also carries -158 and +210. The source does not "
-                    "attribute the reported phenotype to -198 alone."),
+               note="n=1 haplotype also carrying -158 and +210. The authors explicitly decline to "
+                    "attribute the phenotype to -198."),
         _claim("28659276", "mechanism_klf1", NOT_ACCESSED, NOT_REVIEWED, HUDEP2_DELTA_GGAMMA,
                note="KLF1 was nominated on erythroid abundance, not binding exclusivity; twelve "
                     "other KLFs bound the mutant probe."),
@@ -175,37 +179,40 @@ _CITATIONS = {
     ),
     (175, "T", "C"): (
         _claim("2449926", "human_variant_report_hbg2", FULL_TEXT, FULL_TEXT_READ,
-               note="One reported chromosome also carries -158 and changes after the gene. This "
-                    "source proposes an octamer mechanism, not TAL1; PMID 25971621 supports TAL1."),
+               note="n=1, in cis with -158 and 3'-flanking changes. Proposes an OCTAMER, not TAL1. "
+                    "Must never be cited for a TAL1 claim; TAL1 belongs to 25971621."),
         _claim("25971621", "mechanism_tal1_ebox", FULL_TEXT, FULL_TEXT_READ, WIENERT_MEL_BAC,
-               note="The gamma coding sequence is replaced by a reporter, so the reported "
-                    "gamma-globin expression value is fluorescence rather than gamma-globin or "
-                    "HbF. The MEL ChIP amplicon does not establish which HBG promoter contributed "
-                    "the signal. It therefore supports increased promoter occupancy but not a "
-                    "specific assignment to HBG1 -175T>C."),
+               note="Measures NO gamma-globin and NO HbF: the gamma coding sequence is replaced by "
+                    "a reporter, so every value called 'gamma-globin expression' is fluorescence. "
+                    "The MEL ChIP amplicon almost certainly does not distinguish the paralogs while "
+                    "MEL retains both promoters, so it averages a mutant and a WT promoter. Error "
+                    "direction is conservative, so the conclusion holds but the attribution does "
+                    "not: occupancy rises at the gamma promoter REGION, not demonstrably at the "
+                    "Agamma -175T>C promoter."),
         _claim("25971621", "mechanism_tal1_ebox_second_system", FULL_TEXT, FULL_TEXT_READ,
                WIENERT_K562,
                note="Second architecture in the same paper. Same reporter caveat."),
         _claim("37400614", "hspc_base_editing", NOT_ACCESSED, NOT_REVIEWED,
                PRIMARY_CD34_TRANSPLANT, engraftment=True),
         _claim("7679879", "human_variant_report_hbg1", NOT_ACCESSED, NEVER_REVIEWED,
-               note="Coleman 1993 reports HBG1 -175 on the same chromosome as HBG2 -158. Its phase "
-                    "claim comes from a compilation; the six primary sources remain unreviewed."),
+               note="Coleman 1993, HBG1 -175 in cis with HBG2 -158. 2 of 2 known Agamma carriers, "
+                    "but phase is asserted by a compilation and all six underlying primaries are "
+                    "unread."),
     ),
     (124, "T", "C"): (
         _claim("35147495", "synthetic_screen_hit", FULL_TEXT, FULL_TEXT_READ, HUDEP2_INTACT,
                note="Discovery screen was HUDEP-2, not HSPCs."),
         _claim("35147495", "allele_installed_in_hspcs", FULL_TEXT, FULL_TEXT_READ, PRIMARY_CD34,
-               note="The exact allele was installed and genotyped in primary CD34+ HSPCs at day "
-                    "6, before differentiation. The study did not include transplantation, so it "
-                    "does not establish durable editing in repopulating HSCs."),
+               note="Exact allele installed and genotyped in primary CD34+ HSPCs at day 6, before "
+                    "differentiation. NO xenotransplantation, so this does not show durable "
+                    "editing in repopulating HSCs."),
     ),
     (123, "T", "C"): (
         _claim("35147495", "synthetic_screen_hit", FULL_TEXT, FULL_TEXT_READ, HUDEP2_INTACT),
         _claim("35147495", "allele_installed_in_hspcs", FULL_TEXT, FULL_TEXT_READ, PRIMARY_CD34,
-               note="The same paper reports no transplantation data for this edit. Its KLF1 "
-                    "binding test uses the combined -123/-124 change. The ChIP control changed by "
-                    "a similar amount, and the source names other possible factors."),
+               note="See -124: same paper, same absence of transplant data. KLF1 binding was shown "
+                    "for the -123/-124 DOUBLE substitution only, and the ChIP negative control "
+                    "moved similarly while the authors name alternative factors."),
     ),
     (122, "G", "A"): (
         _claim("35147495", "cbe_on_target_conversion", FULL_TEXT, FULL_TEXT_READ, HUDEP2_INTACT,
@@ -214,28 +221,28 @@ _CITATIONS = {
     ),
     (117, "G", "A"): (
         _claim("2417646", "phenotype_concordance", FULL_TEXT, FULL_TEXT_READ,
-               note="This source compares phenotypes but is not the original variant description. "
-                    "It credits Gelinas 1985 and Collins 1985, which are not included in this "
-                    "registry. This entry therefore has no reviewed existence source for -117."),
+               note="NOT a variant description. Its own introduction credits the -117 description "
+                    "to Gelinas 1985 and Collins 1985, neither cited anywhere in this repo. There "
+                    "is NO existence citation for -117 here."),
         _claim("3181130", "mechanism_distal_ccaat", NOT_ACCESSED, NOT_REVIEWED),
         _claim("37989316", "motif_base_editing", NOT_ACCESSED, NOT_REVIEWED, PRIMARY_CD34),
         _DOERFLER_FRAMEWORK,
     ),
     (114, "C", "T"): (
         _claim("1698280", "human_variant_report_hbg2", FULL_TEXT, FULL_TEXT_READ,
-               note="This report covers HBG2 in two related cases. HBG1 was not sequenced or used "
-                    "in an assay, so the source does not support an HBG1 -114 claim."),
+               note="HBG2 only, a mother-son pair. Agamma was NEVER SEQUENCED in any subject and no "
+                    "Agamma sequence entered any assay, so Oner 1991's 'one can assume' at HBG1 "
+                    "-114 has no HBG1 claim to assume from."),
         _claim("1704803", "correspondence_n2_siblings", FULL_TEXT, FULL_TEXT_READ,
                note="Two brothers, published as correspondence. Its paralog claim is an explicit "
                     "assumption in the paper's own words, not a measurement."),
         _claim("35147495", "regional_base_editing", FULL_TEXT, FULL_TEXT_READ, HUDEP2_INTACT,
-               note="The -114 editing experiment used HUDEP-2 cells. The paper did not apply a CBE "
-                    "to primary HSPCs, so it does not support an HSPC base-editing label for this "
-                    "DNA change."),
+               note="Ravi's -114 editing was HUDEP-2 only. -114C>T needs a CBE and no CBE was "
+                    "applied to primary HSPCs in that paper, so 'HSPC base editing' is wrong here."),
         _claim("37989316", "motif_base_editing", NOT_ACCESSED, NOT_REVIEWED, PRIMARY_CD34),
         _claim("34341563", "competition_framework_only", FULL_TEXT, FULL_TEXT_READ, DOERFLER_FUSED,
-               note="Framework only. Doerfler's cellular change is C>A and its EMSA probe is C>G; "
-                    "neither is the C>T change stored here. The CP1 mechanism rests on EMSA competition "
+               note="Framework only. Doerfler's cellular allele here is C>A and its EMSA oligo is "
+                    "C>G; NEITHER is this repo's C>T. The CP1 mechanism rests on EMSA competition "
                     "with no antibody and no supershift, and DNaseI footprinting failed to resolve "
                     "the distal motif in either probe."),
     ),
@@ -255,17 +262,17 @@ _CITATIONS = {
 
 
 def durability_for(offset: int, ref: str, alt: str) -> str:
-    """Return whether a cited experiment reported engraftment, separately from evidence level."""
+    """Whether any claim behind this allele showed engraftment. Separate axis from strength."""
     claims = _CITATIONS.get((abs(offset), ref, alt), ())
     return XENOTRANSPLANT if any(c.get("demonstrates_engraftment") for c in claims) \
         else NO_ENGRAFTMENT_DATA
 
 
 def mechanism_projectable_onto(gene: str, offset: int, ref: str, alt: str) -> bool:
-    """Return whether a mechanism was studied with the named HBG gene present and unchanged.
+    """Can a mechanism claim here be projected onto this paralog?
 
-    A HUDEP-2 experiment performed after deletion of G-gamma, which is HBG2, cannot support an HBG2
-    mechanism claim.
+    Only if some mechanism claim was made in a system where that paralog's locus was intact. A
+    mechanism shown in a HUDEP-2 line with Ggamma deleted says nothing about HBG2.
     """
     for c in _CITATIONS.get((abs(offset), ref, alt), ()):
         if not c["role"].startswith("mechanism"):
@@ -276,15 +283,15 @@ def mechanism_projectable_onto(gene: str, offset: int, ref: str, alt: str) -> bo
     return False
 
 
-# Support for the mechanism assigned to each position. Three supporting papers have been reviewed;
-# each provides binding tests outside cells but no cell-based confirmation.
+# How well the mechanism named for each position is supported. Three have been read; all three turned
+# out to rest on in vitro binding alone.
 #   -198 KLF1     KLF1 was nominated on erythroid abundance, not on binding exclusivity, and twelve
 #                 other KLFs bound the mutant probe.
-#   -123/-124     EMSA supports binding, but the ChIP negative control changed similarly and the authors
+#   -123/-124     the EMSA is good, but the ChIP negative control moved similarly and the authors
 #                 name alternative factors themselves.
 #   -114 CP1      EMSA competition only, with no antibody and no supershift, and DNaseI footprinting
 #                 failed to resolve the distal motif in either probe.
-# The other papers have not been reviewed, so their mechanism status remains `NOT_REVIEWED`.
+# The rest are unread, so they stay NOT_REVIEWED rather than being assumed sound.
 _MECHANISM_EVIDENCE = {
     198: IN_VITRO_BINDING_ONLY,
     124: IN_VITRO_BINDING_ONLY,
@@ -295,10 +302,10 @@ _MECHANISM_EVIDENCE = {
     113: NOT_REVIEWED,
 }
 
-# Evidence strength per HPFH position (see `docs/coordinates.md`).
+# Evidence strength per HPFH position (see docs/coordinates.md).
 _STRENGTH = {
     198: "published_hspc",   # HSPC ABE (Mayuranathan 2023)
-    175: "published_hspc",   # highest-support exact-allele HSPC ABE entry (Mayuranathan 2023)
+    175: "published_hspc",   # strongest exact-allele HSPC ABE (Mayuranathan 2023)
     124: "published_hspc",   # the synthetic -123/-124 pair in HSPC-derived erythroid cells (Ravi 2022)
     123: "published_hspc",
     117: "motif",            # covered by a tiling screen, not the exact allele (Han 2023)
@@ -316,11 +323,16 @@ def _motif_for(mechanism: str) -> str:
 
 
 def _entry_id(pos) -> str:
-    """Use `hpfh_` for natural HPFH alleles and `synthetic_` for screen-derived changes."""
+    """`hpfh_` claims a natural HPFH allele, so only positions the anchor table calls natural get it.
+
+    -123 and -124 are screen hits. Naming their entries `hpfh_-123_ABE` asserted the opposite of what
+    anchors.py says about them, on the two positions represented together in the registry.
+    """
     is_synthetic = {pos.hbg1_status == anchors.SYNTHETIC, pos.hbg2_status == anchors.SYNTHETIC}
     if len(is_synthetic) > 1:
-        # One entry cannot cover both genes if their natural-versus-synthetic status differs. Use a
-        # separate, gene-specific identifier before adding such a row.
+        # Latent until now: the prefix used to read HBG1's status alone for an entry covering both
+        # genes. -198, -175 and -117 already have statuses that differ between paralogs; they happen
+        # not to differ on synthetic-ness. If one ever does, one entry_id cannot honestly name both.
         raise ValueError(
             f"offset {pos.promoter_offset}: HBG1 is {pos.hbg1_status} and HBG2 is "
             f"{pos.hbg2_status}, so one entry_id cannot describe both paralogs. Make the id "
@@ -350,7 +362,8 @@ def _hpfh_entries() -> list[RegistryEntry]:
     ]
 
 
-# Reported clinical HBG1/HBG2 promoter programs. Unknown fields remain unset until source review.
+# Clinical HBG1/HBG2 promoter programs, recorded no more specifically than the available source
+# supports because exact positions and motifs are not always public.
 _CLINICAL = [
     RegistryEntry(
         "beam_101", "risto-cel, formerly BEAM-101 (Beam Therapeutics, BEACON)", ("HBG1", "HBG2"),
@@ -358,9 +371,11 @@ _CLINICAL = [
         (_registry_ref("NCT05456880", "trial_registration", note="BEACON"),
          _registry_ref("Beam Therapeutics BEAM-101 program materials (public)", "sponsor_material",
                        note="Not resolvable as written; needs a dated, specific source.")),
-        "Reported CD34+ HSPC base-editing program at the HBG1/HBG2 promoter BCL11A site. The "
-        "stable entry identifier retains the former program name. The editor class remains unset "
-        "until a specific sponsor source has been reviewed.",
+        "Base-edited CD34+ HSPCs in the HBG1/HBG2 promoter, aimed at stopping BCL11A from binding, "
+        "the way HPFH variants do. Same approach and same target as this tool. Renamed to "
+        "ristoglogene autogetemcel (risto-cel); the entry_id keeps the old name so nothing "
+        "downstream breaks. Public reporting says the editor is an ABE. The supporting sponsor "
+        "source has not completed review, so editor_class stays unasserted.",
         program_status="active",
     ),
     RegistryEntry(
@@ -370,22 +385,24 @@ _CLINICAL = [
          _registry_ref("NCT05444894", "trial_registration", note="EdiThal"),
          _registry_ref("Editas reni-cel program materials (8-K summary)", "sponsor_material",
                        note="Not resolvable as written; needs the SEC accession and a date.")),
-        "Reported AsCas12a nuclease program at the HBG1/HBG2 promoter BCL11A site. A nuclease can "
-        "create insertions or deletions, so this entry is a same-location comparison rather than a "
-        "base-editing comparison. The recorded program state does not state a safety or efficacy "
-        "result.",
+        "AsCas12a cutting at the HBG1/HBG2 promoter BCL11A site. Same place and same idea, but a "
+        "nuclease rather than a base editor, so it makes indels instead of point edits. "
+        "DISCONTINUED: Editas ended development in December 2024 after failing to find a commercial "
+        "partner, and both trials were stopped early for that reason, not for safety or efficacy. "
+        "The human evidence still stands, which is why strength remains 'clinical'.",
         program_status="discontinued_2024_12",
     ),
-    # The sources for these entries have not been reviewed. Their identifiers therefore retain the
-    # `NEVER_REVIEWED` status and cannot support more detailed fields.
+    # These entries complete the known promoter-program list. Their cited sources have not
+    # completed review, so every identifier they carry remains marked unread.
     RegistryEntry(
         "cs_101", "CS-101 / CS-206 (CorrectSequence Therapeutics)", ("HBG1", "HBG2"),
         "base_editing", None, (), "BCL11A", "clinical",
         (_registry_ref("NCT06024876", "trial_registration", NEVER_REVIEWED),
          _registry_ref("NCT06291961", "trial_registration", NEVER_REVIEWED),
          _registry_ref("NCT06565026", "trial_registration", NEVER_REVIEWED)),
-        "Reported clinical base-editing program at the HBG1/HBG2 promoter BCL11A site. The exact "
-        "editor class remains unset because the listed registry sources have not been reviewed.",
+        "A clinical base editor at the HBG1/HBG2 promoter BCL11A site, which makes it the closest "
+        "analog anywhere to what this tool models. It was missing from this list entirely. "
+        "Transformer base editor; the subclass is not public, so editor_class is None.",
         program_status="active",
     ),
     RegistryEntry(
@@ -394,20 +411,25 @@ _CLINICAL = [
         (_registry_ref("NCT04443907", "trial_registration", NEVER_REVIEWED),
          _cite("37646679", "clinical_trial_report", NEVER_REVIEWED,
                "Sharma et al., NEJM 2023, Cas9 disruption of the HBG1 and HBG2 promoters. Cited by "
-               "PMID because this registry records no DOI for the source.")),
-        "Reported Cas9 nuclease program that disrupts both HBG promoters. It is a same-location "
-        "comparison, not a base-editing comparison.",
+               "PMID because this repo ships no DOIs.")),
+        "Cas9-edited CD34+ HSPCs with a targeted disruption of both gamma-globin promoters. Same "
+        "locus as this tool, nuclease rather than base editor. Read out in 2023.",
         program_status="discontinued",
     ),
     RegistryEntry(
-        "rm_001", "RM-001 (Reforgene Therapeutics)",
+        "rm_001", "RM-001 (Reforgene Therapeutics / 瑞风生物, Guangzhou)",
         ("HBG1", "HBG2"), "nuclease", None, (), "unknown", "clinical",
         (_registry_ref(
-            "RM-001 public program materials", "sponsor_material", NEVER_REVIEWED,
-            "No dated source or trial registry identifier has been reviewed for this entry."
+            "sponsor materials (unopened)", "sponsor_material", NEVER_REVIEWED,
+            "RM-001 trial registry identifiers were not verified. This placeholder needs a dated, "
+            "specific source."
         ),),
-        "Reported HBG1/HBG2 promoter nuclease program. No reviewed source supports an exact "
-        "position or motif, so this entry cannot create a position or motif match.",
+        "Cas9 editing reported directly at the HBG1/HBG2 promoter region, distinct from "
+        "BCL11A-enhancer programs; the exact promoter motif is unverified. The Phase I study is "
+        "reported complete, and company "
+        "announcements from late 2025 report a completed confirmatory trial now in follow-up. "
+        "Those sponsor materials were not opened here, and no trial registry identifier is "
+        "asserted.",
         program_status="active",
     ),
     RegistryEntry(
@@ -415,7 +437,7 @@ _CLINICAL = [
         ("HBG1", "HBG2"), "base_editing", None, (), "unknown", "clinical",
         (_registry_ref(
             "NCT06678165", "trial_registration", NEVER_REVIEWED,
-             "Registry identifier awaiting source review."
+            "Registry identifier awaiting source review."
         ),
          _registry_ref(
              "ChiCTR2500112517", "trial_registration", NEVER_REVIEWED,
@@ -437,24 +459,26 @@ _CLINICAL = [
     ),
 ]
 
-# Programs that target the BCL11A erythroid enhancer are outside this HBG-promoter registry. Each
-# excluded entry records that location difference.
+# Programs targeting the BCL11A erythroid enhancer, rather than an HBG promoter, fail the registry's
+# target-first criterion: same therapeutic goal, different locus. Recorded here rather than deleted,
+# because "we considered it and it does not qualify" is information.
 MOVED_OUT_OF_REGISTRY = (
     {"label": "exa-cel / CTX001 (Casgevy)",
      "reason": "BCL11A erythroid enhancer, not the HBG1/HBG2 promoter",
-     "note": "Retained as a comparison with a different target location."},
+     "note": "Useful as a goal-level comparator. It must not count toward how complete the "
+             "promoter-program list is, which is what it was doing before."},
     {"label": "BRL-101 (Bioraylab / 邦耀生物)",
      "reason": "BCL11A erythroid enhancer, not the HBG1/HBG2 promoter",
      "citations": (_registry_ref(
-         "BRL-101 public program materials", "sponsor_or_trial_material",
-         NEVER_REVIEWED, "No dated source has been reviewed for this entry."
+         "Bioraylab BRL-101 sponsor/trial materials (unopened)", "sponsor_or_trial_material",
+         NEVER_REVIEWED, "Unverified; needs source review and a dated, specific source."
      ),),
      "note": "Kept outside the promoter registry pending source review."},
     {"label": "ET-01 (EdiGene / 博雅辑因)",
      "reason": "BCL11A erythroid enhancer, not the HBG1/HBG2 promoter",
      "citations": (_registry_ref(
-         "ET-01 public program materials", "sponsor_or_trial_material",
-         NEVER_REVIEWED, "No dated source has been reviewed for this entry."
+         "EdiGene ET-01 sponsor/trial materials (unopened)", "sponsor_or_trial_material",
+         NEVER_REVIEWED, "Unverified; needs source review and a dated, specific source."
      ),),
      "note": "Kept outside the promoter registry pending source review."},
 )
@@ -470,8 +494,8 @@ def entry(entry_id: str) -> RegistryEntry | None:
 def relationship(gene: str, promoter_offset: int, editor_class: str, mechanism: str | None = None) -> dict:
     """Compare a candidate against the list.
 
-    Return the closest relationship, the highest evidence level among matched entries, and each
-    individual match.
+    Returns the closest structural match, the strongest evidence across everything it matched, and
+    the individual matches.
 
     exact_edit: a base-editing entry at the same promoter offset with the same editor class.
     same_motif: same motif (BCL11A, say) at an HBG-promoter entry, but not the same edit.

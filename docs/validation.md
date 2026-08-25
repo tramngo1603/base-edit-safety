@@ -1,26 +1,37 @@
-# Validation status and safeguards
+# Validation
 
-Validation is in progress. The public repository contains the evaluation code and synthetic
-fixtures with fixed expected results, but no held-out comparison between predictions and
-measurements.
+This page summarizes the validation work without publishing source tables or paper-derived records.
 
-The v1 plan separates public measured datasets into a tuning allocation (D1-D4) and a single
-held-out allocation (D5). That assignment was locked on 2026-08-14 before held-out outcome review.
-Changing the assignment requires a new protocol version; tests pin the role map and lock date.
+## What has been checked
 
-Additional gates remain intentionally closed until their evidence is complete:
+- Coordinate and strand tests cover the fixed GRCh38 HBG1 and HBG2 promoter windows.
+- Tests confirm that HBG1 and HBG2 remain separate loci and that a guide matching both receives the
+  expected dual-locus and deletion warnings.
+- Hand-written sample files exercise the analysis and reporting workflow from input parsing through
+  final output.
+- Tests check that missing predictions remain marked as unavailable instead of being treated as
+  zero.
+- The validation runner checks dataset roles, file checksums, code versions, and the one-use lock
+  for reserved data.
 
-- every dataset must pass checks covering its source, reuse terms, checksum, sample mapping,
-  guide/editor mapping, reference-genome build, and overlap with development inputs;
-- metric thresholds and the code release under test must be frozen before prediction-measurement
-  comparisons are viewed;
-- a non-fixture held-out run requires a clean checkout at the frozen validation tag;
-- the single-run record is written before outcome values are loaded and cannot be overwritten; and
-- failures are reported under the pre-specified categories; held-out data cannot be used to adjust
-  the method after the run.
+The research workspace uses a written validation plan. Development data may be used to find and fix
+problems; a separate reserved set is kept for the final check. Dataset roles and pass marks are
+fixed before that final run.
 
-Accordingly, the current release makes no measured performance, clinical-safety, or regulatory
-clearance claim. The versioned source document is
-[`validation/validation-protocol.md`](../validation/validation-protocol.md); the locked split and
-dataset registry record its change history. See [evaluation runner](evaluation.md) for the input
-contract, fixture-only CI mode, and generated report structure.
+## What is kept private
+
+The public repository does not include publisher tables, source workbooks, paper-derived site
+lists, accession-level sample maps, raw or normalized measurements, per-paper review notes, or
+reserved-data results. Those records remain in the private research workspace.
+
+## Reproducing the software checks
+
+After installing the project with its test dependencies, run:
+
+```sh
+python -m pytest -q
+```
+
+The public test suite checks the exposed analysis workflow. The detailed dataset runner, source
+records, and its dataset-specific checks remain in the private research workspace. Validation
+against research datasets is still underway, so no final performance result is reported here.

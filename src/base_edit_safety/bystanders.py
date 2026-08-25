@@ -1,15 +1,24 @@
-"""Classify additional edits made on the same predicted DNA molecule.
+"""What a bystander edit does, keyed by the edit rather than by the position.
 
-A rule needs the exact DNA change, not only its promoter position. For example, -110 A>G is an ABE
-bystander, while -110 A>C is a different change. A rule can also depend on companion edits on the
-same molecule. The -181 change is neutral only when -173 remains unedited.
+An offset alone is not enough to look a bystander up, for three reasons found independently:
 
-Rules therefore use `(gene, offset, reference base, alternate base)` plus any required companion
-edits. The guide and editor stay in the source record but do not decide which rule matches. ABE
-changes A to G, while CBE changes C to T.
+- **One offset, several alleles.** -110 is an ABE bystander as A>G and an out-of-scope NF-Y
+  transversion as A>C. Keyed by offset they collide and one silently wins.
+- **One allele, several contexts.** -181 is neutral only when -173 is unedited. Mayuranathan's
+  clonal comparison is that A3G5A11 and A3G5G11 are both productive while G3G5G11 is not, so the
+  class is a property of the haplotype, not of the position.
+- **Evidence attaches to alleles.** -114 appears in the literature as C>T, C>A and C>G. Filing all
+  three under "-114" attaches a paper about one allele to a claim about another.
 
-Offsets follow the gene-reading strand and count backward from the transcription start site. The
-literature writes upstream positions as negative values; lookup code stores their absolute value.
+The key is `(gene, offset, ref, alt)` plus haplotype conditions. Guide and editor are deliberately
+**not** in the key. A classification is a claim about what happens when a base changes in a motif
+context, and the motif does not care which guide made the edit. Whether a position gets edited at
+all is guide-dependent, but that is the predictor's job. The editor is already implied by the
+alleles: an ABE gives A>G, a CBE gives C>T. Guide and editor are recorded as provenance so a reader
+can see where a number came from, and are never matched on.
+
+Offsets are sense-strand, counted back from the cap site, and written negative here the way the
+literature writes them. Records store the magnitude, so the lookup normalises.
 """
 from __future__ import annotations
 
@@ -23,14 +32,15 @@ UNKNOWN = "unknown"
 
 BOTH_GENES = ("HBG1", "HBG2")
 
-# State of another edit on the same predicted sequence. `unresolved` is distinct from absence: a
-# position outside the predictor's window has no rate, so a dependent rule cannot be evaluated.
+# Presence of another edit on the same allele. Unknown is a real third state: a position outside the
+# predictor's window has no rate, so we cannot say whether it is edited, and a rule that depends on
+# it cannot be evaluated either way.
 PRESENT, ABSENT, UNRESOLVED = "present", "absent", "unresolved"
 
 
 @dataclass(frozen=True)
 class BystanderRule:
-    """One bystander classification with its conditions and supporting source details."""
+    """One classification, and everything needed to audit it."""
 
     genes: tuple
     offset: int                      # negative, sense strand, cap-site numbering
@@ -39,10 +49,10 @@ class BystanderRule:
     functional_class: str
     note: str
     confidence: str
-    # Companion edits on the same DNA molecule, each stored as `(offset, ref, alt)`.
+    # Haplotype conditions, each an (offset, ref, alt) on the same allele.
     requires_present: tuple = ()
     requires_absent: tuple = ()
-    # Supporting source fields are recorded but excluded from rule matching.
+    # Provenance. Recorded, never matched on.
     observed_in_guide: tuple = ()
     observed_with_editor: tuple = ()
     observed_rate: str = ""
@@ -59,13 +69,14 @@ def _edit(offset: int, ref: str, alt: str) -> tuple:
 
 
 # The -113 ABE guide creates a GATA site spanning -113 to -110. -111 is a T, so -112 and -110 are the
-# only ABE-editable positions inside it. Two papers report editing at both positions. Neither paper
-# tests their functional effect together with -113A>G, so that effect has medium confidence.
+# only ABE-editable positions inside it. Both are edited at high rate by that guide in two papers,
+# and neither has ever been tested in combination with -113A>G, which is why the class is medium
+# while the position and rate are high.
 _GATA_113 = _edit(113, "A", "G")
 # The -175 ABE guide. Its spacer is published in Mayuranathan Supplementary Table 12 and was located
 # in the GRCh38 reference on 2026-07-28: plus strand, 5' end at chr11:5,250,028. Every A in it maps to
-# directly to an offset: A3 = -173, A5 = -175, and A11 = -181. These coordinates come from the
-# sequence rather than an estimate based on the quoted "-175 (A5)" anchor.
+# an offset directly, so A3 = -173, A5 = -175 and A11 = -181 are now READ OFF THE SEQUENCE rather than
+# interpolated from the quoted "-175 (A5)" anchor.
 _EBOX_175 = _edit(175, "A", "G")
 
 # Spacers from Mayuranathan Supplementary Table 12, each located in the reference window.
@@ -73,9 +84,6 @@ PUBLISHED_SPACERS = {
     "sgRNA -175":     {"spacer": "AGATATTTGCATTGAGATAG", "pam": "NG", "strand": "+",
                        "five_prime_hbg1": 5_250_028,
                        "offsets": {3: -173, 5: -175, 11: -181, 15: -185, 17: -187, 19: -189}},
-    "sgRNA -113":     {"spacer": "CTTGACCAATAGCCTTGACA", "pam": "NGG", "strand": "-",
-                       "five_prime_hbg1": 5_249_977,
-                       "offsets": {5: -116, 8: -113, 9: -112, 11: -110}},
     "sgRNA -187/189": {"spacer": "ATTGAGATAGTGTGGGGAAG", "pam": "NGG", "strand": "+",
                        "five_prime_hbg1": 5_250_038,
                        "offsets": {1: -181, 5: -185, 7: -187, 9: -189}},
@@ -92,12 +100,9 @@ PUBLISHED_SPACERS = {
                                "nonblocking."},
 }
 
-# Match published guides to the CRISPOR enumeration. Nineteen of the 22 distinct guide-matched
-# sequences were screened by Ravi, so the papers evaluate the same sequences rather than only the
-# same promoter positions. Established 2026-07-28 from Ravi Supplementary file 1 and Mayuranathan
-# Supplementary Table 12.
+# Where selected published guides turn up in our own CRISPOR enumeration. Dataset-configured guide
+# identities are deliberately not embedded here.
 GUIDE_IDENTITIES = {
-    "CTTGACCAATAGCCTTGACA": {"ours": "19rev",   "ravi": "gRNA 2",  "mayuranathan": "sgRNA -113"},
     "AGGCAAGGCTGGCCAACCCA": {"ours": "60forw",  "ravi": "gRNA 10", "mayuranathan": None},
     "GGCAAGGCTGGCCAACCCAT": {"ours": "61forw",  "ravi": "gRNA 11", "mayuranathan": None},
     "ATTGAGATAGTGTGGGGAAG": {"ours": "122forw", "ravi": "gRNA 25", "mayuranathan": "sgRNA -187/189"},
@@ -109,11 +114,13 @@ GUIDE_IDENTITIES = {
 
 
 def catastrophic_exposure(guide, edit_window) -> list[tuple]:
-    """Return high-impact positions that this guide can edit inside its supported window.
+    """Which catastrophic positions this guide would edit, inside the window.
 
-    In the cited study, disruption at -187/-189 prevented the -175 edit from increasing HbF and
-    removed binding by GATA1, TAL1, LMO2, and LDB1. The result contains `(guide position, promoter
-    offset)` pairs and is empty when neither position is reachable.
+    Disrupting the upstream GATA1 motif at -187/-189 made the -175 edit fail to induce HbF at all,
+    with no GATA1, TAL1, LMO2 or LDB1 occupancy. A guide that reaches one of those positions in its
+    editing window is not merely suboptimal, it can abolish the effect it was chosen for.
+
+    Returns (protospacer position, promoter offset) pairs, empty when the guide is clear.
     """
     reachable = {c.offset for c in CATASTROPHIC}
     found = []
@@ -132,7 +139,7 @@ RULES: tuple[BystanderRule, ...] = (
         requires_present=(_GATA_113,),
         note="Downgraded from productive. Han 2023 measures BCL11A binding affinity reduced only "
              "3.7x by -116A>G, against 31x for -115C>T and 55x for -114C>T, and the ABE8e strategy "
-             "installing it gave the lowest gamma-globin across the tested conditions despite >90% editing.",
+             "installing it gave the lowest gamma-globin of everything tested despite >90% editing.",
         confidence="medium-high",
         observed_in_guide=("sgHBG-1", "gRNA-2"), observed_with_editor=("ABE8e",),
         observed_rate="92.2% (Han 2023, sgHBG-1); 66% (Ravi 2022, gRNA-2, CD34+ HSPCs)",
@@ -146,7 +153,7 @@ RULES: tuple[BystanderRule, ...] = (
              "'should inhibit HbF induction by destroying the GATA motif created by the on-target "
              "edit'. That is a stated expectation, not a measurement: no paper has combined "
              "-112A>G with -113A>G. The adverse call rests on motif structure alone.",
-        confidence="high for position and rate; medium for the adverse class",
+        confidence="high on position and rate; MEDIUM on the adverse class",
         observed_in_guide=("sgHBG-1", "gRNA-2"), observed_with_editor=("ABE8e",),
         observed_rate="40.4% (Han 2023, sgHBG-1); 37% (Ravi 2022, gRNA-2, CD34+ HSPCs)",
         source_pmid=("37989316", "35147495", "37400614"), evidence_class="motif_structure_only",
@@ -155,21 +162,22 @@ RULES: tuple[BystanderRule, ...] = (
         genes=BOTH_GENES, offset=-110, ref="A", alt="G",
         functional_class=ADVERSE,
         requires_present=(_GATA_113,),
-        note="Fourth base of the GATA site created by the -113 edit. Doerfler 2021 introduced "
-             "-110A>G alone as a control "
+        note="Fourth base of the GATA site the -113 edit creates. The closest direct test that "
+             "exists is a NULL: Doerfler 2021 introduced -110A>G genomically as an inert control "
              "and measured no HbF change by IE-HPLC and no accessibility change by ATAC-seq. That "
              "is the exact allele, tested alone in cells, with no effect. It does not test the "
              "bystander case, because it was never combined with -113A>G. The adverse call rests "
              "entirely on motif structure.",
-        confidence="high for position and rate; medium for the adverse class because the combined "
-                   "-110A>G and -113A>G change was not tested",
+        confidence="high on position and rate; MEDIUM on the adverse class, and now explicitly "
+                   "untested in the only configuration that matters",
         observed_in_guide=("sgHBG-1", "gRNA-2"), observed_with_editor=("ABE8e",),
         observed_rate="80.0% (Han 2023, sgHBG-1); 31% (Ravi 2022, gRNA-2, CD34+ HSPCs)",
         source_pmid=("37989316", "35147495", "34341563"),
         evidence_class="motif_structure_only_with_contrary_isolated_null",
     ),
-    # -114 and -115 are absent from the section-2 change table. Retain them only for supported CBE/tBE
-    # BCL11A-motif sequence contexts rather than applying them as global offset rules.
+    # -114 and -115 are absent from the section-2 table, which lists only the five entries that
+    # changed. They are carried forward here rather than dropped, under the p2 instruction to scope
+    # them to supported CBE/tBE BCL11A-motif haplotypes instead of applying them as global rules.
     BystanderRule(
         genes=BOTH_GENES, offset=-114, ref="C", alt="T",
         functional_class=PRODUCTIVE,
@@ -178,8 +186,7 @@ RULES: tuple[BystanderRule, ...] = (
              "relevance. The evidence does not justify a global editor-independent offset rule, so "
              "it is keyed to this allele. Note the literature also carries -114 C>A (Doerfler, "
              "genomic) and C>G (Doerfler, EMSA oligo); neither is this edit.",
-        confidence="high for this DNA change in the cited CBE and tBE contexts; not a general "
-                   "position-only rule",
+        confidence="high for this allele in CBE/tBE contexts; NOT a global single-offset rule",
         observed_with_editor=("BE4max", "transformer base editor"),
         source_pmid=("37989316", "35147495"), evidence_class="supported_haplotype_context",
     ),
@@ -202,8 +209,8 @@ RULES: tuple[BystanderRule, ...] = (
              "against both A3G5A11 and A3G5G11, and the authors state the A3 edit likely "
              "interferes with HbF induction by -175A>G. -173 falls inside the created E-box "
              "(sense -175 to -170), which corroborates the offset.",
-        confidence="high for the result; coordinate derived directly from the published guide "
-                   "sequence",
+        confidence="high on the result; the offset is now CONFIRMED, read off the published spacer "
+                   "rather than interpolated",
         observed_in_guide=("sgRNA -175 = AGATATTTGCATTGAGATAG (Mayuranathan Supp Table 12); "
                            "plus strand, 5' at chr11:5,250,028, so A3 = -173",),
         observed_with_editor=("ABE8e",),
@@ -215,12 +222,13 @@ RULES: tuple[BystanderRule, ...] = (
         functional_class=NEUTRAL,
         requires_present=(_EBOX_175,),
         requires_absent=(_edit(173, "A", "G"),),
-        note="A3G5A11 and A3G5G11 are both productive edit combinations in Mayuranathan 2023, so "
-             "the A11 edit does not reduce induction when -173 is unedited. When -173 and -181 are "
-             "both edited, the adverse effect is assigned to -173. A second guide also reaches "
-             "-181, but that experiment does not isolate its effect.",
-        confidence="high for the A11 result; coordinate derived directly from the published guide "
-                   "sequence",
+        note="Flipped from adverse. A3G5A11 and A3G5G11 are both productive haplotypes in "
+             "Mayuranathan 2023, so the A11 edit does not harm induction on its own; the earlier "
+             "adverse call attributed -173's effect to it. Neutral only while -173 is unedited: "
+             "with both edited the pair is harmful and the harm is attributed to -173. Reachable "
+             "by a second, different guide, whose edits are pooled and give no isolated effect.",
+        confidence="high on the A11 result; the offset is now CONFIRMED, read off the published "
+                   "spacer rather than interpolated",
         observed_in_guide=("sgRNA -175 = AGATATTTGCATTGAGATAG, plus strand 5' at chr11:5,250,028, "
                            "so A11 = -181",
                            "sgRNA -187/189 = ATTGAGATAGTGTGGGGAAG, plus strand 5' at "
@@ -233,10 +241,10 @@ RULES: tuple[BystanderRule, ...] = (
 
 _BY_KEY: dict[tuple, BystanderRule] = {r.key: r for r in RULES}
 
-# Positions where disruption caused a severe loss of function in the cited study. They are not
-# bystanders of a guide currently in scope: Mayuranathan used a separate guide, and these positions
-# fall outside the supported ABE window for the -175 guide. Keep them in the rule table so a future
-# candidate that includes either position receives the recorded high-impact label.
+# Positions where disrupting the element is catastrophic rather than merely adverse. Not bystanders
+# of any guide in scope: Mayuranathan reached them with a separate sgRNA, and they fall outside any
+# plausible ABE window on the -175 guide. Recorded because if a candidate guide ever does place one
+# in its window, this is the worst outcome available at the locus.
 @dataclass(frozen=True)
 class CatastrophicPosition:
     genes: tuple
@@ -249,13 +257,13 @@ class CatastrophicPosition:
 CATASTROPHIC = (
     CatastrophicPosition(
         BOTH_GENES, -187, "upstream GATA1 motif (WGATAR), sense -190 to -185",
-        "ABE7.10 disruption at this position produced clones in which -175G did not increase HbF. "
-        "CUT&RUN detected no GATA1, TAL1, LMO2, or LDB1 occupancy. Reached by sgRNA -187/189 = "
+        "ABE7.10 disruption here produced clones where the -175G variant FAILED to induce HbF at "
+        "all, with no GATA1, TAL1, LMO2 or LDB1 occupancy by CUT&RUN. Reached by sgRNA -187/189 = "
         "ATTGAGATAGTGTGGGGAAG (A7), and also inside sgRNA -175 at A17.", ("37400614",)),
     CatastrophicPosition(
         BOTH_GENES, -189, "upstream GATA1 motif (WGATAR), sense -190 to -185",
-        "The same experiment and result as -187. This position is A9 in sgRNA -187/189 and A19 in "
-        "sgRNA -175. The latter guide spans promoter positions -175 through -189.", ("37400614",)),
+        "See -187: the same disruption, same result. sgRNA -187/189 at A9, and inside sgRNA -175 "
+        "at A19. Note sgRNA -175 therefore spans -175 through -189 in one spacer.", ("37400614",)),
 )
 
 # Motif geometry at -175, measured from Wienert 2015 Fig 1a. The same substitution completes one
@@ -263,7 +271,7 @@ CATASTROPHIC = (
 MOTIF_GEOMETRY_175 = {
     "created_tal1_ebox": (-175, -170),
     "destroyed_gata1_core": (-175, -172),
-    "redundant_gata1_site": (-190, -185),   # genomic GATA1 ChIP was unchanged at this second site
+    "redundant_gata1_site": (-190, -185),   # rescues GATA1 binding; why genomic GATA1 ChIP was flat
     "inside_both_ebox_and_destroyed_gata": (-174, -172),
 }
 
@@ -271,15 +279,16 @@ MOTIF_GEOMETRY_175 = {
 def allele_context(records: list[dict]) -> dict:
     """Which edits sit on one guide's allele, as (offset, ref, alt) -> present | absent | unresolved.
 
-    A rate above zero means present. A predicted rate of zero means absent. `None` means the position
-    was outside the request sent to the predictor, so presence and dependent rules remain unresolved.
+    A rate above zero is present. A rate of zero is a real predicted absence. A rate of None means
+    the predictor was never asked, so presence is unresolved and any rule depending on it declines
+    rather than guessing.
     """
     context: dict = {}
     for r in records:
         key = (-abs(r["promoter_offset"]), r.get("promoter_sense_ref"), r.get("promoter_sense_alt"))
         rate = r.get("predicted_rate")
         state = UNRESOLVED if rate is None else (PRESENT if rate > 0 else ABSENT)
-        if context.get(key) != PRESENT:      # keep `present` if duplicate records disagree
+        if context.get(key) != PRESENT:      # presence wins if a position appears twice
             context[key] = state
     return context
 
@@ -291,16 +300,16 @@ def _presence(edit: tuple, edits_on_allele: dict) -> str:
 
 def bystander_function(gene: str, promoter_offset: int, ref: str, alt: str,
                        edits_on_allele: dict | None = None) -> tuple[str, str]:
-    """Return the class and note for one bystander, given its companion edits.
+    """Class and note for one bystander edit, given what else is edited on the same allele.
 
     `edits_on_allele` maps (negative offset, ref, alt) to PRESENT, ABSENT or UNRESOLVED. A rule whose
-    conditions cannot be evaluated returns unknown. This prevents an unsupported class from
-    changing the design's rank.
+    conditions cannot be evaluated returns unknown rather than guessing, because both a false
+    adverse and a false productive would move a design for the wrong reason.
     """
     edits_on_allele = edits_on_allele or {}
     rule = _BY_KEY.get((-abs(promoter_offset), ref, alt))
     if rule is None:
-        return UNKNOWN, "no rule for this edit; apply the configured unknown-edit penalty"
+        return UNKNOWN, "no rule for this edit; gets the small default penalty"
     if gene not in rule.genes:
         return UNKNOWN, f"rule at {rule.offset} {ref}>{alt} does not cover {gene}"
 
@@ -325,5 +334,5 @@ def bystander_function(gene: str, promoter_offset: int, ref: str, alt: str,
 
 
 def rule_for(promoter_offset: int, ref: str, alt: str) -> BystanderRule | None:
-    """Return the matching rule with its conditions and supporting source fields."""
+    """The rule itself, for callers that want its provenance rather than its verdict."""
     return _BY_KEY.get((-abs(promoter_offset), ref, alt))

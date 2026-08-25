@@ -308,8 +308,8 @@ def ingest(source_dir: str | Path, output_dir: str | Path) -> dict[str, object]:
         asdict(item) | {"local_sha256_verified": verify_source_file(item, source / item.filename)}
         for item in SOURCES
     ]
-    # Extract derived tables on every run so an older or modified extraction cannot bypass the
-    # checksum applied to the publisher archive.
+    # Re-extract derived tables on every run so a stale/tampered extraction cannot bypass the
+    # checksum enforced on the publisher tarball.
     cd40l_paths = extract_cd40l_tar(source / "GSE298465_RAW.tar", source / "gse298465")
     groups = {
         "cd40l_replicate_rows": parse_cd40l(cd40l_paths),

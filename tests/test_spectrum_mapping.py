@@ -6,8 +6,8 @@ from base_edit_safety.pipeline.datatypes import (
     MODEL_PREDICTED, NOT_EVALUATED, EditSpectrum, Guide, OutcomeHaplotype, spectrum_to_records,
 )
 
-# Validated HBG1 -113 ABE protospacer (minus strand), 5' end at genomic 5,249,977.
-PROTO = "CTTGACCAATAGCCTTGACA"
+# Synthetic protospacer placed on the minus strand at the coordinate geometry under test.
+PROTO = "GCTAACGAACGTACGATCAA"
 GUIDE = Guide(
     guide_id="HBG1_m113_ABE",
     protospacer=PROTO,
@@ -64,29 +64,30 @@ def test_reduction_classifies_on_target_and_bystander():
     assert roles[113] == "on_target"
     # position 5 -> genomic 5,249,973 -> offset 116 -> bystander
     assert roles[116] == "bystander"
-    # Inside the window, emit positions with a nonzero predicted rate plus the intended position.
+    # Inside the window, only positions the model actually edits are emitted, plus the on-target one.
     inside = [r for r in records if r.confidence == "model_predicted"]
     assert all(r.predicted_rate > 0 or r.promoter_offset == 113 for r in inside)
 
 
 def test_positions_outside_the_window_are_reported_as_not_evaluated():
-    """Report positions outside EDIT_WINDOW as not evaluated.
+    """The predictor is only asked about EDIT_WINDOW, so everything else has no rate to report.
 
-    These positions retain a record so a missing prediction is not confused with a predicted zero.
+    Those positions still get a record. A silent omission and a predicted zero both read as "no edit
+    here", and neither is true: nobody looked.
     """
     records = spectrum_to_records(_spectrum(), on_target_offset=113)
     by_pos = {r.provenance["protospacer_position"]: r for r in records}
-    for pos in (11, 18, 20):   # editable A's on this protospacer, all past the window edge at 10
+    for pos in (13, 16, 20):   # editable A's on this protospacer, all past the window edge at 10
         assert pos in by_pos, f"protospacer position {pos} produced no record at all"
         r = by_pos[pos]
         assert r.confidence == NOT_EVALUATED
         assert r.predicted_rate is None
-    # In-window positions with predicted edits retain their predicted status.
+    # The in-window ones this spectrum actually edits are unaffected.
     for pos in (5, 8):
         assert by_pos[pos].confidence == MODEL_PREDICTED
         assert by_pos[pos].predicted_rate is not None
-    # Position 9 is an editable base inside the window with predicted rate zero. Omit this bystander,
-    # while retaining positions that were outside the prediction request.
+    # Position 9 is in the window, is an A, and this spectrum never edits it. That is a real
+    # predicted zero for a bystander, so it stays dropped. Only the never-asked case is kept.
     assert 9 not in by_pos
 
 
@@ -100,7 +101,7 @@ def test_real_predicted_zero_inside_the_window_is_model_predicted():
     assert zero.predicted_rate == 0.0
     assert zero.confidence == MODEL_PREDICTED
 
-    outside = by_pos[11]
+    outside = by_pos[13]
     assert outside.predicted_rate is None
     assert outside.confidence == NOT_EVALUATED
 
