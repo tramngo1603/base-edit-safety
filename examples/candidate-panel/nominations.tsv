@@ -1,0 +1,9 @@
+guide_id	nomination_kind	source_method	source_version_or_citation	genome_build	chrom	start_0based	end_0based_exclusive	strand	site_role	site_sequence	pam	mismatch_count	dna_bulge	rna_bulge	score_name	score_value	editable_base_in_window	population_variant_id	ch_driver_gene	source_record_id	search_profile
+synthetic_HBG_guide	computational	Cas-OFFinder	synthetic example	SYNTHETIC	chrSYN1	100	123	+	intended	ACGTACGTACGTACGTACGTAGG	AGG	0	0	0	CFD	1.0	true			HBG1_control	synthetic_broad_panel_v1
+synthetic_HBG_guide	computational	Cas-OFFinder	synthetic example	SYNTHETIC	chrSYN1	5024	5047	+	intended	ACGTACGTACGTACGTACGTAGG	AGG	0	0	0	CFD	1.0	true			HBG2_control	synthetic_broad_panel_v1
+synthetic_HBG_guide	computational	Cas-OFFinder	synthetic example	SYNTHETIC	chrSYN2	200	223	-	candidate	TCGTACGTTCGTTCGTTCGTAGG	AGG	4	0	0	CFD	0.084848	true			comp_0042	synthetic_broad_panel_v1
+synthetic_HBG_guide	experimental	CHANGE-seq-BE	synthetic example	SYNTHETIC	chrSYN2	200	223	-	candidate	TCGTACGTTCGTTCGTTCGTAGG		4			read_count	42	true			exp_0017	
+synthetic_HBG_guide	computational	Cas-OFFinder	synthetic example	SYNTHETIC	chrSYN3	300	323	+	candidate	TCGTTCGTTCGTTCGTTCGTTGG	TGG	5	0	0	CFD	0.012	false			comp_0088	synthetic_broad_panel_v1
+synthetic_HBG_guide	computational	variant-aware search	synthetic example	SYNTHETIC	chrSYN4	400	423	+	candidate	TCGTACGTTCGTACGTTCGTCGG	CGG	3	0	0	CFD	0.22	true	rsSYNTHETIC1	SYNTHETIC_DRIVER	variant_0003	synthetic_broad_panel_v1
+synthetic_HBG_guide	experimental	CIRCLE-seq	synthetic example	SYNTHETIC	chrSYN5	500	523	-	candidate	ACGTTCGTACGTTCGTTCGTNGG		4			read_count	18	true			exp_0021	
+synthetic_HBG_guide	computational	bulge-aware search	synthetic example	SYNTHETIC	chrSYN6	600	623	-	candidate	ACGTACGTACGTACGTTCGTGAG	GAG	4	1	0	alignment_score	0.31				bulge_0004	synthetic_broad_panel_v1

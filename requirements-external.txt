@@ -4,3 +4,4 @@
 #
 # BE-DICT          predicts base-editing outcomes (MIT)                      required
 # CRISPOR          guide design and off-target search (mixed / free)         required
+# CRISPRon-BE      fallback ABE outcomes (BSL 1.1)                            conditional

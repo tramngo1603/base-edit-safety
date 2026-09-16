@@ -1,12 +1,13 @@
-# Local data
+# Local inputs and results
 
-The `data/` directory is the local workspace for inputs and generated results. Its contents are
-ignored by Git except for this file.
+This directory holds local working files. Git ignores its contents except for this page.
 
-- `data/inputs/` may hold reference caches or source files obtained under their original access
-  and reuse terms.
-- `data/outputs/` holds candidate records, run manifests, and validation artifacts.
+- `data/inputs/` holds authorized reference files and other source inputs.
+- `data/outputs/` holds generated records, run details and private checks.
 
-The repository includes only small, hand-written examples under `tests/fixtures/`. Before sharing
-a generated file, check its source terms and remove local paths, credentials, donor identifiers,
-and unpublished results.
+Keep paper workbooks, extracted site rows, individual measurements and reports containing those
+rows out of the public repository. Do not put donor genotypes, sample identifiers or restricted
+data in Git. The public examples and test inputs are constructed software checks, not paper data.
+
+I share aggregate findings and citations under the [data policy](../docs/data-policy.md).
+Local permission to analyze a file does not by itself permit sharing that file or its extracts.

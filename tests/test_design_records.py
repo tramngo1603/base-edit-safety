@@ -1,6 +1,11 @@
 """The design records: evidence tiers, shape, off-target kinds, paralog flags, and the checklist."""
 from base_edit_safety import annotation, evidence, hbg_registry
+from base_edit_safety.adapters.crispor import _summarize_sequence_matches
 from base_edit_safety.design_record import build_design_records
+from base_edit_safety.pipeline.enumerate_guides import (
+    PERSIST_4MM_CFD_FLOOR,
+    _low_mismatch_sites,
+)
 
 _FORBIDDEN = ("clonal", "expansion", "leukemia", "leukaemia", "mds", "lifetime", "risk",
               "trajectory", "incidence")
@@ -68,7 +73,10 @@ def test_design_record_schema():
                 "empirical_support", "required_validation", "provenance"}
     assert required <= set(rec)
     assert "scoring" not in rec and "limitations" not in rec
-    assert [e["promoter_offset"] for e in rec["candidate"]["target"]["intended_edits"]] == [113]
+    edit = rec["candidate"]["target"]["intended_edits"][0]
+    assert edit["promoter_offset"] == -113
+    assert edit["upstream_distance_bp"] == 113
+    assert edit["allele_key"]["promoter_offset"] == edit["promoter_offset"]
 
 
 def test_offtarget_blind_spots_are_record_set_limitations():
@@ -86,6 +94,61 @@ def test_offtarget_kinds_stay_separate():
     assert kinds["spacer_homology_cas_style"]["mm_histogram"] == {"2": 1, "4": 5}
     assert kinds["base_editor_context"]["status"] == "not_assessed_here"
     assert kinds["rna_off_target"]["status"] == "not_assessed_here"
+
+
+def test_offtarget_coordinate_retention_uses_two_tiers():
+    sites = [
+        {"chrom": "chr1", "start": "103", "strand": "+", "mismatchCount": "3",
+         "cfdOfftargetScore": "0.01", "locusDesc": "three-mm"},
+        {"chrom": "chr1", "start": "101", "strand": "+", "mismatchCount": "1",
+         "cfdOfftargetScore": None, "locusDesc": "one-mm"},
+        {"chrom": "chr1", "start": "104", "strand": "+", "mismatchCount": "4",
+         "cfdOfftargetScore": "0.80", "locusDesc": "four-mm-high"},
+        {"chrom": "chr1", "start": "105", "strand": "+", "mismatchCount": "4",
+         "cfdOfftargetScore": str(PERSIST_4MM_CFD_FLOOR), "locusDesc": "four-mm-floor"},
+        {"chrom": "chr1", "start": "106", "strand": "+", "mismatchCount": "4",
+         "cfdOfftargetScore": "0.099", "locusDesc": "four-mm-low"},
+        {"chrom": "chr1", "start": "107", "strand": "+", "mismatchCount": "5",
+         "cfdOfftargetScore": "0.99", "locusDesc": "five-mm"},
+        {"chrom": "chr11", "start": "108", "strand": "+", "mismatchCount": "0",
+         "cfdOfftargetScore": "1.0", "locusDesc": "intended-paralog"},
+    ]
+
+    kept = _low_mismatch_sites(sites)
+
+    assert [site["locus_desc"] for site in kept] == [
+        "intended-paralog", "one-mm", "three-mm", "four-mm-high", "four-mm-floor",
+    ]
+    perfect = kept[0]
+    assert perfect["identity_status"] == "requires_intended_locus_coordinate_match"
+
+
+def test_coordinate_retention_does_not_change_the_full_histogram():
+    sites = [
+        {"mismatchCount": "0", "cfdOfftargetScore": "1.0"},
+        {"mismatchCount": "3", "cfdOfftargetScore": "0.01"},
+        {"mismatchCount": "4", "cfdOfftargetScore": "0.80"},
+        {"mismatchCount": "4", "cfdOfftargetScore": "0.099"},
+        {"mismatchCount": "5", "cfdOfftargetScore": "0.99"},
+    ]
+
+    assert len(_low_mismatch_sites(sites)) == 3
+    summary = _summarize_sequence_matches(sites)
+    assert summary["mm_histogram"] == {"0": 1, "3": 1, "4": 2, "5": 1}
+    assert summary["perfect_match_candidate_count"] == 1
+    assert summary["paralog_count"] == 0
+
+
+def test_design_record_keeps_the_retained_candidate_coordinates():
+    records = _records()
+    sites = [{"chrom": "chr1", "start": "104", "strand": "+", "mismatch_count": 4,
+              "cfd_offtarget_score": "0.80", "locus_desc": "four-mm-high"}]
+    for record in records:
+        record["provenance"]["offtarget_sites_low_mismatch"] = sites
+
+    off_target = build_design_records(records)["records"][0]["off_target"]
+
+    assert off_target["candidate_sites"] == sites
 
 
 def test_paralog_flags_set():
@@ -142,7 +205,8 @@ def test_a_design_with_two_edits_keeps_both():
     recs = [_rec("HBG_pair", "HBG1", 123, "on_target", 0.30, pos=5_249_980),
             _rec("HBG_pair", "HBG1", 124, "on_target", 0.28, pos=5_249_981)]
     rec = build_design_records(recs)["records"][0]
-    assert {e["promoter_offset"] for e in rec["candidate"]["target"]["intended_edits"]} == {123, 124}
+    assert {e["promoter_offset"] for e in rec["candidate"]["target"]["intended_edits"]} == {-123, -124}
+    assert {e["upstream_distance_bp"] for e in rec["candidate"]["target"]["intended_edits"]} == {123, 124}
     assert len(rec["registry_match"]["by_edit"]) == 2
     assert {a["relationship"] for a in rec["registry_match"]["by_edit"]} == {hbg_registry.EXACT_EDIT}
     assert len(rec["predicted_edit_spectrum"]["on_target"]) == 2
@@ -177,13 +241,8 @@ def test_every_citation_states_its_role_and_whether_it_was_read():
                                          hbg_registry.NOT_REVIEWED), c
 
 
-def test_coleman_is_still_unread_and_doerfler_is_not():
-    """Both were dropped when the worksheet compressed parentheticals. Only one has been read since.
-
-    Doerfler 2021 has now been read at full text, which is what let it be split two-and-two rather
-    than sitting on four positions equally. Coleman 1993 is still unread, and its phase claim rests
-    on a compilation whose six underlying primaries are also unread.
-    """
+def test_citation_review_status_matches_the_recorded_source_review():
+    """Keep the recorded unread and full-text-reviewed citation statuses distinct."""
     status = {c["pmid"]: c["audit_status"]
               for e in hbg_registry.REGISTRY for c in e.citations if "pmid" in c}
     assert status["7679879"] == hbg_registry.NEVER_REVIEWED
@@ -246,3 +305,11 @@ def test_unreviewed_program_sources_remain_unreviewed():
     for entry_id in ("cs_101", "otq923"):
         for c in by_id[entry_id].citations:
             assert c["audit_status"] == hbg_registry.NEVER_REVIEWED, c
+
+
+def test_m2_false_paralog_flag_is_not_truthy_text():
+    from base_edit_safety.paralog_flags import paralog_flags
+
+    for value in (False, "False", "false", "0", 0, None):
+        result = paralog_flags({"gene": "other", "provenance": {"co_targets_paralog": value}})
+        assert result["flagged"] is False

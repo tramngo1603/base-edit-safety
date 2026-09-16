@@ -12,13 +12,17 @@ and ClinVar in June 2026.
 - **Promoter numbering.** Positions like -198 or -113 are counted back from the transcription cap
   site: +1 is the first transcribed base, -1 is the base immediately before it, and there is no zero.
   For these minus-strand genes that makes the arithmetic `genomic position = TSS + |offset|`.
+- **Record fields.** Design-record schema v7 uses the signed literature convention in every public
+  `promoter_offset` field, so upstream positions are negative. The positive magnitude is available
+  only as `upstream_distance_bp`. Internal anchor arithmetic stores that magnitude separately and
+  does not change the public sign.
 - **Both allele orientations.** The literature writes promoter alleles on the gene's own
   strand ("-198 T>C"). Genome browsers and VCFs write them on the plus strand ("-198 A>G"), which is
   the reverse complement. Storing both orientations helps prevent strand errors. The mapping is:
   sense T>C = plus A>G, sense A>G = plus T>C, sense G>A = plus C>T,
   sense C>T = plus G>A.
 - **Identifiers.** The canonical form is genomic HGVS, for example `NC_000011.10:g.5250055A>G`. The
-  current transcripts are NM_000559.3 (HBG1) and NM_000184.3 (HBG2); the older `.2` versions are
+  recorded transcripts are NM_000559.3 (HBG1) and NM_000184.3 (HBG2); the older `.2` versions are
   aliases only. Do not use a transcript HGVS such as `c.-53-198T>C` as a coordinate: transcript
   numbering counts from the ATG through the 5' UTR, which is not the same arithmetic, and ClinVar
   has invalidated that particular expression anyway.
@@ -52,7 +56,8 @@ Sources: NCBI annotation release RS_2025_08 (records updated 3 June 2026) and En
 - HBG1: chr11:5,249,937-5,250,067
 - HBG2: chr11:5,254,861-5,254,991
 
-The two promoters are nearly identical, so most guides hit both. Every edit is projected onto both.
+The promoters have similar sequences, so a guide can match both. The coordinate table includes
+both copies; a sequence match alone does not demonstrate editing at either one.
 
 ## Positions in scope
 
@@ -85,11 +90,12 @@ copied across.
 | HBG2 -175 | rs63750654 | RCV001814961 / VCV000014983 |
 | HBG2 -114 | rs34809449 | RCV000016130 / VCV000014990 (multiallelic: store the G>A allele, not just the rsID) |
 
-**db_unverified**: shown experimentally in CD34+ HSPCs, coordinate derived from RefSeq, but **no
-ClinVar record** for that gene. Fine to target, not citable as a catalogued variant.
+**db_unverified**: the recorded review found experimental support in CD34+ HSPCs and a RefSeq
+coordinate, but no ClinVar record for that gene. This label is not a recommendation to edit it
+and does not establish that it is a catalogued natural variant.
 
 A dbSNP rsID may still exist, and for two of these it does. A dbSNP submission is not curation, so it
-does not promote the status. All five rows, which is three more than this list used to name:
+does not promote the status. The five recorded rows are:
 
 | | dbSNP | ClinVar |
 |---|---|---|
@@ -99,13 +105,9 @@ does not promote the status. All five rows, which is three more than this list u
 | HBG1 -113 | none | none |
 | HBG2 -113 | none | none |
 
-HBG2 -198 and HBG2 -117 were missing from this list while `anchors.py` marked them unverified. A
-curator working from this page alone would have skipped both.
-
-All five rows were re-queried by position on 2026-07-26, not by exact-HGVS string, because SPDI is
-0-based and HGVS is 1-based and an off-by-one could have hidden records. It had not: the position
-query returns the same two rsIDs and nothing further. The three "none" rows above are a settled
-negative result.
+The position-based check on 2026-07-26 found the two rsIDs listed above and no matching
+dbSNP records for HBG1 -113, HBG2 -113 or HBG2 -117. These are dated search results;
+database records can change.
 
 **synthetic**: -123 and -124. Screen hits, not natural HPFH alleles.
 
@@ -121,20 +123,19 @@ Kept here as explicit negative cases:
 - **-69 C>T and -70 C>T.** Ravi 2022 novel substitutions, outside the -210 to -80 modelling window.
   Recorded so that omitting them is a decision rather than an oversight. Widening the window to
   reach them is a separate call.
-- **Delta-13**, roughly -114 to -102. A 13 nt deletion, modelled with a Cas9 nuclease. Base editors
-  do not make it.
+- **Delta-13**, roughly -114 to -102. A 13 nt deletion, modelled with a Cas9 nuclease. This tool does not model it as an intended base substitution.
 
 ## Conversions this tool cannot predict
 
 Ravi 2022 reports a real **-117 G>A** CBE conversion happening *outside* the protospacer and outside
-the editing window. BE-DICT is only asked about positions inside the window, so no prediction will
-ever contain it. It is recorded in `anchors.OBSERVED_OUTSIDE_WINDOW` rather than beside the
+the editing window. This tool reports BE-DICT rates only inside its supported window, so it cannot predict that
+outside-window conversion. It is recorded in `anchors.OBSERVED_OUTSIDE_WINDOW` rather than beside the
 within-window bystanders, because filing it there would imply a capability the tool does not have.
 It is a different thing from the -117 CBE anchor above, which is the intended within-window edit.
 
-## Where the evidence is strongest
+## What the recorded evidence supports
 
-Build and demo on these first:
+The source review distinguishes exact-allele work from broader motif experiments:
 
 - **-175**, **-113**, and the **-123/-124** pair have the strongest exact-allele evidence in HSPCs.
   HBG2 -175 has a database record and HBG1 -175 does not. The exact -113 A>G was installed with
@@ -146,8 +147,7 @@ Build and demo on these first:
 
 Matching HBG1 and HBG2 positions must differ by exactly 4,924 bp, which is the TSS separation
 (5,254,781 - 5,249,857) on GRCh38 and the same on GRCh37. `anchors.check_paralog_spacing()` runs this
-before anything else and stops the run if it fails. It once caught an off-by-one that had put HBG2
--114 at HBG2 -113's coordinate.
+when the anchor table loads and stops the run if the spacing is wrong.
 
 The check catches shifted rows. It does not tell you which gene a position belongs to, so never work
 a gene out by adding or subtracting 4,924. When processing reads, require a flank that can only
@@ -155,8 +155,9 @@ belong to one gene; otherwise label the read `HBG1/HBG2_AMBIGUOUS`.
 
 ## Citations
 
-A clinical report establishes that a variant exists. A modern paper explains the mechanism. The
-mechanism papers came decades later, so do not read them as the same claim.
+Variant reports and mechanism studies answer different questions. The references below explain
+the coordinate and allele definitions; they are not new measurements from this tool. Individual
+experimental values and source tables are not reproduced here.
 
 - **-198**: clinical Tate/Wood/Weatherall 1986 PMID 2430647 | KLF1 mechanism Wienert 2017
   PMID 28659276 (plus the competition model, Doerfler 2021 PMID 34341563) | HSPC ABE Mayuranathan

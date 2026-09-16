@@ -1,4 +1,4 @@
-"""Safety triage for base-editing guides at the HBG1/HBG2 fetal-hemoglobin promoters."""
+"""Review evidence for base-editing guides at the HBG1/HBG2 promoters."""
 from importlib.metadata import PackageNotFoundError, version
 
 try:

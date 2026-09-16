@@ -1,15 +1,25 @@
-"""Enumeration over both promoters, with a predicted edit for every guide.
+"""Enumeration over both promoters, with predicted rates or explicit fallback for every guide.
 
 Skipped unless both CRISPOR and BE-DICT are installed and configured.
 """
 import pytest
 
-from base_edit_safety.config import bedict_configured, crispor_configured
+from base_edit_safety.config import (
+    bedict_configured,
+    crispron_abe_configured,
+    crispor_configured,
+    load_crispor_config,
+)
+from base_edit_safety.pipeline.datatypes import NON_NGG_MODEL_SCOPE_REASON
 
 pytestmark = pytest.mark.integration
 
-if not (bedict_configured() and crispor_configured()):
-    pytest.skip("external guide-design / predictor not configured", allow_module_level=True)
+if not crispor_configured():
+    pytest.skip("external guide-design tool not configured", allow_module_level=True)
+
+PAM_CLASS = load_crispor_config().pam
+if PAM_CLASS == "NGG" and not bedict_configured():
+    pytest.skip("NGG rate predictor not configured", allow_module_level=True)
 
 from base_edit_safety import anchors  # noqa: E402
 from base_edit_safety.pipeline.enumerate_guides import run_enumeration  # noqa: E402
@@ -28,10 +38,33 @@ def test_guides_for_both_promoters(records):
     assert genes == {"HBG1", "HBG2"}
 
 
-def test_every_record_has_a_spectrum_value(records):
+def test_every_record_has_a_rate_or_explicit_fallback(records):
     assert records
-    assert all(r.predicted_rate is not None for r in records)
-    assert all(r.model_name.startswith("BE-DICT-bystander") for r in records)
+    if PAM_CLASS == "NGG":
+        fallback = [
+            record for record in records
+            if record.provenance.get("analysis_role") == "sensitivity_fallback"
+        ]
+        predicted = [record for record in records if record not in fallback]
+        assert predicted and all(record.predicted_rate is not None for record in predicted)
+        assert all(record.model_name.startswith("BE-DICT-bystander") for record in predicted)
+        assert all(record.provenance.get("fallback_predictor") ==
+                   f"CRISPRon-{record.editor_class}"
+                   for record in fallback)
+        if fallback and crispron_abe_configured():
+            assert all(record.predicted_rate is not None for record in fallback
+                       if record.confidence == "model_predicted_fallback")
+            assert all(record.provenance.get("fallback_status") == "executed"
+                       for record in fallback)
+            assert all(record.provenance.get("predictor_role") ==
+                       "fallback_for_bedict_instability" for record in fallback)
+        else:
+            assert all(record.predicted_rate is None for record in fallback)
+            assert all(record.confidence == "not_evaluated" for record in fallback)
+    else:
+        assert all(r.predicted_rate is None for r in records)
+        assert all(r.confidence == "not_evaluated" for r in records)
+        assert all(r.provenance.get("reason") == NON_NGG_MODEL_SCOPE_REASON for r in records)
 
 
 def test_anchor_on_targets_found_in_both_genes(records):

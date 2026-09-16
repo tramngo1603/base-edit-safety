@@ -1,17 +1,8 @@
-"""A short list of HBG1/HBG2 edits that already have support, and how a candidate compares to them.
+"""Compare a candidate with recorded HBG variant and editing evidence.
 
-The list holds three things: the natural HPFH promoter variants from anchors.py, published
-base-editing work at the HBG promoter in HSPCs, and the clinical HBG1/HBG2 programs.
-
-A candidate gets two separate answers, not one blended score. The first is how it lines up
-structurally (exact_edit, same_motif, nearby, no_match). The second is how strong the matched
-entry's evidence is. Keeping them apart stops an exact match to a published HSPC edit from being
-reported as if it were a loose one.
-
-Two things to know about the entries themselves. Clinical programs do not always publish their exact
-target position or motif, so those fields stay unknown unless the available source supports them.
-And citations here are trial registry or program identifiers; primary-literature DOIs are left out
-unless someone has checked them.
+The list contains natural promoter variants, published HSPC editing work and clinical program
+references. Match type (exact_edit, same_motif, nearby or no_match) stays separate from evidence
+strength. Unknown program targets stay unknown. Source-review status limits each claim.
 """
 from __future__ import annotations
 
@@ -29,10 +20,8 @@ NO_MATCH = "no_match"
 # something published elsewhere never turns into `empirically_measured`, which means measured here.
 STRENGTH_ORDER = ("none", "analog", "motif", "published_hspc", "clinical")
 
-# How well the named mechanism is actually supported, which is a separate question from how well the
-# variant's existence is supported. Every label checked so far turned out softer than it sounded, so
-# an unread label is recorded as NOT_REVIEWED and should be read as overstated until someone opens the
-# paper.
+# Mechanism support is separate from evidence that a variant exists.
+# Use NOT_REVIEWED until the mechanism's source has been checked.
 #   in_vitro_binding_only  gel-shift or competition work, no cellular confirmation that discriminates
 #   binding_plus_cellular  in vitro binding plus a cellular assay that rules alternatives out
 #   established            the mechanism is not seriously in question
@@ -48,11 +37,7 @@ NEVER_REVIEWED = "never_reviewed"
 
 
 def _cite(pmid: str, role: str, audit: str = NOT_REVIEWED, note: str | None = None) -> dict:
-    """One citation, with what it is being asked to support and whether anyone has checked it.
-
-    `role` is deliberately specific. "clinical" was doing too much work: it was carrying variant
-    descriptions, phenotype-concordance arguments, reviews and two-sibling correspondence alike.
-    """
+    """Record a citation, the claim it supports and its source-review status."""
     entry = {"pmid": pmid, "role": role, "audit_status": audit}
     if note:
         entry["note"] = note
@@ -80,7 +65,7 @@ class RegistryEntry:
 # Architecture belongs to the CLAIM, not the PMID. Wienert 2015 alone spans two systems, and half its
 # claims come from each. Mayuranathan and Ravi each span an engineered line and native primary cells.
 #
-# `intact_paralogs` is the load-bearing field: a mechanism shown in a system where HBG2 was deleted
+# Check `intact_paralogs`: a mechanism shown in a system where HBG2 was deleted
 # cannot be projected onto HBG2. None of the five mechanism papers used an intact native locus.
 
 @dataclass(frozen=True)
@@ -115,8 +100,8 @@ PRIMARY_CD34_TRANSPLANT = LocusArchitecture(
 ACCESS_ORDER = ("not_accessed", "abstract_only", "database_record", "full_text")
 FULL_TEXT, ABSTRACT_ONLY, NOT_ACCESSED = "full_text", "abstract_only", "not_accessed"
 
-# Durability is a separate axis from strength. Ravi and Mayuranathan would both read published_hspc
-# while only one of them transplanted, which is the whole reason this axis exists.
+# Record transplantation/engraftment evidence separately from an HSPC evidence label.
+# An HSPC experiment alone does not show durability after transplantation.
 NO_ENGRAFTMENT_DATA = "no_engraftment_data"
 XENOTRANSPLANT = "xenotransplant_engraftment_shown"
 
@@ -124,7 +109,7 @@ XENOTRANSPLANT = "xenotransplant_engraftment_shown"
 def _claim(pmid: str, role: str, access: str = NOT_ACCESSED, audit: str = NOT_REVIEWED,
            architecture: LocusArchitecture | None = None, engraftment: bool = False,
            note: str | None = None) -> dict:
-    """One assertion, the system it was shown in, and how far anyone got into the source."""
+    """Record a claim, the experimental system and the source material reviewed."""
     entry = {"pmid": pmid, "role": role, "access_level": access, "audit_status": audit,
              "demonstrates_engraftment": engraftment}
     if architecture is not None:
@@ -262,7 +247,7 @@ _CITATIONS = {
 
 
 def durability_for(offset: int, ref: str, alt: str) -> str:
-    """Whether any claim behind this allele showed engraftment. Separate axis from strength."""
+    """Return the recorded engraftment evidence separately from other evidence labels."""
     claims = _CITATIONS.get((abs(offset), ref, alt), ())
     return XENOTRANSPLANT if any(c.get("demonstrates_engraftment") for c in claims) \
         else NO_ENGRAFTMENT_DATA
@@ -323,16 +308,14 @@ def _motif_for(mechanism: str) -> str:
 
 
 def _entry_id(pos) -> str:
-    """`hpfh_` claims a natural HPFH allele, so only positions the anchor table calls natural get it.
+    """Use the hpfh_ prefix only for an allele recorded as natural in the anchor table.
 
-    -123 and -124 are screen hits. Naming their entries `hpfh_-123_ABE` asserted the opposite of what
-    anchors.py says about them, on the two positions represented together in the registry.
+    The constructed -123/-124 screen changes receive a different prefix.
     """
     is_synthetic = {pos.hbg1_status == anchors.SYNTHETIC, pos.hbg2_status == anchors.SYNTHETIC}
     if len(is_synthetic) > 1:
-        # Latent until now: the prefix used to read HBG1's status alone for an entry covering both
-        # genes. -198, -175 and -117 already have statuses that differ between paralogs; they happen
-        # not to differ on synthetic-ness. If one ever does, one entry_id cannot honestly name both.
+        # Check both genes before assigning a shared natural/synthetic prefix.
+        # Their database statuses can differ; a mixed natural/synthetic pair needs separate entries.
         raise ValueError(
             f"offset {pos.promoter_offset}: HBG1 is {pos.hbg1_status} and HBG2 is "
             f"{pos.hbg2_status}, so one entry_id cannot describe both paralogs. Make the id "

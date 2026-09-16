@@ -1,0 +1,18 @@
+{
+  "name": "synthetic_broad_panel_v1",
+  "max_mismatches": 6,
+  "max_dna_bulge": 1,
+  "max_rna_bulge": 1,
+  "pam_patterns": [
+    "NGG",
+    "NAG"
+  ],
+  "variant_aware": true,
+  "intended_use": "Synthetic demonstration of a broader, predeclared candidate search for panel review.",
+  "reference_id": "SYNTHETIC",
+  "reference_provenance": "No external reference was used; all rows and coordinates in this example are fabricated.",
+  "variant_source": "No external variant source was used; the variant label is fabricated.",
+  "retention_rule": "Retain every synthetic row within the declared mismatch, bulge, PAM, and variant scope; apply no score cutoff.",
+  "retention_score_name": null,
+  "minimum_score": null
+}

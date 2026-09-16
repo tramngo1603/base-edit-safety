@@ -11,16 +11,22 @@ import os
 
 from ..pipeline.datatypes import EditRecord
 
+# 7: executed CRISPRon-ABE fallbacks carry model-predicted-fallback confidence, model/version/input
+#    provenance, their complete outcome spectrum, and an explicit link to the untouched BE-DICT
+#    exclusion ledger.
+# 6: BE-DICT records include each model's raw score sum, normalization, agreement checks,
+#    the limits of relative scores, and the fallback choice for excluded model results.
+# 5: `offtarget_sites_low_mismatch` retains all 1-3-mm sites plus 4-mm sites with CFD >= 0.10;
+#    final design records expose that list as `off_target.candidate_sites`.
 # 4: multi-edit enumeration records carry an allele-keyed joint_on_target_rate and its model,
 #    method, confidence, and caveat provenance. BE-DICT-backed records also carry uniform-v1 score
 #    normalization provenance and raw mass; run metadata records the policy and any exclusions.
-# 3: enumeration records carry `offtarget_sites_low_mismatch`, the per-site coordinates for
-#    <=3-mismatch off-targets. Without these a run cannot be compared against a published panel,
-#    which is how eleven Ravi sites for 61forw sat uncomparable against our own twelve.
+# 3: enumeration records include coordinates for off-target candidates with up to three
+#    mismatches, so they can be matched to sites in a measured panel.
 # 2: records carry `confidence` (model_predicted | not_evaluated) and a rate of None where the
 #    predictor was never asked, the header key is `scope`, and meta carries a reproducibility block.
-# 1: anything written before that, including every file in data/outputs as of 2026-07-26.
-ARTIFACT_SCHEMA_VERSION = "4"
+# 1: legacy output format, unsupported by this reader.
+ARTIFACT_SCHEMA_VERSION = "7"
 
 # Header keys that were removed at version 2. Their presence dates a file on its own.
 _RETIRED_HEADER_KEYS = ("disclaimer", "claim_disclaim")

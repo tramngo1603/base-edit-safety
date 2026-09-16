@@ -49,8 +49,8 @@ def test_spans_are_well_formed():
         assert start < end, gene
 
 
-def test_the_one_observed_off_target_still_falls_in_dnmt3a():
-    """The real run's only CH hit. If a span moves, this is where it shows up first."""
+def test_fixed_reference_coordinate_overlaps_dnmt3a():
+    """Check a fixed reference coordinate inside the pinned DNMT3A interval."""
     assert annotation.gene_at("chr2", 25_264_110) == "DNMT3A"
 
 

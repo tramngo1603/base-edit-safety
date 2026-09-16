@@ -1,4 +1,4 @@
-"""NEW-1: multi-edit efficacy is the complete intended haplotype, never a marginal max."""
+"""Check joint predictions for the complete intended edit combination."""
 from __future__ import annotations
 
 import copy
@@ -47,7 +47,7 @@ def _mutate(seq: str, *positions: int) -> str:
 
 
 def _spectrum() -> EditSpectrum:
-    # Complete probability mass: marginals are 0.45 and 0.35; their joint is 0.20.
+    # Complete relative model mass: marginals are 0.45 and 0.35; their joint is 0.20.
     return EditSpectrum(
         guide=PAIR_GUIDE,
         model_name="BE-DICT-bystander:fixture",
@@ -57,7 +57,7 @@ def _spectrum() -> EditSpectrum:
             OutcomeHaplotype(_mutate(PROTO, 5), 0.15),
             OutcomeHaplotype(_mutate(PROTO, 4, 5), 0.20),
         ],
-        provenance={"ensemble_runs": 5},
+        provenance={"ensemble_runs": 5, "rate_semantics": "model_relative"},
     )
 
 
@@ -124,7 +124,7 @@ def test_multi_edit_design_record_keeps_marginals_and_allele_keyed_joint_provena
     spectrum = design["predicted_edit_spectrum"]
     joint_provenance = spectrum["joint_on_target_rate_provenance"]
 
-    assert design["schema_version"] == SCHEMA_VERSION == "3"
+    assert design["schema_version"] == SCHEMA_VERSION == "7"
     assert [row["predicted_rate"] for row in spectrum["on_target"]] == [0.45, 0.35]
     assert spectrum["joint_on_target_rate"] == 0.20
     assert joint_provenance["allele_keys"] == [
@@ -136,6 +136,7 @@ def test_multi_edit_design_record_keeps_marginals_and_allele_keyed_joint_provena
     assert joint_provenance["predictor_runs"] == 5
     assert joint_provenance["confidence"] == "model_predicted"
     assert joint_provenance["caveat"] == JOINT_ON_TARGET_CAVEAT
+    assert joint_provenance["rate_semantics"] == "model_relative"
     assert all("allele_key" in row for row in design["registry_match"]["by_edit"])
 
 
@@ -185,6 +186,7 @@ def test_joint_provenance_must_name_each_intended_allele_once():
         ("joint_on_target_model", "model provenance"),
         ("predictor_runs", "positive predictor run count"),
         ("joint_on_target_caveat", "required provenance note"),
+        ("joint_on_target_rate_semantics", "labelled model_relative"),
     ],
 )
 def test_joint_rate_requires_complete_model_provenance(missing_key: str, message: str):
@@ -205,5 +207,5 @@ def test_joint_rate_above_a_marginal_is_rejected():
         build_design_records(records)
 
 
-def test_enumeration_schema_bumped_for_joint_provenance_contract():
-    assert outputs.ARTIFACT_SCHEMA_VERSION == "4"
+def test_enumeration_schema_includes_current_bedict_contract():
+    assert outputs.ARTIFACT_SCHEMA_VERSION == "7"

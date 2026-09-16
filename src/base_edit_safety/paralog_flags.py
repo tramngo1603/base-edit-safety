@@ -1,10 +1,8 @@
-"""Flags for editing inside the HBG1/HBG2 duplication, and the assays those flags call for.
+"""Flag the need to distinguish the two HBG copies and check larger changes.
 
-HBG1 and HBG2 came from a recent duplication. Their proximal promoters are nearly identical and the
-genes sit about 4.9 kb apart on chr11. Editing there can produce things a generic off-target tool
-cannot see at all: both copies edited at once, and large deletions or rearrangements between the two
-genes (the ~4.9 kb inter-HBG deletion is the known one). This module flags candidates in that region
-and lists the assays that would settle it.
+HBG1 and HBG2 have similar promoters about 4.9 kb apart. A reference-sequence search alone
+cannot establish which copy edits or whether a deletion or rearrangement occurs between them.
+This module records those concerns and the assays needed to check them.
 """
 from __future__ import annotations
 
@@ -12,9 +10,15 @@ from . import anchors
 
 
 def paralog_flags(record: dict) -> dict:
-    """Flag one edit record for paralog trouble, and list the assays it needs."""
+    """Flag the HBG copy checks and assays needed for one edit record."""
     prov = record.get("provenance", {})
-    co_targets = bool(prov.get("co_targets_paralog"))
+    value = prov.get("co_targets_paralog")
+    if value is None or str(value).strip().casefold() in {"", "false", "0", "no", "n"}:
+        co_targets = False
+    elif str(value).strip().casefold() in {"true", "1", "yes", "y"}:
+        co_targets = True
+    else:
+        raise ValueError("co_targets_paralog must be an explicit boolean or missing")
     in_promoter_window = record.get("gene") in ("HBG1", "HBG2")
 
     flags = []

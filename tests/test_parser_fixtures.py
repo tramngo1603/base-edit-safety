@@ -69,14 +69,16 @@ def test_bedict_rejects_wrong_length_haplotype():
 
 
 def test_bedict_rejects_probability_out_of_range():
-    with pytest.raises(ValueError, match="outside"):
+    with pytest.raises(ValueError, match="inside"):
         _validated_haplotypes(GUIDE_M113, [{"output_seq": "A" * 20, "pred_score": 1.5}])
 
 
-def test_bedict_rejects_probability_mass_above_authorized_envelope():
+def test_bedict_mass_above_superseded_envelope_is_normalized_inside_new_gate():
     raw = [{"output_seq": "A" * 20, "pred_score": 0.7}, {"output_seq": "C" * 20, "pred_score": 0.7}]
-    with pytest.raises(ValueError, match="outside.*guide excluded as malformed"):
-        _validated_haplotypes(GUIDE_M113, raw)
+    haplotypes, raw_mass = _validated_haplotypes(GUIDE_M113, raw)
+
+    assert raw_mass == pytest.approx(1.4)
+    assert sum(haplotype.pred_score for haplotype in haplotypes) == pytest.approx(1.0)
 
 
 # --- CRISPOR row parsing + off-target summary-----------------------------------
@@ -89,9 +91,10 @@ def test_crispor_guide_row_maps_and_summarizes_offtargets():
     row = next(r for r in guide_rows if r["guideId"] == "19rev")
     cand = _designer()._row_to_candidate(row, HBG1_WIN, "HBG1", sites_by_guide)
     assert cand.strand == "-" and cand.proto_5p_genomic == 5_249_977
-    assert cand.offtarget["mm_histogram"] == {"2": 1, "4": 2}
-    assert cand.offtarget["paralog_count"] == 1               # the 0-mismatch site is the paralog
-    assert cand.offtarget["offtarget_count_excl_paralog"] == 3
+    assert cand.offtarget["mm_histogram"] == {"0": 1, "2": 1, "4": 2}
+    assert cand.offtarget["perfect_match_candidate_count"] == 1
+    assert cand.offtarget["paralog_count"] == 0
+    assert cand.offtarget["offtarget_count_excl_paralog"] == 4
 
 
 def test_crispor_ambiguous_target_is_rejected():

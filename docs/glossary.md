@@ -1,49 +1,42 @@
-# Glossary
+# Terms used in the records
 
-This page defines specialized terms used in the records and documentation. The definitions describe
-how this repository uses each term; they are not clinical definitions.
+These definitions explain how I use the terms in this tool.
 
-- **ABE (adenine base editor):** an editor that can convert an A-T base pair to a G-C base pair
-  within its supported editing window.
-- **Allele:** one DNA sequence observed or predicted at a genomic position. An edited allele differs
-  from the reference sequence at one or more positions.
-- **Base editor:** a CRISPR-derived system designed to change a DNA base without making the standard
-  double-strand cut used by many CRISPR nucleases.
-- **Bystander edit:** an edit inside the intended target region that is not one of the requested
-  changes.
-- **CBE (cytosine base editor):** an editor that can convert a C-G base pair to a T-A base pair
-  within its supported editing window.
-- **CH (clonal hematopoiesis) driver gene:** a gene associated with expansion of a blood-cell clone
-  when particular acquired variants occur. This tool reports gene overlap only; it does not estimate
-  a person's risk.
+- **ABE (adenine base editor):** an editor designed to change an A–T base pair to G–C.
+- **Allele:** a version of the DNA sequence at a location. Here, `ref` means the reference
+  sequence and `alt` means a reported alternative. A reported sequence is not proof of a donor's genotype.
+- **Base editor:** a CRISPR system designed to change a base without the usual double-strand
+  cut made by a Cas9 nuclease.
+- **Bulge:** an unpaired base represented by a gap in a guide–DNA alignment. An alignment is
+  a proposed pairing, not proof that the molecules pair that way.
+- **Bystander edit:** a change near the intended base that was not requested.
+- **Candidate ledger:** the JSON record of candidate sites, sources, results and review decisions.
+- **CBE (cytosine base editor):** an editor designed to change a C–G base pair to T–A.
+- **CH (clonal hematopoiesis) driver gene:** a gene in which particular acquired changes can
+  help a blood-cell clone expand. This tool flags gene overlap; it does not estimate a person's risk.
 - **Concordance:** agreement between a prediction and a measurement.
-- **Editing window:** the positions within a guide-targeted sequence for which an editor or predictor
-  supports an edit.
-- **Evidence level:** one of `predicted_only`, `analog_supported`, or `empirically_measured`. The
-  label states the type of support attached to a record.
-- **Guide:** the sequence that directs a CRISPR system to a matching DNA region.
-- **Haplotype:** the complete set of edits present together on one predicted or measured DNA
-  sequence. Position-by-position edit rates do not show which edits occur together.
-- **Held-out set:** data reserved for a final evaluation and not used to choose thresholds, weights,
-  or rules. The tuning set is the separate data used during development.
-- **Hand-checked reference set:** examples whose expected result has been checked directly against a
-  primary source. The validation code keeps the older field name `golden_set`.
-- **Locus:** a named region of the genome. In this project, HBG1 and HBG2 are distinct loci.
-- **Off-target site:** a genomic location other than the intended target that a guide or editor may
-  affect. A predicted site is a candidate for testing, not a measured edit.
-- **PAM (protospacer-adjacent motif):** a short DNA sequence next to the guide-matched region that the
-  CRISPR protein requires.
-- **Paralog:** one of two related genes produced by gene duplication. HBG1 and HBG2 are paralogs with
-  similar promoter sequences, so some assays and guides may not distinguish them.
-- **Protospacer:** the genomic sequence matched by the guide, next to the PAM.
-- **Provenance:** the source, tool version, code version, reference build, and other details needed to
-  trace where a value came from.
-- **Protocol lock (freeze):** the point after which dataset roles, pass marks, and the tested code
-  version cannot change without starting a new protocol version.
-- **QC (quality control):** technical checks on source identity, file integrity, sample mapping, and
-  required metadata. Passing QC does not establish biological performance.
-- **Reference build:** a named version of the reference genome. This project uses the GRCh38 primary
-  assembly for its HBG coordinates.
-- **Source-overlap group:** reserved-data points whose source paper also informed a project rule.
-  They are shown separately because they are not fully independent of rule development.
-- **Sample test file (synthetic fixture):** small, invented data used to check the software.
+- **Editing window:** the guide positions assessed for an editor or model. Bases outside that
+  window are outside that assessment, not proven impossible to edit.
+- **Evidence level:** `predicted_only`, `analog_supported` or `empirically_measured` in a design
+  record. This label does not establish measurement coverage for every candidate DNA version.
+- **Guide:** the sequence that directs a CRISPR system toward matching DNA.
+- **Haplotype:** changes present together on one DNA molecule. Separate frequencies do not show
+  whether changes occur together; that relationship is called phase.
+- **Locus:** a location or region in the genome. HBG1 and HBG2 are separate loci.
+- **Measurement coverage:** which reported DNA versions have matching, usable experiment records.
+  This checks supplied information; it does not independently verify the experiment.
+- **Nomination:** a search or assay proposes a site for follow-up. It does not show that the
+  site was edited in cells.
+- **Off-target candidate:** a site outside the intended targets that may be affected and needs
+  testing. A candidate is not a measured off-target edit.
+- **PAM:** the short DNA motif next to the guide-matched sequence required by the CRISPR protein.
+- **Paralog:** a related gene copy. HBG1 and HBG2 have similar promoters, which some assays
+  and guides may not distinguish.
+- **Protospacer:** the DNA sequence matched by the guide, next to the PAM.
+- **Provenance:** where a value came from, including the source file, settings and software versions.
+- **QC (quality control):** checks used to judge the experiment or input data. Passing them does
+  not establish biological safety.
+- **Reference build:** a named version of the genome. The HBG definitions here use GRCh38.
+- **Synthetic fixture:** a small constructed input used to test the software, not an experiment.
+- **Unmeasured candidate:** a proposed site without the relevant experimental follow-up. Its
+  absence from a tested panel does not show whether it edits.

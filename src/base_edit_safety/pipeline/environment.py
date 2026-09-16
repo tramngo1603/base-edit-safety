@@ -51,7 +51,7 @@ def tool_environment(name: str, repo_root: str | None = None,
 
 def reproducibility(tools: list[dict], editors: dict, ensemble_runs: int | None,
                     reference_windows: dict) -> dict:
-    """Put the whole picture together for an output file's meta block."""
+    """Collect the run settings and source versions for the output metadata."""
     return {
         "genome_build": anchors.GENOME_BUILD,
         "tools": tools,

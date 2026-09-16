@@ -22,18 +22,47 @@ from ..pipeline.datatypes import reverse_complement
 from ..pipeline.datatypes import CandidateGuide
 
 PROTO_LEN = 20
-# Exhaustive sequence nomination keeps CRISPOR's NAG/NGA alternative-PAM candidates even when its
-# heuristic MIT score is below the command-line default of 1.0. The raw site scores remain
-# available for later review instead of being filtered during enumeration.
+# Keep reported NAG/NGA matches even below CRISPOR's default MIT score cutoff of 1.0.
+# Retain their scores for review; this does not establish an exhaustive search.
 MIN_ALT_PAM_SCORE = 0.0
+CRISPRON_CONTEXT_PREFIX = 4
+CRISPRON_CONTEXT_SUFFIX = 3
 
 
 class AmbiguousTargetMapping(ValueError):
     """Raised when a CRISPOR target maps to more than one site in the reference window."""
 
 
+def _target_context_30mer(window, protospacer: str, pam: str, strand: str,
+                          proto_5p_genomic: int) -> str | None:
+    """Return the 4+20+3+3 target context used by CRISPRon-BE when it fits the window."""
+    if len(protospacer) != PROTO_LEN or len(pam) != 3:
+        return None
+    if strand == "+":
+        low = proto_5p_genomic - CRISPRON_CONTEXT_PREFIX
+        high = proto_5p_genomic + PROTO_LEN + len(pam) + CRISPRON_CONTEXT_SUFFIX - 1
+    else:
+        low = proto_5p_genomic - (
+            PROTO_LEN + len(pam) + CRISPRON_CONTEXT_SUFFIX - 1
+        )
+        high = proto_5p_genomic + CRISPRON_CONTEXT_PREFIX
+    if low < window.start_1based or high > window.end_1based:
+        return None
+    start = low - window.start_1based
+    context = window.plus_sequence[start:start + 30]
+    if strand == "-":
+        context = reverse_complement(context)
+    expected_target = protospacer + pam
+    if len(context) != 30 or context[4:27] != expected_target:
+        raise ValueError(
+            f"reference context does not contain mapped target {expected_target} at "
+            f"{window.chrom}:{proto_5p_genomic} ({strand})"
+        )
+    return context
+
+
 def _find_all(haystack: str, needle: str) -> list[int]:
-    """All start indices where needle occurs in haystack (non-overlapping)."""
+    """Return every matching start index, including overlapping matches."""
     hits, idx = [], haystack.find(needle)
     while idx != -1:
         hits.append(idx)
@@ -41,46 +70,49 @@ def _find_all(haystack: str, needle: str) -> list[int]:
     return hits
 
 
-def _offtarget_likelihood_summary(sites: list[dict]) -> dict:
-    """Summarize a guide's sequence-match off-target candidates.
+def _summarize_sequence_matches(sites: list[dict]) -> dict:
+    """Count reported sequence matches and sum their CFD scores.
 
-    A 0-mismatch site is the paralog, which the guide is meant to hit, so it is counted separately
-    and left out of the off-target totals. What comes back is the raw count per mismatch level and
-    the CFD-weighted total, both straight from CRISPOR.
+    Keep perfect matches until a separate coordinate check identifies the intended targets.
+    These counts and score sums are not probabilities of binding or editing.
     """
     histogram: dict[str, int] = {}
     cfd_burden = 0.0
-    paralog_count = 0
+    perfect_match_candidate_count = 0
     for s in sites:
         try:
             mm = int(s.get("mismatchCount"))
         except (TypeError, ValueError):
             continue
         if mm == 0:
-            paralog_count += 1
-            continue  # intended paralog co-target, not an off-target
+            perfect_match_candidate_count += 1
         histogram[str(mm)] = histogram.get(str(mm), 0) + 1
         try:
             cfd_burden += float(s.get("cfdOfftargetScore"))
         except (TypeError, ValueError):
             pass
     return {
-        "mm_histogram": histogram,                 # mismatches (>=1) -> site count, paralog excluded
+        "mm_histogram": histogram,
         "cfd_weighted_burden": round(cfd_burden, 4),
-        "paralog_count": paralog_count,
+        "perfect_match_candidate_count": perfect_match_candidate_count,
+        "perfect_match_classification": "requires intended-locus coordinate match",
+        # Kept for record compatibility. No paralog is inferred from mismatch count alone.
+        "paralog_count": 0,
         "offtarget_count_excl_paralog": sum(histogram.values()),
     }
 
 
 class CrisporGuideDesigner:
-    """Finds guides in a window and asks CRISPOR where else in the genome each one could bind."""
+    """Find guides and ask CRISPOR for matching reference-genome sequences."""
 
     name = "CRISPOR"
 
-    def __init__(self, config: CrisporConfig | None = None, pam: str = "NGG",
+    def __init__(self, config: CrisporConfig | None = None, pam: str | None = None,
                  tss_for_gene=None, min_alt_pam_score: float = MIN_ALT_PAM_SCORE):
         self.config = config or load_crispor_config()
-        self.pam = pam
+        self.pam = (pam or self.config.pam).strip().upper()
+        if not self.pam:
+            raise ValueError("CRISPOR PAM pattern cannot be empty")
         self.min_alt_pam_score = min_alt_pam_score
         # Map a gene symbol to its TSS; defaults to the values in anchors.py.
         if tss_for_gene is None:
@@ -180,6 +212,9 @@ class CrisporGuideDesigner:
             return None  # not present in this window (e.g. the guide spans the edge)
 
         tool_guide_id = row.get("guideId", "")
+        target_context_30mer = _target_context_30mer(
+            window, protospacer, pam, strand, proto_5p_genomic
+        )
         sites = (sites_by_guide or {}).get(tool_guide_id, [])
         offtarget = {
             "source": self.name,
@@ -188,7 +223,7 @@ class CrisporGuideDesigner:
             "offtarget_count": row.get("offtargetCount"),  # raw count, includes the paralog site
             "genome_locus": row.get("targetGenomeGeneLocus"),
             "tool_guide_id": tool_guide_id,
-            **_offtarget_likelihood_summary(sites),
+            **_summarize_sequence_matches(sites),
         }
         return CandidateGuide(
             guide_id=f"{gene}_{tool_guide_id or 'NA'}",
@@ -203,4 +238,6 @@ class CrisporGuideDesigner:
             proto_5p_genomic=proto_5p_genomic,
             offtarget=offtarget,
             offtarget_sites=sites,
+            pam_class=self.pam,
+            target_context_30mer=target_context_30mer,
         )

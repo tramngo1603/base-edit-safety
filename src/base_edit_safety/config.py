@@ -87,6 +87,51 @@ def bedict_configured() -> bool:
 
 
 @dataclass(frozen=True)
+class CrispronAbeConfig:
+    """Where the separately installed CRISPRon-BE fallback predictor lives."""
+
+    repo_root: str
+    python_executable: str
+
+
+def load_crispron_abe_config() -> CrispronAbeConfig:
+    """Read the pinned CRISPRon-BE checkout and environment paths.
+
+    Environment variables:
+      BE_SAFETY_CRISPRON_ABE_REPO    checkout containing bin/CRISPRonBE.sh
+      BE_SAFETY_CRISPRON_ABE_PYTHON  Python interpreter in its isolated environment
+    """
+    repo = _setting("BE_SAFETY_CRISPRON_ABE_REPO")
+    py = _setting("BE_SAFETY_CRISPRON_ABE_PYTHON")
+    if not repo or not py:
+        raise ExternalToolNotConfigured(
+            "CRISPRon-ABE fallback predictor not configured. Set "
+            "BE_SAFETY_CRISPRON_ABE_REPO (installed checkout containing "
+            "bin/CRISPRonBE.sh) and BE_SAFETY_CRISPRON_ABE_PYTHON "
+            "(its isolated environment's interpreter)."
+        )
+    entrypoint = os.path.join(repo, "bin", "CRISPRonBE.sh")
+    if not os.path.isfile(entrypoint):
+        raise ExternalToolNotConfigured(
+            f"bin/CRISPRonBE.sh not found under BE_SAFETY_CRISPRON_ABE_REPO: {repo}"
+        )
+    if not os.path.isfile(py):
+        raise ExternalToolNotConfigured(
+            f"BE_SAFETY_CRISPRON_ABE_PYTHON is not a file: {py}"
+        )
+    return CrispronAbeConfig(repo_root=repo, python_executable=py)
+
+
+def crispron_abe_configured() -> bool:
+    """True when the separately installed CRISPRon-ABE fallback can be found."""
+    try:
+        load_crispron_abe_config()
+        return True
+    except ExternalToolNotConfigured:
+        return False
+
+
+@dataclass(frozen=True)
 class CrisporConfig:
     """Where the installed guide-design tool and its genome directory live.
 
@@ -94,12 +139,14 @@ class CrisporConfig:
     python_executable python interpreter of the environment it was installed into.
     genome            genome identifier present under genome_dir (e.g. hg38).
     genome_dir        directory holding the indexed genome(s).
+    pam                PAM pattern passed to CRISPOR (default: NGG).
     """
 
     repo_root: str
     python_executable: str
     genome: str
     genome_dir: str
+    pam: str = "NGG"
 
 
 def load_crispor_config() -> CrisporConfig:
@@ -110,6 +157,7 @@ def load_crispor_config() -> CrisporConfig:
       BE_SAFETY_CRISPOR_PYTHON  path to that environment's python interpreter
       BE_SAFETY_CRISPOR_GENOME  genome identifier (default: hg38)
       BE_SAFETY_CRISPOR_GENOMEDIR  genome directory (default: <repo>/genomes)
+      BE_SAFETY_CRISPOR_PAM     PAM pattern accepted by CRISPOR (default: NGG)
     """
     repo = _setting("BE_SAFETY_CRISPOR_REPO")
     py = _setting("BE_SAFETY_CRISPOR_PYTHON")
@@ -124,7 +172,14 @@ def load_crispor_config() -> CrisporConfig:
         raise ExternalToolNotConfigured(f"BE_SAFETY_CRISPOR_PYTHON is not a file: {py}")
     genome = _setting("BE_SAFETY_CRISPOR_GENOME") or "hg38"
     genome_dir = _setting("BE_SAFETY_CRISPOR_GENOMEDIR") or os.path.join(repo, "genomes")
-    return CrisporConfig(repo_root=repo, python_executable=py, genome=genome, genome_dir=genome_dir)
+    pam = (_setting("BE_SAFETY_CRISPOR_PAM") or "NGG").upper()
+    return CrisporConfig(
+        repo_root=repo,
+        python_executable=py,
+        genome=genome,
+        genome_dir=genome_dir,
+        pam=pam,
+    )
 
 
 def crispor_configured() -> bool:

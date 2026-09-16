@@ -1,10 +1,9 @@
-"""Runs BE-DICT. This file is executed by BE-DICT's own interpreter, not the pipeline's.
+"""Run BE-DICT in its own Python environment.
 
-That is why it imports nothing from this package: only BE-DICT and the standard library. It reads a
-JSON request, runs the ensemble of models on CPU, and writes a JSON response holding the possible
-output sequences and their probabilities.
+Read a JSON request, run the models on CPU and write predicted sequences with their raw model
+scores. This script imports only BE-DICT and the standard library.
 
-Usage:  python _bedict_runner.py <bedict_repo_root> <request.json> <response.json>
+Usage: python _bedict_runner.py <bedict_repo_root> <request.json> <response.json>
 """
 import json
 import os
@@ -62,12 +61,26 @@ def main() -> int:
 
     aggregated = model.compute_avg_predictions(pd.concat(run_frames, ignore_index=True))
 
-    response = {"editor": editor, "ensemble_runs": runs, "sequences": {}}
+    response = {
+        "editor": editor,
+        "ensemble_runs": runs,
+        "sequences": {},
+        "member_predictions": {},
+    }
     for seq_id, group in aggregated.groupby("seq_id"):
         response["sequences"][seq_id] = [
             {"output_seq": row["Outp_seq"], "pred_score": float(row["pred_score"])}
             for _, row in group.iterrows()
         ]
+    for run_num, run_frame in enumerate(run_frames):
+        for seq_id, group in run_frame.groupby("seq_id"):
+            response["member_predictions"].setdefault(seq_id, []).append({
+                "member": f"run_{run_num}",
+                "haplotypes": [
+                    {"output_seq": row["Outp_seq"], "pred_score": float(row["pred_score"])}
+                    for _, row in group.iterrows()
+                ],
+            })
     with open(response_path, "w") as handle:
         json.dump(response, handle)
     return 0

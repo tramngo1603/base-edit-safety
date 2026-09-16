@@ -32,16 +32,19 @@ EDIT_WINDOW = range(3, 11)
 EDIT_SOURCE_BASE = {"ABE": "A", "CBE": "C"}
 EDIT_TARGET_BASE = {"ABE": "G", "CBE": "T"}
 
-# How much a rate can be trusted. A position inside EDIT_WINDOW gets a number from the predictor; one
-# outside it gets no number, and says so rather than reporting zero.
+# Whether a supported model evaluated the position. Outside-window positions have no rate;
+# they are marked unassessed rather than zero.
 MODEL_PREDICTED = "model_predicted"
+MODEL_PREDICTED_FALLBACK = "model_predicted_fallback"
 NOT_EVALUATED = "not_evaluated"
+NON_NGG_MODEL_SCOPE_REASON = "editor model scope: NGG-trained predictor, NGN design"
 
 # A design-level joint rate is derived from complete predictor haplotypes rather than per-position
 # marginals. These strings keep that method attached to the downstream value.
 JOINT_ON_TARGET_METHOD = "sum_haplotypes_containing_all_intended_edits"
 JOINT_ON_TARGET_CAVEAT = (
-    "Joint value is derived from predicted haplotypes containing every intended edit."
+    "Joint value is derived from predicted haplotypes containing every intended edit. "
+    "It is model-relative, not a calibrated probability."
 )
 
 
@@ -63,7 +66,7 @@ class EditRecord:
     on_target_or_bystander: Literal["on_target", "bystander"]
     predicted_rate: Optional[float] = None
     model_name: Optional[str] = None
-    confidence: Optional[str] = None   # MODEL_PREDICTED | NOT_EVALUATED
+    confidence: Optional[str] = None   # primary/fallback model prediction | NOT_EVALUATED
     consequence: Optional[str] = None
     ch_driver_flag: bool = False
     ch_driver_gene: Optional[str] = None
@@ -95,6 +98,8 @@ class Guide:
     edit_from: str                         # base the editor changes (A for ABE, C for CBE)
     edit_to: str
     proto_5p_genomic: int = field(default=0)  # genomic coordinate of protospacer position 1
+    pam_class: str = "NGG"                    # configured nuclease/PAM context, not the observed PAM
+    target_context_30mer: Optional[str] = None  # 4-nt prefix + spacer + 3-nt PAM + 3-nt suffix
 
     def genomic_coord(self, proto_pos_1based: int) -> int:
         """Genomic coordinate of a protospacer position."""
@@ -134,10 +139,10 @@ class Guide:
 
 @dataclass(frozen=True)
 class CandidateGuide:
-    """A guide found by the guide-design tool, before an editor is chosen.
+    """A guide returned by the search before an editor is chosen.
 
-    It knows where it sits on the genome and what the tool said about its off-targets. Call
-    for_editor() to pair it with an editor before predicting what the edit looks like.
+    Store its genome location and reported candidate sites. Call for_editor() to select the
+    editor before requesting edit predictions.
     """
 
     guide_id: str
@@ -152,9 +157,11 @@ class CandidateGuide:
     proto_5p_genomic: int
     offtarget: dict = field(default_factory=dict)
     offtarget_sites: list = field(default_factory=list)  # kept in memory, not all written out
+    pam_class: str = "NGG"
+    target_context_30mer: Optional[str] = None
 
     def has_editable_base(self, editor_class: str) -> bool:
-        """True if this editor has something to edit inside the editing window."""
+        """Return whether the guide has the editor's substrate base inside the window."""
         source = EDIT_SOURCE_BASE[editor_class]
         return any(self.protospacer[p - 1] == source for p in EDIT_WINDOW if p - 1 < len(self.protospacer))
 
@@ -175,12 +182,14 @@ class CandidateGuide:
             edit_from=EDIT_SOURCE_BASE[editor_class],
             edit_to=EDIT_TARGET_BASE[editor_class],
             proto_5p_genomic=self.proto_5p_genomic,
+            pam_class=self.pam_class,
+            target_context_30mer=self.target_context_30mer,
         )
 
 
 @dataclass(frozen=True)
 class OutcomeHaplotype:
-    """One sequence the editor might produce, and how likely the model thinks it is."""
+    """One modeled output sequence and its normalized relative model score."""
 
     output_seq: str
     pred_score: float
@@ -188,7 +197,7 @@ class OutcomeHaplotype:
 
 @dataclass
 class EditSpectrum:
-    """What a predictor returned for one guide: the possible outcomes and their probabilities."""
+    """What a predictor returned for one guide: modeled outcomes and relative scores."""
 
     guide: Guide
     model_name: str
@@ -202,7 +211,7 @@ class EditSpectrum:
         return [i + 1 for i in range(min(len(ref), len(out))) if ref[i] != out[i]]
 
     def per_position_rate(self) -> dict[int, float]:
-        """Chance each editable position ends up edited, added up over all the outcomes."""
+        """Relative score for each editable position, summed over modeled outcomes."""
         rates: dict[int, float] = {p: 0.0 for p in self.guide.editable_positions()}
         for hap in self.haplotypes:
             for pos in self.edited_positions(hap):
@@ -211,7 +220,7 @@ class EditSpectrum:
         return rates
 
     def joint_edit_rate(self, proto_positions: set[int]) -> float:
-        """Predicted frequency of complete haplotypes containing every requested edit."""
+        """Relative score of complete haplotypes containing every requested edit."""
         if not proto_positions:
             raise ValueError("joint edit rate needs at least one protospacer position")
         invalid = proto_positions - set(self.guide.editable_positions())
@@ -233,23 +242,24 @@ def spectrum_to_records(
     on_target_coords: set[int] | None = None,
     allow_overunity: bool = False,
 ) -> list[EditRecord]:
-    """Turn a spectrum into one EditRecord per editable position.
+    """Make one EditRecord per assessed or unresolved editable position.
 
-    A position counts as on-target when it lands on a position this tool targets, matched either by
-    promoter offset (on_target_offset, for a single guide) or by genomic coordinate
-    (on_target_coords, when enumerating against the whole table). Everything else is a bystander.
+    Match intended edits by promoter offset for one guide, or by genomic coordinate when
+    searching the full target table. Other editable positions are bystanders.
 
-    A per-position rate above 1 means the predictor's probabilities do not add up, which raises
-    unless allow_overunity is set.
+    A per-position score above 1 raises an error unless allow_overunity is set. Scores are
+    model outputs, not measured editing rates.
 
-    Positions outside EDIT_WINDOW are never sent to the predictor, so there is no rate to report for
-    them. They are emitted with predicted_rate None and confidence NOT_EVALUATED rather than a zero,
-    because a zero here would be indistinguishable from the predictor having looked and found nothing.
-    They are emitted whether or not they are the intended target, so the gap is visible in the output
-    instead of being silently absent.
+    Positions outside EDIT_WINDOW have no supported rate. Keep them with predicted_rate=None
+    and confidence=NOT_EVALUATED, including bystanders, so missing predictions remain visible.
     """
     guide = spectrum.guide
     rates = spectrum.per_position_rate()
+    prediction_confidence = spectrum.provenance.get("prediction_confidence", MODEL_PREDICTED)
+    if prediction_confidence not in (MODEL_PREDICTED, MODEL_PREDICTED_FALLBACK):
+        raise ValueError(
+            f"unsupported prediction confidence {prediction_confidence!r} for {guide.guide_id}"
+        )
 
     def is_on_target(proto_pos: int) -> bool:
         offset = guide.promoter_offset(proto_pos)
@@ -277,10 +287,13 @@ def spectrum_to_records(
         joint_provenance = {
             "joint_on_target_rate": round(joint_rate, 6) if joint_rate is not None else None,
             "joint_on_target_allele_keys": allele_keys,
-            "joint_on_target_confidence": MODEL_PREDICTED if evaluated_joint else NOT_EVALUATED,
+            "joint_on_target_confidence": (
+                prediction_confidence if evaluated_joint else NOT_EVALUATED
+            ),
             "joint_on_target_method": JOINT_ON_TARGET_METHOD,
             "joint_on_target_model": spectrum.model_name,
             "joint_on_target_caveat": JOINT_ON_TARGET_CAVEAT,
+            "joint_on_target_rate_semantics": spectrum.provenance.get("rate_semantics"),
         }
 
     records: list[EditRecord] = []
@@ -295,11 +308,11 @@ def spectrum_to_records(
         offset = guide.promoter_offset(proto_pos)
         coord = guide.genomic_coord(proto_pos)
         position_is_on_target = is_on_target(proto_pos)
-        # A predicted zero inside the window is a real answer, and a bystander with one is not worth
-        # a row. Outside the window there is no answer at all, so the row stays and says so.
+        # Omit bystanders with a zero model score inside the supported window.
+        # Keep outside-window bases as unassessed; a model zero is not experimental evidence.
         if evaluated and rate <= 0 and not position_is_on_target:
             continue
-        confidence = MODEL_PREDICTED if evaluated else NOT_EVALUATED
+        confidence = prediction_confidence if evaluated else NOT_EVALUATED
         predicted_rate = round(rate, 6) if evaluated else None
         alleles = guide.alleles_for(proto_pos)
         role = "on_target" if position_is_on_target else "bystander"
@@ -307,12 +320,17 @@ def spectrum_to_records(
             "guide_id": guide.guide_id,
             "protospacer": guide.protospacer,
             "pam": guide.pam,
+            "pam_class": guide.pam_class,
             "strand": guide.strand,
             "protospacer_position": proto_pos,
             "editor": guide.editor_name,
             "predictor_runs": spectrum.provenance.get("ensemble_runs"),
             "normalization_applied": spectrum.provenance.get("normalization_applied"),
+            "structural_stability": spectrum.provenance.get("structural_stability"),
+            "upstream_mass_anomaly": spectrum.provenance.get("upstream_mass_anomaly"),
             "raw_mass": spectrum.provenance.get("raw_mass"),
+            "raw_mass_per_member": spectrum.provenance.get("raw_mass_per_member"),
+            "rate_semantics": spectrum.provenance.get("rate_semantics"),
             **joint_provenance,
         }
         records.append(
@@ -334,6 +352,58 @@ def spectrum_to_records(
                 confidence=confidence,
                 variant_db_status="unset",
                 provenance=provenance,
+            )
+        )
+    return records
+
+
+def structural_records_without_rates(
+    guide: Guide,
+    on_target_coords: set[int],
+    reason: str = NON_NGG_MODEL_SCOPE_REASON,
+    extra_provenance: dict | None = None,
+) -> list[EditRecord]:
+    """List editable bases when the PAM has no supported rate model.
+
+    Keep each base with a null rate and the model-scope reason. Do not create an EditSpectrum,
+    which would make an unassessed position look like a predicted zero.
+    """
+    records = []
+    for proto_pos in guide.editable_positions():
+        coord = guide.genomic_coord(proto_pos)
+        alleles = guide.alleles_for(proto_pos)
+        records.append(
+            EditRecord(
+                genome_build=guide.genome_build,
+                chrom=guide.chrom,
+                pos_1based=coord,
+                genomic_plus_ref=alleles["genomic_plus_ref"],
+                genomic_plus_alt=alleles["genomic_plus_alt"],
+                promoter_sense_ref=alleles["promoter_sense_ref"],
+                promoter_sense_alt=alleles["promoter_sense_alt"],
+                gene=guide.gene,
+                gene_strand=guide.gene_strand,
+                promoter_offset=guide.promoter_offset(proto_pos),
+                editor_class=guide.editor_class,
+                on_target_or_bystander="on_target" if coord in on_target_coords else "bystander",
+                predicted_rate=None,
+                model_name=None,
+                confidence=NOT_EVALUATED,
+                variant_db_status="unset",
+                provenance={
+                    "guide_id": guide.guide_id,
+                    "protospacer": guide.protospacer,
+                    "pam": guide.pam,
+                    "pam_class": guide.pam_class,
+                    "strand": guide.strand,
+                    "protospacer_position": proto_pos,
+                    "editor": guide.editor_name,
+                    "predictor_runs": None,
+                    "normalization_applied": None,
+                    "raw_mass": None,
+                    "reason": reason,
+                    **(extra_provenance or {}),
+                },
             )
         )
     return records

@@ -60,8 +60,8 @@ def test_empty_reproducibility_is_caught():
     assert any("reproducibility" in c for c in outputs.schema_complaints(doc))
 
 
-def test_the_artifact_we_actually_had_is_rejected_on_every_count():
-    """The real file, reconstructed from what it contained. Four independent tells at once."""
+def test_legacy_document_reports_all_schema_errors():
+    """Report each incompatible field in a constructed legacy document."""
     stale = {
         "disclaimer": "PREDICTED SHORTLIST FOR WET-LAB CONFIRMATION ...",
         "claim_disclaim": {"what_this_is": "..."},

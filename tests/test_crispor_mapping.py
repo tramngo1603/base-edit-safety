@@ -36,6 +36,8 @@ def test_reverse_strand_guide_maps_to_high_coord_5p_end():
     guide = cand.for_editor("ABE", "ABE8e")
     assert guide.genomic_coord(8) == 5_249_970
     assert guide.promoter_offset(8) == 113
+    assert cand.target_context_30mer == "AAAA" + TARGET + "CCC"
+    assert guide.target_context_30mer == cand.target_context_30mer
 
 
 def test_forward_strand_guide_maps_to_low_coord_5p_end():
@@ -46,6 +48,7 @@ def test_forward_strand_guide_maps_to_low_coord_5p_end():
     assert cand.proto_5p_genomic == 5_249_937 + 20
     # base at protospacer position 1 equals the plus-strand reference base there
     assert cand.protospacer[0] == plus[20]
+    assert cand.target_context_30mer == plus[16:46]
 
 
 def test_offtarget_metadata_attached():
@@ -59,3 +62,14 @@ def test_editable_base_detection():
     cand = DESIGNER._row_to_candidate(_row("19rev", TARGET), HBG1_WIN, "HBG1")
     assert cand.has_editable_base("ABE")  # has A in window
     assert cand.has_editable_base("CBE")  # has C in window
+
+
+def test_configured_pam_class_reaches_candidate_and_editor_guide():
+    designer = CrisporGuideDesigner(config=CrisporConfig("x", "y", "hg38", "z", pam="NGN"))
+
+    cand = designer._row_to_candidate(_row("19rev", TARGET), HBG1_WIN, "HBG1")
+
+    assert designer.pam == "NGN"
+    assert cand.pam == "AGG"                 # observed sequence at this particular target
+    assert cand.pam_class == "NGN"           # configured nuclease/PAM design context
+    assert cand.for_editor("ABE", "ABE8e").pam_class == "NGN"

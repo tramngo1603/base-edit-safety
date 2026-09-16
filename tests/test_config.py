@@ -1,6 +1,8 @@
 """Local external-tool configuration stays explicit and portable."""
 from __future__ import annotations
 
+import pytest
+
 from base_edit_safety import config
 
 
@@ -49,6 +51,28 @@ def test_process_environment_takes_precedence_over_project_env(tmp_path, monkeyp
     assert loaded.python_executable == str(env_python)
 
 
+def test_crispron_abe_config_can_fall_back_to_ignored_project_env(tmp_path, monkeypatch):
+    repo = tmp_path / "crispron-BE"
+    (repo / "bin").mkdir(parents=True)
+    (repo / "bin" / "CRISPRonBE.sh").write_text("")
+    python = tmp_path / "crispron-python"
+    python.write_text("")
+    dotenv = tmp_path / ".env"
+    dotenv.write_text(
+        f"BE_SAFETY_CRISPRON_ABE_REPO={repo}\n"
+        f"BE_SAFETY_CRISPRON_ABE_PYTHON={python}\n"
+    )
+    monkeypatch.delenv("BE_SAFETY_CRISPRON_ABE_REPO", raising=False)
+    monkeypatch.delenv("BE_SAFETY_CRISPRON_ABE_PYTHON", raising=False)
+    monkeypatch.setattr(config, "_DOTENV_PATH", dotenv)
+
+    loaded = config.load_crispron_abe_config()
+
+    assert loaded.repo_root == str(repo)
+    assert loaded.python_executable == str(python)
+    assert config.crispron_abe_configured() is True
+
+
 def test_crispor_config_can_fall_back_to_ignored_project_env(tmp_path, monkeypatch):
     repo = tmp_path / "crispor"
     repo.mkdir()
@@ -79,4 +103,25 @@ def test_crispor_config_can_fall_back_to_ignored_project_env(tmp_path, monkeypat
     assert loaded.python_executable == str(python)
     assert loaded.genome == "hg38"
     assert loaded.genome_dir == str(genome_dir)
+    assert loaded.pam == "NGG"
     assert config.crispor_configured() is True
+
+
+@pytest.mark.parametrize("pam", ["NG", "NGA", "NGAG", "NGN"])
+def test_crispor_pam_is_loaded_without_narrowing_supported_patterns(tmp_path, monkeypatch, pam):
+    repo = tmp_path / "crispor"
+    repo.mkdir()
+    (repo / "crispor.py").write_text("")
+    python = tmp_path / "crispor-python"
+    python.write_text("")
+    genome_dir = tmp_path / "genomes"
+    genome_dir.mkdir()
+    monkeypatch.setenv("BE_SAFETY_CRISPOR_REPO", str(repo))
+    monkeypatch.setenv("BE_SAFETY_CRISPOR_PYTHON", str(python))
+    monkeypatch.setenv("BE_SAFETY_CRISPOR_GENOME", "hg38")
+    monkeypatch.setenv("BE_SAFETY_CRISPOR_GENOMEDIR", str(genome_dir))
+    monkeypatch.setenv("BE_SAFETY_CRISPOR_PAM", pam.lower())
+
+    loaded = config.load_crispor_config()
+
+    assert loaded.pam == pam

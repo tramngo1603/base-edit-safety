@@ -1,9 +1,9 @@
-# Security and sensitive-data reporting
+# Reporting sensitive data
 
-Do not open a public issue containing credentials, PHI, participant-level data, proprietary data,
-or unpublished validation output. Use GitHub's private vulnerability-reporting channel if enabled;
-otherwise contact the repository owner privately before disclosing details.
+Do not put credentials, patient or donor data, proprietary files, or private results in a public
+issue. Use GitHub's private vulnerability reporting if it is enabled, or contact me privately
+before sending details.
 
-The project is research software and is not designed to store clinical records. If sensitive data
-is found in Git history, keep the repository private, rotate any affected credential immediately,
-and remove the data from all reachable history before publication.
+This is research software, not a system for storing clinical records. If sensitive data enters
+Git history, stop publication, keep the repository private, rotate any affected credentials and
+remove the data from all reachable history before release.

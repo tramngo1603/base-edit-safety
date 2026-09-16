@@ -76,6 +76,14 @@ def test_adapter_request_carries_edit_window_bounds(monkeypatch):
             "sequences": {
                 GUIDE.guide_id: [{"output_seq": GUIDE.protospacer, "pred_score": 1.0}],
             },
+            "member_predictions": {
+                GUIDE.guide_id: [
+                    {"member": f"run_{run_num}", "haplotypes": [
+                        {"output_seq": GUIDE.protospacer, "pred_score": 1.0}
+                    ]}
+                    for run_num in range(2)
+                ],
+            },
         }
 
     monkeypatch.setattr(predictor, "_run", fake_run)

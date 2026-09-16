@@ -1,15 +1,8 @@
-"""The HBG1/HBG2 promoter coordinates and the edit positions this tool covers.
+"""Store the HBG1/HBG2 coordinates and base changes used by this tool.
 
-The table below is copied from docs/coordinates.md. Nothing here re-derives a coordinate;
-this module holds the table and turns it into EditRecords.
-
-Every position stores two versions of the same allele. Papers write HBG promoter alleles on the
-gene's own strand ("-198 T>C"); genome browsers and VCFs write them on the plus strand ("-198 A>G").
-HBG1 and HBG2 sit on the minus strand, so the two never agree, and keeping only one of them would
-guarantee a strand mix-up.
-
-Loading the table first checks that matching HBG1 and HBG2 positions stay 4,924 bp apart. If they
-don't, a row has shifted and the run stops.
+The values match docs/coordinates.md; this module does not look them up again. Each change
+stores both promoter-strand and genomic-plus alleles because HBG1 and HBG2 are minus-strand
+genes. Loading the table checks that matching positions remain 4,924 bp apart.
 """
 from __future__ import annotations
 
@@ -18,8 +11,7 @@ from typing import Literal, Optional
 
 from .pipeline.datatypes import EditRecord
 
-# Agamma is HBG1 and Ggamma is HBG2. Every paper this repo cites uses the Greek names, and every
-# coordinate here uses the HBG names, so this mapping is load-bearing on every citation.
+# Agamma means HBG1; Ggamma means HBG2. Use this mapping when connecting paper names to coordinates.
 #
 # authority = HGNC nomenclature: HBG1 = "hemoglobin subunit gamma 1" (Aγ);
 # HBG2 = "hemoglobin subunit gamma 2" (Gγ).
@@ -63,9 +55,8 @@ class AnchorPosition:
     mechanism: str                       # the motif the edit CREATES
     hbg1_status: str
     hbg2_status: str
-    # The motif the edit DESTROYS. Every mechanism examined so far had two consequences and this repo
-    # recorded one, and in both confirmed cases the second was in the paper's supplement rather than
-    # its main text. So the default is "nobody has looked", never "there isn't one".
+    # Record any motif lost by the edit separately from a motif it creates.
+    # The default means unreviewed, not that no motif is lost.
     lost_motif: str = LOST_MOTIF_NOT_REVIEWED
     hbg1_rsid: Optional[str] = None
     hbg2_rsid: Optional[str] = None
@@ -79,22 +70,15 @@ class AnchorPosition:
         return HBG2_TSS + self.promoter_offset
 
 
-# How well a variant database backs each position, per docs/coordinates.md.
-# db_confirmed   a ClinVar accession AND an rsID, both for this gene.
-# db_unverified  no ClinVar record for this gene. A dbSNP rsID may still exist, and for two positions
-#                one does; dbSNP submission is not curation, so it does not promote the status. Fine
-#                as a target, not citable as a catalogued variant.
-# synthetic      a screen hit, not a natural HPFH allele.
+# Variant database status for each gene, from the recorded source review.
+# db_confirmed: a ClinVar accession and an rsID for this gene.
+# db_unverified: no matching ClinVar record in that review; a dbSNP rsID may still exist.
+# synthetic: a constructed screen edit rather than a catalogued natural HPFH allele.
+# An rsID is never copied from one paralog to the other.
 #
-# The earlier wording said "no record for this gene", which was wrong: rs1261339811 and rs34153902
-# were both sitting in dbSNP on the right gene at the right coordinate the whole time. An rsID is
-# never borrowed from the paralog under any status.
-#
-# All five db_unverified rows were re-queried BY POSITION on 2026-07-26, because SPDI is 0-based
-# while HGVS is 1-based and an exact-HGVS string query could plausibly have missed records off by
-# one. It did not: the position query returns the same two rsIDs and nothing more. HBG1 -113,
-# HBG2 -113 and HBG2 -117 have no dbSNP record at all. That is a settled negative, not an untested
-# gap, and it does not need running again.
+# The position-based check on 2026-07-26 found rs1261339811 for HBG2 -198 and rs34153902
+# for HBG1 -175. It found no matching dbSNP record for HBG1 -113, HBG2 -113 or HBG2 -117.
+# These are dated search results; database records can change.
 DB = "db_confirmed"
 UNVERIFIED = "db_unverified"
 SYNTHETIC = "synthetic"
@@ -168,7 +152,7 @@ OUT_OF_SCOPE: list[ExcludedPosition] = [
 
 @dataclass(frozen=True)
 class OutsideWindowConversion:
-    """A conversion reported in the literature that this tool structurally cannot predict."""
+    """A reported conversion outside this tool's supported prediction window."""
 
     promoter_offset: int
     promoter_sense_ref: str
@@ -178,9 +162,8 @@ class OutsideWindowConversion:
     note: str
 
 
-# BE-DICT is only asked about positions inside the editing window, so a conversion outside it can
-# never appear in a prediction. Filing these beside within-window bystanders would imply a
-# capability the tool does not have.
+# No BE-DICT rates are reported outside the supported window. Keep reported outside-window
+# conversions separate from predicted bystanders so this limit remains visible.
 OBSERVED_OUTSIDE_WINDOW: list[OutsideWindowConversion] = [
     OutsideWindowConversion(
         117, "G", "A", "CBE", "35147495",

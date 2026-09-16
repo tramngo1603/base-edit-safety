@@ -9,5 +9,54 @@
       {"output_seq": "GCTAGCGAACGTACGATCAA", "pred_score": 0.15},
       {"output_seq": "GCTAGCGGACGTACGATCAA", "pred_score": 0.05}
     ]
+  },
+  "member_predictions": {
+    "HBG1_m113_ABE": [
+      {
+        "member": "run_0",
+        "haplotypes": [
+          {"output_seq": "GCTAACGAACGTACGATCAA", "pred_score": 0.60},
+          {"output_seq": "GCTAACGGACGTACGATCAA", "pred_score": 0.20},
+          {"output_seq": "GCTAGCGAACGTACGATCAA", "pred_score": 0.15},
+          {"output_seq": "GCTAGCGGACGTACGATCAA", "pred_score": 0.05}
+        ]
+      },
+      {
+        "member": "run_1",
+        "haplotypes": [
+          {"output_seq": "GCTAACGAACGTACGATCAA", "pred_score": 0.60},
+          {"output_seq": "GCTAACGGACGTACGATCAA", "pred_score": 0.20},
+          {"output_seq": "GCTAGCGAACGTACGATCAA", "pred_score": 0.15},
+          {"output_seq": "GCTAGCGGACGTACGATCAA", "pred_score": 0.05}
+        ]
+      },
+      {
+        "member": "run_2",
+        "haplotypes": [
+          {"output_seq": "GCTAACGAACGTACGATCAA", "pred_score": 0.60},
+          {"output_seq": "GCTAACGGACGTACGATCAA", "pred_score": 0.20},
+          {"output_seq": "GCTAGCGAACGTACGATCAA", "pred_score": 0.15},
+          {"output_seq": "GCTAGCGGACGTACGATCAA", "pred_score": 0.05}
+        ]
+      },
+      {
+        "member": "run_3",
+        "haplotypes": [
+          {"output_seq": "GCTAACGAACGTACGATCAA", "pred_score": 0.60},
+          {"output_seq": "GCTAACGGACGTACGATCAA", "pred_score": 0.20},
+          {"output_seq": "GCTAGCGAACGTACGATCAA", "pred_score": 0.15},
+          {"output_seq": "GCTAGCGGACGTACGATCAA", "pred_score": 0.05}
+        ]
+      },
+      {
+        "member": "run_4",
+        "haplotypes": [
+          {"output_seq": "GCTAACGAACGTACGATCAA", "pred_score": 0.60},
+          {"output_seq": "GCTAACGGACGTACGATCAA", "pred_score": 0.20},
+          {"output_seq": "GCTAGCGAACGTACGATCAA", "pred_score": 0.15},
+          {"output_seq": "GCTAGCGGACGTACGATCAA", "pred_score": 0.05}
+        ]
+      }
+    ]
   }
 }

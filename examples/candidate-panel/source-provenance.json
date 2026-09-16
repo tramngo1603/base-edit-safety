@@ -1,0 +1,39 @@
+{
+  "adapter": {
+    "base_edit_safety_version": "0.1.0",
+    "mode": "synthetic_fixture"
+  },
+  "generated_at_utc": "2026-08-29T00:00:00+00:00",
+  "guide_manifest": {
+    "file": "guides.tsv",
+    "sha256": "54a73455a357ae1b912ab0074106146ef581d9e33b30aa3bb0eff33e52f1294d"
+  },
+  "intended_locus_manifest": {
+    "file": "intended-loci.tsv",
+    "sha256": "5e2fb2dee31408b93610c9ba1f69b0d9d10c17b487cbdffb9704a2aa28bec0e9"
+  },
+  "native_input": {
+    "file": "nominations.tsv",
+    "sha256": "07f8aca2e5164449fd75fd2cf1d4220955d794d236b6d0ab45836ca7b400b527"
+  },
+  "normalized_output": {
+    "file": "nominations.tsv",
+    "row_count": 8,
+    "sha256": "07f8aca2e5164449fd75fd2cf1d4220955d794d236b6d0ab45836ca7b400b527"
+  },
+  "record_type": "nomination_source_provenance",
+  "reference_fasta": null,
+  "schema_version": "1",
+  "search_profile": {
+    "file": "search-profile.json",
+    "sha256": "f7a4919f5725dac24ed1ee42523a4a5e90b58b2f54ec9d54c6fbed9e4ae45e44"
+  },
+  "source_run": {
+    "command": "not applicable: rows were authored as a synthetic package fixture",
+    "method": "synthetic fixture compilation",
+    "reference_checksum_status": "not_applicable_synthetic",
+    "reference_id": "SYNTHETIC",
+    "reference_sha256": null,
+    "version_or_citation": "base-edit-safety synthetic example v1"
+  }
+}

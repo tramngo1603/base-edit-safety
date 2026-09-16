@@ -1,0 +1,9 @@
+guide_id	genome_build	chrom	start_0based	end_0based_exclusive	decision	reason	note	related_site_id
+synthetic_HBG_guide	SYNTHETIC	chrSYN1	100	123	include	other_note	Intended HBG1-like control in this synthetic example.	
+synthetic_HBG_guide	SYNTHETIC	chrSYN1	5024	5047	include	other_note	Intended HBG2-like control in this synthetic example.	
+synthetic_HBG_guide	SYNTHETIC	chrSYN2	200	223	include	low_mm_high_cfd	Computational and experimental nominations have a measurement.	
+synthetic_HBG_guide	SYNTHETIC	chrSYN3	300	323	exclude	other_note	Capacity example; the bounded measurement remains visible.	
+synthetic_HBG_guide	SYNTHETIC	chrSYN4	400	423	include	variant_created_pam	Variant-aware candidate with a synthetic context flag.	
+synthetic_HBG_guide	SYNTHETIC	chrSYN5	500	523	include	lab_nominated	Experimentally nominated and unmeasured.	
+synthetic_HBG_guide	SYNTHETIC	chrSYN6	600	623	undecided	bulge_site	Requires review before panel selection.	
+synthetic_HBG_guide	SYNTHETIC	chrSYN7	700	723	include	other_note	Measurement without a nomination requires reconciliation.	

@@ -14,8 +14,6 @@ data/*
 !data/README.md
 # Keep the runtime paths explicit because validation checks refer to these boundaries directly.
 data/inputs/*
-data/inputs/d5_config.json
-data/inputs/d5_fastq/
 data/outputs/*
 validation/
 # --- local research and generated review material ---

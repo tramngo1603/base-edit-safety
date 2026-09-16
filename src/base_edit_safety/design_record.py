@@ -1,16 +1,21 @@
-"""Build one review record per candidate guide.
+"""Build a review record for each candidate guide.
 
-Each record keeps the predicted edit spectrum, off-target candidate summary, HBG paralog checks,
-CH-driver overlap, evidence links, and follow-up assays together. It does not collapse those fields
-into a composite score.
+Keep predictions, candidate sites, HBG copy checks, gene overlaps, evidence sources and required
+assays together. These fields remain separate; no combined safety score is calculated.
 """
 from __future__ import annotations
 
 from . import annotation, anchors, evidence, hbg_registry, offtarget_kinds, paralog_flags
 from .pipeline import environment
-from .pipeline.datatypes import JOINT_ON_TARGET_CAVEAT, JOINT_ON_TARGET_METHOD, NOT_EVALUATED
+from .pipeline.datatypes import (
+    JOINT_ON_TARGET_CAVEAT,
+    JOINT_ON_TARGET_METHOD,
+    MODEL_PREDICTED,
+    MODEL_PREDICTED_FALLBACK,
+    NOT_EVALUATED,
+)
 
-SCHEMA_VERSION = "3"
+SCHEMA_VERSION = "7"
 _MECHANISM_BY_OFFSET = {p.promoter_offset: p.mechanism for p in anchors.IN_SCOPE}
 _REL_ORDER = (hbg_registry.NO_MATCH, hbg_registry.NEARBY,
               hbg_registry.SAME_MOTIF, hbg_registry.EXACT_EDIT)
@@ -24,7 +29,7 @@ def _edit_str(record: dict) -> dict:
 
 
 def _allele_key(record: dict) -> dict:
-    """Canonical sense-strand identity for one intended or bystander edit."""
+    """Identify an intended or bystander change by promoter-strand position, REF and ALT."""
     ref = record.get("promoter_sense_ref")
     alt = record.get("promoter_sense_alt")
     if (not isinstance(ref, str) or ref not in "ACGT"
@@ -37,6 +42,16 @@ def _allele_key(record: dict) -> dict:
         "promoter_sense_ref": ref,
         "promoter_sense_alt": alt,
     }
+
+
+def _promoter_location(record: dict) -> dict:
+    """Public promoter location with one unambiguous signed convention.
+
+    Negative offsets are upstream of the transcription start site. The positive magnitude is
+    exposed under a different field name so it cannot be mistaken for the signed coordinate.
+    """
+    distance = abs(record["promoter_offset"])
+    return {"promoter_offset": -distance, "upstream_distance_bp": distance}
 
 
 def _joint_edit_summary(on_target: list[dict]) -> dict:
@@ -60,6 +75,7 @@ def _joint_edit_summary(on_target: list[dict]) -> dict:
                 "predictor_runs": fallback_provenance.get("predictor_runs"),
                 "confidence": NOT_EVALUATED,
                 "caveat": JOINT_ON_TARGET_CAVEAT,
+                "rate_semantics": fallback_provenance.get("rate_semantics"),
             },
         }
 
@@ -81,6 +97,7 @@ def _joint_edit_summary(on_target: list[dict]) -> dict:
             "model": provenance.get("joint_on_target_model"),
             "predictor_runs": provenance.get("predictor_runs"),
             "caveat": provenance.get("joint_on_target_caveat"),
+            "rate_semantics": provenance.get("joint_on_target_rate_semantics"),
         })
 
     if len(payloads) != len(on_target):
@@ -96,6 +113,8 @@ def _joint_edit_summary(on_target: list[dict]) -> dict:
         raise ValueError(f"unsupported joint_on_target_rate method {payload['method']!r}")
     if payload["caveat"] != JOINT_ON_TARGET_CAVEAT:
         raise ValueError("joint_on_target_rate is missing its required provenance note")
+    if payload["rate_semantics"] != "model_relative":
+        raise ValueError("joint_on_target_rate must be labelled model_relative")
 
     confidence = payload["confidence"]
     rate = payload["rate"]
@@ -103,7 +122,7 @@ def _joint_edit_summary(on_target: list[dict]) -> dict:
         if rate is not None:
             raise ValueError("not_evaluated joint_on_target_rate must be None")
         return not_evaluated()
-    if confidence != "model_predicted":
+    if confidence not in (MODEL_PREDICTED, MODEL_PREDICTED_FALLBACK):
         raise ValueError(f"unsupported joint_on_target_rate confidence {confidence!r}")
     if not isinstance(payload["model"], str) or not payload["model"]:
         raise ValueError("model-predicted joint_on_target_rate needs model provenance")
@@ -135,6 +154,7 @@ def _joint_edit_summary(on_target: list[dict]) -> dict:
             "predictor_runs": runs,
             "confidence": confidence,
             "caveat": payload["caveat"],
+            "rate_semantics": payload["rate_semantics"],
         },
     }
 
@@ -145,7 +165,7 @@ def _strongest(values, order) -> str:
 
 
 def _validation_checklist(bystanders, off_triggers, flags, ch_annot) -> list[dict]:
-    """The lab tests this candidate needs before anyone acts on it."""
+    """List the experiments needed to assess this design."""
     items = [{"validates": "on_target_edit_rate",
               "assay": "amplicon NGS in the target cell type (CD34+ HSPCs)", "status": "required"}]
     if bystanders:
@@ -161,9 +181,10 @@ def _validation_checklist(bystanders, off_triggers, flags, ch_annot) -> list[dic
     return items
 
 
-def _limitations() -> list[str]:
-    return [
-        "BE-DICT estimates the on-target and bystander rates; confirm them in the target cell type.",
+def _limitations(records: list[dict]) -> list[str]:
+    limitations = [
+        "BE-DICT and any executed CRISPRon-ABE fallback supply model-relative on-target and "
+        "bystander rates, not calibrated probabilities; confirm them in the target cell type.",
         "The CRISPOR search covers mismatch-only sites in the reference genome. Bulges and "
         "population variants need separate searches, while editor-context and RNA effects remain "
         "separate fields.",
@@ -172,14 +193,41 @@ def _limitations() -> list[str]:
         "The current target scope is the HBG1/HBG2 proximal promoter. Clinical-program matches "
         "compare motif and mechanism when exact positions are unavailable.",
     ]
+    pam_classes = {
+        (record.get("provenance") or {}).get("pam_class", "NGG") for record in records
+    }
+    if any(pam_class != "NGG" for pam_class in pam_classes):
+        limitations[0] += (
+            " For non-NGG designs, outcome and bystander rates are not evaluated because the "
+            "available BE-DICT models were trained for NGG designs."
+        )
+    fallback_records = [
+        record for record in records
+        if (record.get("provenance") or {}).get("analysis_role") == "sensitivity_fallback"
+    ]
+    if any(
+        (record.get("provenance") or {}).get("fallback_status") == "executed"
+        for record in fallback_records
+    ):
+        limitations.append(
+            "Structurally unstable BE-DICT ensembles retain their exclusion ledger. Executed "
+            "CRISPRon-ABE fallback rates are independent model predictions; rejected BE-DICT "
+            "scores are neither revived nor blended."
+        )
+    elif fallback_records:
+        limitations.append(
+            "Structurally unstable BE-DICT ensembles carry no BE-DICT rate; affected guides are "
+            "marked for CRISPRon sensitivity/fallback analysis."
+        )
+    return limitations
 
 
 def build_design_records(records: list[dict], empirical: dict | None = None) -> dict:
-    """Build the design records from annotated enumeration records.
+    """Build design records from annotated guide-search results.
 
-    records:   enumeration EditRecords as dicts, on-target and bystander, with provenance.
-    empirical: optional {guide_id: [measurement, ...]}. Attaching real measurements moves a
-               candidate to empirically_measured. Nothing else can: not published work, not a model.
+    records contains intended and bystander EditRecords as dictionaries with source details.
+    empirical optionally maps guide IDs to measurements. Only attached measurements can set
+    empirically_measured. This design label does not establish per-site or per-allele coverage.
     """
     empirical = empirical or {}
 
@@ -204,7 +252,7 @@ def build_design_records(records: list[dict], empirical: dict | None = None) -> 
             mech = _MECHANISM_BY_OFFSET.get(abs(a["promoter_offset"]))
             m = hbg_registry.relationship(a["gene"], a["promoter_offset"], a["editor_class"], mech)
             by_edit.append({"allele_key": _allele_key(a),
-                            "promoter_offset": a["promoter_offset"], "relationship": m["relationship"],
+                            **_promoter_location(a), "relationship": m["relationship"],
                             "evidence_strength": m["evidence_strength"],
                             "matched_entries": m["matched_entries"]})
         best_rel = _strongest([m["relationship"] for m in by_edit], _REL_ORDER)
@@ -224,18 +272,68 @@ def build_design_records(records: list[dict], empirical: dict | None = None) -> 
 
         predicted_edit_spectrum = {
             "on_target": [{"allele_key": _allele_key(a),
-                           "promoter_offset": a["promoter_offset"],
+                           **_promoter_location(a),
                            "predicted_rate": a.get("predicted_rate"),
                            "model": a.get("model_name"),
-                           "confidence": a.get("confidence")} for a in on_target],
+                           "confidence": a.get("confidence"),
+                           "rate_semantics": (a.get("provenance") or {}).get("rate_semantics")}
+                          for a in on_target],
             "bystanders": [{"allele_key": _allele_key(b),
-                            "promoter_offset": b["promoter_offset"],
+                            **_promoter_location(b),
                             "predicted_rate": b.get("predicted_rate"),
+                            "confidence": b.get("confidence"),
+                            "rate_semantics": (b.get("provenance") or {}).get("rate_semantics"),
                             "genomic_plus": _edit_str(b)["genomic_plus"]} for b in bystanders],
         }
         predicted_edit_spectrum.update(_joint_edit_summary(on_target))
 
-        out.append({
+        design_provenance = {
+            "guide_id": guide_id,
+            "model_name": base.get("model_name"),
+            "predictor_runs": prov.get("predictor_runs"),
+            "protospacer": prov.get("protospacer"),
+            "pam": prov.get("pam"),
+            "pam_class": prov.get("pam_class", "NGG"),
+            "strand": prov.get("strand"),
+            "normalization_applied": prov.get("normalization_applied"),
+            "structural_stability": prov.get("structural_stability"),
+            "upstream_mass_anomaly": prov.get("upstream_mass_anomaly"),
+            "raw_mass": prov.get("raw_mass"),
+            "raw_mass_per_member": prov.get("raw_mass_per_member"),
+            "rate_semantics": prov.get("rate_semantics"),
+        }
+        for key in (
+            "predictor",
+            "predictor_role",
+            "model_relative",
+            "prediction_tier",
+            "rate_transform",
+            "target_context_30mer",
+            "analysis_role",
+            "fallback_predictor",
+            "fallback_status",
+            "fallback_executed_date",
+            "fallback_model_version",
+            "fallback_model_member_count",
+            "fallback_model_weights",
+            "fallback_predicted_editing_efficiency_percent",
+            "fallback_predicted_editing_efficiency_rate",
+            "fallback_outcome_spectrum",
+            "fallback_context_deduplicated",
+            "fallback_shared_input_guide_ids",
+            "primary_predictor",
+            "primary_predictor_status",
+            "primary_predictor_exclusion_link",
+            "primary_predictor_exclusion_reason",
+            "rejected_bedict_scores_used",
+            "fallback_blended_with_primary",
+        ):
+            if prov.get(key) is not None:
+                design_provenance[key] = prov[key]
+        if prov.get("reason"):
+            design_provenance["reason"] = prov["reason"]
+
+        design = {
             "record_type": "hbg_design_record",
             "schema_version": SCHEMA_VERSION,
             "candidate": {
@@ -243,7 +341,7 @@ def build_design_records(records: list[dict], empirical: dict | None = None) -> 
                 "editor_name": prov.get("editor"),
                 "target": {"locus": "HBG1/HBG2 proximal promoter", "chrom": base["chrom"],
                            "intended_edits": [{"allele_key": _allele_key(a),
-                                               "promoter_offset": a["promoter_offset"],
+                                               **_promoter_location(a),
                                                "pos_1based": a["pos_1based"],
                                                "mechanism": _MECHANISM_BY_OFFSET.get(abs(a["promoter_offset"])),
                                                "edit": _edit_str(a)} for a in on_target]},
@@ -258,24 +356,28 @@ def build_design_records(records: list[dict], empirical: dict | None = None) -> 
                          "to this record."),
             },
             "predicted_edit_spectrum": predicted_edit_spectrum,
-            "off_target": {"kinds": off_kinds, "assay_triggers": off_triggers},
+            "off_target": {
+                "kinds": off_kinds,
+                "candidate_sites": prov.get("offtarget_sites_low_mismatch", []),
+                "assay_triggers": off_triggers,
+            },
             "hbg_paralog_flags": flags,
             "ch_annotation": {"driver_offtargets": ch_annot,
                               "note": "for review and monitoring; no estimate is produced"},
             "empirical_support": empirical_support,
             "required_validation": _validation_checklist(bystanders, off_triggers, flags, ch_annot),
-            "provenance": {"guide_id": guide_id, "model_name": base.get("model_name"),
-                           "predictor_runs": prov.get("predictor_runs"),
-                           "protospacer": prov.get("protospacer"), "pam": prov.get("pam"),
-                           "strand": prov.get("strand")},
-        })
+            "provenance": design_provenance,
+        }
+        if prov.get("prediction_tier") is not None:
+            design["prediction_tier"] = prov["prediction_tier"]
+        out.append(design)
 
     return {
         "record_type": "hbg_design_record_set",
         "schema_version": SCHEMA_VERSION,
         "count": len(out),
         "records": out,
-        "limitations": _limitations(),
+        "limitations": _limitations(records),
         "reproducibility": {
             "generated_at": environment.run_stamp(),
             "repo": environment.repo_state(),

@@ -3,10 +3,9 @@
 The pipeline needs the surrounding sequence to build guides and to set reference alleles. Sequence
 comes from UCSC on the first run and lands in data/inputs/ (gitignored), so later runs stay offline.
 
-UCSC hg38 ≡ GRCh38 primary assembly for chr11. GRCh38 patch releases p1-p14 add fix/novel patch
-scaffolds and never shift primary-chromosome coordinates or sequence, so both promoter windows are
-coordinate-stable across all patches; the full p1-p14 enumeration found no patch over either window.
-See docs/context/GRCH38_PATCH_CHECK.md.
+UCSC hg38 is the GRCh38 primary assembly for chr11. The fixed positions in
+docs/coordinates.md are primary-chromosome coordinates; this module does not use patch-contig
+coordinates.
 """
 from __future__ import annotations
 

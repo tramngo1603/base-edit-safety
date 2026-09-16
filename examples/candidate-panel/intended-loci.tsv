@@ -1,0 +1,3 @@
+guide_id	genome_build	chrom	start_0based	end_0based_exclusive	strand	locus_name
+synthetic_HBG_guide	SYNTHETIC	chrSYN1	100	123	+	HBG1
+synthetic_HBG_guide	SYNTHETIC	chrSYN1	5024	5047	+	HBG2

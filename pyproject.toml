@@ -33,6 +33,11 @@ Repository = "https://github.com/tramngo1603/base-edit-safety"
 Documentation = "https://github.com/tramngo1603/base-edit-safety/tree/main/docs"
 Issues = "https://github.com/tramngo1603/base-edit-safety/issues"
 
+[project.scripts]
+bes-candidate-panel = "base_edit_safety.pipeline.candidate_panel:main"
+bes-candidate-report = "base_edit_safety.pipeline.candidate_report:main"
+bes-normalize-nominations = "base_edit_safety.pipeline.normalize_nominations:main"
+
 [build-system]
 requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
@@ -42,7 +47,6 @@ include-package-data = false
 
 [tool.setuptools.packages.find]
 where = ["src"]
-exclude = ["base_edit_safety.evaluation*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

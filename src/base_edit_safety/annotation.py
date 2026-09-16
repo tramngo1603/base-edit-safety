@@ -1,8 +1,7 @@
-"""Annotate edits and candidate sites that overlap clonal-hematopoiesis driver genes.
+"""Flag edits and candidate sites that overlap recorded clonal-hematopoiesis driver genes.
 
-The layer reports the gene, coordinate, feature, mismatch count, and mechanism context needed for
-review. It does not calculate a patient-level outcome. The gene set is the 12-gene boostDM-CH panel;
-the upstream per-mutation scores are not included here.
+The output gives the gene, coordinate, feature and source score for review. It does not estimate
+patient outcomes. The 12-gene list follows boostDM-CH; its per-mutation scores are not included.
 """
 from __future__ import annotations
 

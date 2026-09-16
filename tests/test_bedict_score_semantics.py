@@ -1,12 +1,16 @@
-"""Uniform BE-DICT score normalization with explicit malformed-mass exclusions."""
+"""Member-wise BE-DICT normalization, stability gating, and explicit fallback routing."""
 from __future__ import annotations
 
 from dataclasses import replace
+import math
 
 import pytest
 
 from base_edit_safety.adapters.bedict import (
     NORMALIZATION_APPLIED,
+    RATE_SEMANTICS,
+    RAW_MASS_MAX,
+    RAW_MASS_MIN,
     BedictBystanderPredictor,
     MalformedHaplotypeMass,
     _validated_haplotypes,
@@ -34,15 +38,52 @@ GUIDE = Guide(
 )
 
 
-def _mutate(seq: str, position: int) -> str:
-    return seq[: position - 1] + "G" + seq[position:]
+def _mutate(seq: str, *positions: int) -> str:
+    changed = list(seq)
+    for position in positions:
+        changed[position - 1] = "G"
+    return "".join(changed)
+
+
+OUTCOME_SEQUENCES = [
+    PROTO,
+    _mutate(PROTO, 8),
+    _mutate(PROTO, 5),
+    _mutate(PROTO, 5, 8),
+]
+
+
+def _raw_scores(*scores: float) -> list[dict]:
+    return [
+        {"output_seq": sequence, "pred_score": score}
+        for sequence, score in zip(OUTCOME_SEQUENCES, scores)
+    ]
 
 
 def _raw(first: float, second: float) -> list[dict]:
-    return [
-        {"output_seq": PROTO, "pred_score": first},
-        {"output_seq": _mutate(PROTO, 8), "pred_score": second},
+    return _raw_scores(first, second)
+
+
+def _response(guide_id: str, member_scores: list[tuple[float, ...]]) -> dict:
+    member_rows = [_raw_scores(*scores) for scores in member_scores]
+    aggregate = [
+        {
+            "output_seq": sequence,
+            "pred_score": math.fsum(rows[index]["pred_score"] for rows in member_rows)
+            / len(member_rows),
+        }
+        for index, sequence in enumerate(OUTCOME_SEQUENCES[: len(member_scores[0])])
     ]
+    return {
+        "ensemble_runs": len(member_rows),
+        "sequences": {guide_id: aggregate},
+        "member_predictions": {
+            guide_id: [
+                {"member": f"run_{run_num}", "haplotypes": rows}
+                for run_num, rows in enumerate(member_rows)
+            ]
+        },
+    }
 
 
 def _predictor() -> BedictBystanderPredictor:
@@ -54,82 +95,151 @@ def _predictor() -> BedictBystanderPredictor:
     [
         ((0.8, 0.3), (0.8 / 1.1, 0.3 / 1.1)),
         ((0.6, 0.4), (0.6, 0.4)),
-        ((1.1, 0.0), (1.0, 0.0)),
+        ((1.0, 0.0), (1.0, 0.0)),
     ],
 )
-def test_uniform_normalization_is_applied_to_every_guide(scores, expected):
+def test_one_member_normalization_is_applied_to_every_guide(scores, expected):
     haplotypes, raw_mass = _validated_haplotypes(GUIDE, _raw(*scores))
 
     assert raw_mass == pytest.approx(sum(scores))
     assert [hap.pred_score for hap in haplotypes] == pytest.approx(expected)
-    assert sum(hap.pred_score for hap in haplotypes) == pytest.approx(1.0)
+    assert math.fsum(hap.pred_score for hap in haplotypes) == 1.0
 
 
-def test_raw_mass_and_uniform_policy_are_preserved_on_every_derived_record():
-    response = {
-        "ensemble_runs": 5,
-        "sequences": {GUIDE.guide_id: _raw(0.66, 0.44)},
-    }
-    spectrum = _predictor().spectrum_from_response(GUIDE, "ABE8e", response)
+def test_stable_mass_anomaly_is_readmitted_with_member_normalization_and_flagged_rates(
+    monkeypatch,
+):
+    member_scores = [
+        (0.9, 0.5),
+        (0.8, 0.4),
+        (0.7, 0.4),
+        (0.9, 0.6),
+        (0.8, 0.3),
+    ]
+    response = _response(GUIDE.guide_id, member_scores)
+
+    predictor = _predictor()
+    monkeypatch.setattr(predictor, "_run", lambda request: response)
+    batch = predictor.predict_many([GUIDE])
+    assert batch.exclusions == []
+    assert set(batch.spectra) == {GUIDE.guide_id}
+    spectrum = batch.spectra[GUIDE.guide_id]
+    expected_reference = math.fsum(
+        reference / (reference + edited) for reference, edited in member_scores
+    ) / len(member_scores)
+
+    assert math.fsum(hap.pred_score for hap in spectrum.haplotypes) == 1.0
+    assert spectrum.haplotypes[0].pred_score == pytest.approx(expected_reference)
+    assert spectrum.provenance["normalization_applied"] == NORMALIZATION_APPLIED == \
+        "per_member_then_ensemble_v1"
+    assert spectrum.provenance["structural_stability"] == "stable"
+    assert spectrum.provenance["upstream_mass_anomaly"] is True
+    assert spectrum.provenance["raw_mass"] == pytest.approx(1.26)
+    assert spectrum.provenance["raw_mass_per_member"] == pytest.approx({
+        "run_0": 1.4,
+        "run_1": 1.2,
+        "run_2": 1.1,
+        "run_3": 1.5,
+        "run_4": 1.1,
+    })
+    assert spectrum.provenance["rate_semantics"] == RATE_SEMANTICS == "model_relative"
+
     records = spectrum_to_records(spectrum, on_target_offset=113)
-
-    assert spectrum.provenance["normalization_applied"] == NORMALIZATION_APPLIED == "uniform_v1"
-    assert spectrum.provenance["raw_mass"] == pytest.approx(1.1)
     assert records
-    assert all(record.provenance["normalization_applied"] == "uniform_v1" for record in records)
-    assert all(record.provenance["raw_mass"] == pytest.approx(1.1) for record in records)
-    on_target = next(record for record in records if record.on_target_or_bystander == "on_target")
-    assert on_target.predicted_rate == 0.4
+    for record in records:
+        assert record.provenance["upstream_mass_anomaly"] is True
+        assert record.provenance["raw_mass_per_member"] == \
+            spectrum.provenance["raw_mass_per_member"]
+        assert record.provenance["rate_semantics"] == "model_relative"
 
 
-@pytest.mark.parametrize("raw_mass", [0.75, 1.25])
-def test_raw_mass_bounds_are_inclusive(raw_mass):
-    first = min(raw_mass, 0.7)
-    haplotypes, preserved = _validated_haplotypes(GUIDE, _raw(first, raw_mass - first))
+def test_mass_only_case_inside_new_envelope_no_longer_auto_excludes():
+    haplotypes, raw_mass = _validated_haplotypes(GUIDE, _raw(0.8, 0.6))
 
-    assert preserved == pytest.approx(raw_mass)
-    assert sum(hap.pred_score for hap in haplotypes) == pytest.approx(1.0)
+    assert raw_mass == pytest.approx(1.4)
+    assert math.fsum(hap.pred_score for hap in haplotypes) == 1.0
 
 
-@pytest.mark.parametrize("raw_mass", [0.749999, 1.250001])
-def test_raw_mass_outside_bounds_is_rejected_as_malformed(raw_mass):
-    first = min(raw_mass, 0.7)
-    with pytest.raises(MalformedHaplotypeMass, match="guide excluded as malformed") as exc:
-        _validated_haplotypes(GUIDE, _raw(first, raw_mass - first))
+@pytest.mark.parametrize(
+    "raw",
+    [
+        _raw(0.3, 0.2),
+        _raw(1.0, 1.0),
+    ],
+)
+def test_new_raw_mass_bounds_are_inclusive(raw):
+    haplotypes, raw_mass = _validated_haplotypes(GUIDE, raw)
 
-    assert exc.value.raw_mass == pytest.approx(raw_mass)
+    assert raw_mass in (RAW_MASS_MIN, RAW_MASS_MAX)
+    assert math.fsum(hap.pred_score for hap in haplotypes) == 1.0
 
 
-@pytest.mark.parametrize("score", [-0.01, float("nan"), float("inf")])
-def test_non_finite_or_negative_raw_score_is_rejected_before_normalization(score):
-    with pytest.raises(ValueError, match="must be finite and non-negative"):
-        _validated_haplotypes(GUIDE, _raw(score, 1.0))
+@pytest.mark.parametrize(
+    "raw",
+    [
+        _raw(0.3, 0.199999),
+        _raw_scores(0.8, 0.7, 0.500001),
+    ],
+)
+def test_raw_mass_outside_new_bounds_is_excluded_after_stability_check(raw):
+    with pytest.raises(MalformedHaplotypeMass, match="after stability check"):
+        _validated_haplotypes(GUIDE, raw)
 
 
-def test_batch_exclusion_is_returned_with_raw_mass_instead_of_silently_dropped(monkeypatch):
-    malformed = replace(GUIDE, guide_id="HBG1_malformed_ABE8e")
-    response = {
-        "ensemble_runs": 5,
-        "sequences": {
-            GUIDE.guide_id: _raw(0.66, 0.44),
-            malformed.guide_id: _raw(0.4, 0.3),
-        },
-    }
+@pytest.mark.parametrize("score", [-0.01, 1.01, float("nan"), float("inf")])
+def test_non_finite_or_out_of_range_raw_score_is_rejected_before_normalization(score):
+    with pytest.raises(ValueError, match=r"inside \[0, 1\]"):
+        _validated_haplotypes(GUIDE, _raw(score, 0.5))
+
+
+def test_unstable_rank_order_is_excluded_and_routed_to_crispron_abe(monkeypatch):
+    response = _response(
+        GUIDE.guide_id,
+        [
+            (0.8, 0.2),
+            (0.4, 0.6),
+            (0.7, 0.3),
+            (0.75, 0.25),
+            (0.45, 0.55),
+        ],
+    )
     predictor = _predictor()
     monkeypatch.setattr(predictor, "_run", lambda request: response)
 
-    batch = predictor.predict_many([GUIDE, malformed])
+    batch = predictor.predict_many([GUIDE])
 
-    assert set(batch.spectra) == {GUIDE.guide_id}
+    assert batch.spectra == {}
+    assert len(batch.exclusions) == 1
+    exclusion = batch.exclusions[0]
+    assert exclusion["status"] == "excluded_structurally_unstable_ensemble"
+    assert exclusion["structural_stability"] == "unstable"
+    assert exclusion["normalization_applied"] is None
+    assert exclusion["fallback"] == {
+        "predictor": "CRISPRon-ABE",
+        "analysis_role": "sensitivity_fallback",
+        "status": "routed_not_executed",
+    }
+    assert exclusion["member_rank_order"]["run_0"] != \
+        exclusion["member_rank_order"]["run_1"]
+
+
+def test_stable_ensemble_outside_new_mass_gate_is_excluded(monkeypatch):
+    malformed = replace(GUIDE, guide_id="HBG1_malformed_ABE8e")
+    response = _response(malformed.guide_id, [(0.2, 0.2)] * 5)
+    predictor = _predictor()
+    monkeypatch.setattr(predictor, "_run", lambda request: response)
+
+    batch = predictor.predict_many([malformed])
+
+    assert batch.spectra == {}
     assert len(batch.exclusions) == 1
     exclusion = batch.exclusions[0]
     assert exclusion["guide_id"] == malformed.guide_id
-    assert exclusion["gene"] == "HBG1"
-    assert exclusion["editor_class"] == "ABE"
-    assert exclusion["editor"] == "ABE8e"
-    assert exclusion["protospacer"] == PROTO
-    assert exclusion["raw_mass"] == pytest.approx(0.7)
-    assert exclusion["allowed_raw_mass"] == {"minimum": 0.75, "maximum": 1.25}
+    assert exclusion["raw_mass"] == pytest.approx(0.4)
+    assert exclusion["raw_mass_per_member"] == pytest.approx({
+        f"run_{run_num}": 0.4 for run_num in range(5)
+    })
+    assert exclusion["allowed_raw_mass"] == {"minimum": 0.5, "maximum": 2.0}
+    assert exclusion["structural_stability"] == "stable"
     assert exclusion["normalization_applied"] is None
-    assert exclusion["status"] == "excluded_malformed_raw_mass"
-    assert "guide excluded as malformed" in exclusion["reason"]
+    assert exclusion["status"] == "excluded_raw_mass_outside_authorized_range"
