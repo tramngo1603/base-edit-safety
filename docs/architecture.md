@@ -1,12 +1,22 @@
 # How the parts fit together
 
-The original paths search for guides and supported predictions, or check candidate lists and
-experimental results supplied by the researcher. V3 adds bounded donor-sequence search and
-proposed assays. These paths share guide and genome identities and use separate commands.
+BES has a local app for reference and sample searches, plus command-line workflows for
+candidate review, design comparison and assay planning. They share guide and genome identities.
+
+## Local app
+
+`launcher.py` provides setup, input review, progress and saved-result browsing. `lab.py`
+prepares guides, reference files and optional sample variants, then runs the search.
+`lab_workflow.py` supplies the reference-only example and saves user-entered context.
+
+`lab_report.py` writes the HTML report. `lab_results.py` reads completed analyses and
+exports candidate tables, reports or analysis copies. Candidate exports can include all
+rows, every row matching the applied filters, or selected rows. All and matching exports
+use the complete results table, including rows beyond the app's display limit.
 
 ## Reference and sample search
 
-`bes-search` runs the request through `population/research.py`. It checks pinned inputs,
+The app and `bes-search` use `population/research.py`. It checks pinned inputs,
 searches declared primary chromosomes, compares reference and sample candidates, and writes
 coverage, exclusions and optional evidence links. `research_genotypes.py` reconstructs local
 sample sequences from the VCF and declared ploidy. `research_native.py` runs Cas-OFFinder,

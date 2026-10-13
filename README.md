@@ -7,6 +7,15 @@ coverage reports, and candidate exports. The app searches 20-base guides with NG
 both strands, up to six mismatches and no gaps. Missing genotypes, uncertain phasing,
 unsupported ploidy and excluded regions remain visible in the results.
 
+## System design
+
+![BES 0.5.0: check inputs, search reference and optional sample DNA, compare sites, then inspect coverage and export results](docs/system-chart.svg)
+
+The app searches the reference genome and optional sample variant windows, then
+compares candidate sites and sequences. Results include coverage and excluded regions.
+Separate command-line tools review experimental evidence and plan follow-up assays.
+See [how the parts fit together](docs/architecture.md) for details.
+
 ## Install
 
 From this source checkout, use Python 3.12.12:

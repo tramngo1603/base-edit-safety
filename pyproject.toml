@@ -93,6 +93,7 @@ where = ["src"]
     "docs/research-benchmark.md",
     "docs/setup.md",
     "docs/system-chart.png",
+    "docs/system-chart.svg",
     "docs/validation.md",
 ]
 "share/base-edit-safety/examples/candidate-panel" = [

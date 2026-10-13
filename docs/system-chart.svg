@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="1010" viewBox="0 0 1680 1010" role="img" aria-labelledby="title description">
+  <title id="title">Base Edit Safety 0.5.0 system design</title>
+  <desc id="description">The local app checks guides, a reference genome and optional sample variants. Reference and sample searches feed site comparison, results review and exports. Separate command-line tools match experimental results to tested DNA and produce evidence reports and assay plans.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#117b78"/>
+    </marker>
+    <style>
+      text { font-family: "Helvetica Neue", Arial, sans-serif; fill: #173039; }
+      .title { font-size: 46px; font-weight: 700; }
+      .subtitle { font-size: 25px; fill: #586d78; }
+      .panel { fill: #ebf2f2; }
+      .section { font-size: 22px; font-weight: 700; letter-spacing: 1px; fill: #0b7975; }
+      .card { fill: #fff; stroke: #d3dfe3; stroke-width: 1.5; }
+      .heading { font-size: 25px; font-weight: 700; }
+      .small-heading { font-size: 23px; font-weight: 700; }
+      .body { font-size: 23px; fill: #526976; }
+      .note { font-size: 22px; fill: #526976; }
+      .connector { fill: none; stroke: #117b78; stroke-width: 2.5; stroke-linejoin: round; marker-end: url(#arrow); }
+      .rule { stroke: #ccdcdc; stroke-width: 1; }
+    </style>
+  </defs>
+
+  <rect width="1680" height="1010" fill="#f6f9f9"/>
+  <text class="title" x="60" y="76">Base Edit Safety 0.5.0</text>
+  <text class="subtitle" x="60" y="119">Local app, reference and sample searches, and evidence review</text>
+  <path d="M60 147H1620" stroke="#117b78" stroke-width="1.5"/>
+
+  <rect class="panel" x="40" y="178" width="508" height="576" rx="18"/>
+  <rect class="panel" x="586" y="178" width="508" height="576" rx="18"/>
+  <rect class="panel" x="1132" y="178" width="508" height="576" rx="18"/>
+  <text class="section" x="60" y="218">SET UP</text>
+  <text class="section" x="606" y="218">SEARCH AND COMPARE</text>
+  <text class="section" x="1152" y="218">REVIEW AND EXPORT</text>
+  <path class="rule" d="M60 235H528 M606 235H1074 M1152 235H1620"/>
+
+  <g id="guides-and-reference">
+    <rect class="card" x="60" y="255" width="220" height="211" rx="12"/>
+    <text class="small-heading" x="80" y="296">Guides and<tspan x="80" dy="31">reference</tspan></text>
+    <text class="body" x="80" y="390">20-base guides<tspan x="80" dy="31">GRCh38 FASTA</tspan></text>
+  </g>
+  <g id="sample-variants">
+    <rect class="card" x="304" y="255" width="224" height="211" rx="12"/>
+    <text class="small-heading" x="324" y="296">Optional sample<tspan x="324" dy="31">variants</tspan></text>
+    <text class="body" x="324" y="390">VCF and sample<tspan x="324" dy="31">Declared ploidy</tspan></text>
+  </g>
+  <g id="check-inputs">
+    <rect class="card" x="60" y="551" width="468" height="156" rx="12"/>
+    <text class="heading" x="84" y="596">Check inputs</text>
+    <text class="body" x="84" y="643">Sequences and file hashes<tspan x="84" dy="32">Genotypes and phasing</tspan></text>
+  </g>
+  <path class="connector" d="M170 466V549"/>
+  <path class="connector" d="M416 466V549"/>
+
+  <g id="reference-search">
+    <rect class="card" x="608" y="255" width="440" height="110" rx="12"/>
+    <text class="heading" x="632" y="298">Search the reference</text>
+    <text class="body" x="632" y="337">Cas-OFFinder 2.4.1</text>
+  </g>
+  <g id="sample-search">
+    <rect class="card" x="608" y="393" width="440" height="132" rx="12"/>
+    <text class="heading" x="632" y="436">Build and search sample DNA</text>
+    <text class="body" x="632" y="477">Optional: reconstruct<tspan x="632" dy="28">local variant windows</tspan></text>
+  </g>
+  <g id="compare-sites">
+    <rect class="card" x="608" y="551" width="440" height="156" rx="12"/>
+    <text class="heading" x="632" y="592">Compare sites and sequences</text>
+    <text class="body" x="632" y="633">Gained, lost and retained sites<tspan x="632" dy="28">Sequence changes</tspan><tspan x="632" dy="28">Unresolved regions</tspan></text>
+  </g>
+  <path class="connector" d="M528 627H566V309H606"/>
+  <path class="connector" d="M566 453H606"/>
+  <path class="connector" d="M1048 309H1072V533H1016V549"/>
+  <path class="connector" d="M828 525V549"/>
+
+  <g id="inspect-results">
+    <rect class="card" x="1154" y="255" width="464" height="171" rx="12"/>
+    <text class="heading" x="1178" y="298">Inspect results</text>
+    <text class="body" x="1178" y="348">Candidates and sample differences<tspan x="1178" dy="33">Coverage and excluded regions</tspan></text>
+  </g>
+  <g id="save-and-export">
+    <rect class="card" x="1154" y="503" width="464" height="190" rx="12"/>
+    <text class="heading" x="1178" y="549">Save and export</text>
+    <text class="body" x="1178" y="594">HTML report and TSV tables<tspan x="1178" dy="32">All, filtered or selected candidates</tspan><tspan x="1178" dy="32">File hashes and field descriptions</tspan></text>
+  </g>
+  <path class="connector" d="M1048 627H1112V339H1152"/>
+  <path class="connector" d="M1386 426V501"/>
+  <text class="note" x="1386" y="730" text-anchor="middle">Reopen saved analyses in the app.</text>
+
+  <rect class="panel" x="40" y="778" width="1600" height="174" rx="18"/>
+  <text class="section" x="60" y="813">CANDIDATE AND EVIDENCE REVIEW · COMMAND LINE</text>
+  <path class="rule" d="M60 827H1620"/>
+  <rect class="card" x="60" y="842" width="468" height="90" rx="12"/>
+  <rect class="card" x="608" y="842" width="440" height="90" rx="12"/>
+  <rect class="card" x="1154" y="842" width="464" height="90" rx="12"/>
+  <text class="small-heading" x="84" y="878">Candidate lists and study details<tspan x="84" dy="31">Experimental results</tspan></text>
+  <text class="small-heading" x="632" y="878">Check site identity<tspan x="632" dy="31">Match results to tested DNA</tspan></text>
+  <text class="small-heading" x="1178" y="878">Evidence reports<tspan x="1178" dy="31">Assay plans</tspan></text>
+  <path class="connector" d="M528 887H606"/>
+  <path class="connector" d="M1048 887H1152"/>
+  <text class="note" x="840" y="989" text-anchor="middle">Reference-only analysis is available. Genomic inputs and results stay local.</text>
+</svg>
