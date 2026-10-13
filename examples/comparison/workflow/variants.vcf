@@ -1,0 +1,4 @@
+##fileformat=VCFv4.2
+##reference=synthetic_GRCh38_geometry
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	synthetic-sample-C	synthetic-sample-N
+synthetic_chr11	205	artificial_candidate_variant	A	G	.	PASS	.	GT:PS	1|0:1	0|0:1

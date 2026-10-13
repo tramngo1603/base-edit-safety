@@ -1,0 +1,18 @@
+{
+  "description": "Synthetic exact, mismatched, reverse, genomic insertion/deletion, mixed-gap and duplicated-locus windows. Frozen before native conformance.",
+  "guide": "CTGACCTCGCTGAGTACGTC",
+  "padding": "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
+  "cases": [
+    {"name": "exact_plus", "spacer": "CTGACCTCGCTGAGTACGTC", "pam": "AGG", "strand": "+", "locus": "HBG1"},
+    {"name": "same_sequence_other_locus", "spacer": "CTGACCTCGCTGAGTACGTC", "pam": "AGG", "strand": "+", "locus": "HBG2"},
+    {"name": "exact_minus", "spacer": "CTGACCTCGCTGAGTACGTC", "pam": "TGG", "strand": "-", "locus": "reverse"},
+    {"name": "one_mismatch", "spacer": "CTGACCTCACTGAGTACGTC", "pam": "AGG", "strand": "+", "locus": "snp", "selected_alt_index": 2},
+    {"name": "genomic_insertion", "spacer": "CTGACCTCAGCTGAGTACGTC", "pam": "AGG", "strand": "+", "locus": "insertion", "insertion_index": 8},
+    {"name": "genomic_deletion", "spacer": "CTGACTCGCTGAGTACGTC", "pam": "AGG", "strand": "+", "locus": "deletion", "deleted_index": 5},
+    {"name": "mixed_gaps", "spacer": "CTGACTCGCTGAAGTACGTC", "pam": "AGG", "strand": "+", "locus": "mixed"},
+    {"name": "different_pam", "spacer": "CTGACCTCGCTGAGTACGTC", "pam": "AGA", "strand": "+", "locus": "pam_specific"}
+  ],
+  "unknown_scope": [{"donor_id": "synthetic_missing", "contig": "missing", "start": 100, "end": 200, "reason": "missing_genotype"}],
+  "ungapped": {"max_mismatches": 1, "max_dna_bulges": 0, "max_rna_bulges": 0, "max_total_edits": 1},
+  "gapped": {"max_mismatches": 1, "max_dna_bulges": 1, "max_rna_bulges": 1, "max_total_edits": 2}
+}

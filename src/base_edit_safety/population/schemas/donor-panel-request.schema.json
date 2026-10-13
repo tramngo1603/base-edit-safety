@@ -1,0 +1,240 @@
+{
+  "type": "object",
+  "properties": {
+    "record_type": {
+      "const": "donor_panel_request"
+    },
+    "schema_version": {
+      "const": "1"
+    },
+    "mode": {
+      "enum": [
+        "synthetic_test",
+        "benchmark_simulation",
+        "research_sample_planning"
+      ]
+    },
+    "coverage_basis": {
+      "enum": [
+        "synthetic_truth",
+        "retained_callset_model",
+        "callable_supported"
+      ]
+    },
+    "protocol_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "universe_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "cost_unit": {
+      "type": "string",
+      "minLength": 1
+    },
+    "budget": {
+      "type": "object",
+      "properties": {
+        "max_cost": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_donors": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "max_assays": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        }
+      },
+      "required": [
+        "max_cost",
+        "max_donors",
+        "max_assays"
+      ],
+      "additionalProperties": false
+    },
+    "units": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "configuration_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "weight": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "required_donors": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "id",
+          "configuration_id",
+          "weight",
+          "required_donors"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "donors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "activation_cost": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "availability": {
+            "enum": [
+              "verified_available",
+              "unavailable",
+              "unverified"
+            ]
+          },
+          "use_permitted": {
+            "type": "boolean"
+          },
+          "simulation_eligible": {
+            "type": "boolean"
+          },
+          "specimen_context_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "activation_cost",
+          "availability",
+          "use_permitted",
+          "simulation_eligible",
+          "specimen_context_id"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "donor_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "assay_cost": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "covered_units": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "possible_only_units": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "eligibility": {
+            "enum": [
+              "eligible",
+              "requires_review",
+              "ineligible"
+            ]
+          },
+          "resolution_contract_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "donor_id",
+          "assay_cost",
+          "covered_units",
+          "possible_only_units",
+          "eligibility",
+          "resolution_contract_id"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "existing_usable_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "unit_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "donor_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "unit_id",
+          "donor_id",
+          "evidence_id"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "record_type",
+    "schema_version",
+    "mode",
+    "coverage_basis",
+    "protocol_id",
+    "universe_id",
+    "cost_unit",
+    "budget",
+    "units",
+    "donors",
+    "actions",
+    "existing_usable_evidence"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Base Edit Safety V3 donor-panel request, proposed schema 1",
+  "description": "Cross-field scientific constraints are normative in DATA_CONTRACTS.md."
+}

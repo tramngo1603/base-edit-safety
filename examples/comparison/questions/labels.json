@@ -1,0 +1,50 @@
+{
+  "donors": {
+    "C": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "N": "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c"
+  },
+  "designs": {
+    "A": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+    "B": "comparison_design:v1:fcf6124cf42b8807e941001e5d4c78b0a61f0d71f387575b7dbf62ecb07b2390"
+  },
+  "loci": {
+    "T": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+    "L": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+  },
+  "endpoints": {
+    "T": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+    "L": "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0"
+  },
+  "sequences": {
+    "T": "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7",
+    "L_ref": "comparison_sequence_configuration:v1:7f4e708438eba9c8162a3df39058e58b21eefde79267936e0948683f63bbc9fd",
+    "L_alt": "comparison_sequence_configuration:v1:b05c2edf9fdc189bacd05ce49287e64fdab597f0c13de01f2dcaaa05335c4ef5"
+  },
+  "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+  "expected": {
+    "complete_cost": 18,
+    "insufficient_budget": 17,
+    "treated_panels": 4,
+    "mock_panels": 2,
+    "treatments": 4,
+    "independent_donors_per_arm": 1,
+    "technical_replicates": 1,
+    "evidence_status": "no_measurements",
+    "planning_status": "fully_planned"
+  },
+  "questions": [
+    "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769"
+  ],
+  "actions": {
+    "C:A:treatment": "comparison_action:v1:2863887351a72868cd1930d481fb5b13ae2872710cd94243baf0378471750f02",
+    "C:mock:mock_control": "comparison_action:v1:348e1e631f128b721be4f35e9bd91d4b351a211c49859c76d83ec5cbe282ba87",
+    "C:B:measurement_panel": "comparison_action:v1:6b590bf2a9b335bc1193016572717b3302635dc2df2782a8671ea4631f79fa25",
+    "C:A:measurement_panel": "comparison_action:v1:84e2c6b30f9d66525e0c1c549a6b8c8dc16dbddbee0c7b3f0cb2cc9525b8bbcd",
+    "C:B:treatment": "comparison_action:v1:c10027069908d008f047e9546112354d13a9f8b3a3184716d870cf91e72825d0",
+    "N:B:treatment": "comparison_action:v1:1cdaf97a943a35f0bb77abce13b7201a999d4b7fd4359d5d5f29446c061d72b3",
+    "N:mock:mock_control": "comparison_action:v1:3020679240cbbe4828b8d5bd3ca936d97010e31ed3d29f0f0ddfa16ea3406b8a",
+    "N:A:treatment": "comparison_action:v1:621f72f4a647addeff14d22378423efcec6525051599761340f0d3bac0193a9c",
+    "N:B:measurement_panel": "comparison_action:v1:6de218c4ca6168f3fb950ca54c50a00722a756c89f74eee986e8f75d797b4ebb",
+    "N:A:measurement_panel": "comparison_action:v1:77223e711a50d875a57c1bf780cd70ca2b8d540ddc708b704fa4e7e55b007295"
+  }
+}

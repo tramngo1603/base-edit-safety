@@ -1,0 +1,2074 @@
+[
+  {
+    "record_type": "comparison_source_artifact",
+    "schema_version": "1",
+    "sha256": "1f548e4ce50aeb2f86b6a000bddbbbc080781fec5541fb2f2ad8f3e86964b7a7",
+    "source_id": "synthetic-reference",
+    "release": "contract-fixture-v1",
+    "uri": "urn:bes:synthetic:contract-reference",
+    "media_type": "text/x-fasta",
+    "scope": "complete_file",
+    "parent_artifact_id": {
+      "value": null,
+      "reason": "original artifact"
+    },
+    "locator": {
+      "kind": "file",
+      "member": "reference.fa"
+    },
+    "access": "synthetic",
+    "use_terms": "Artificial fixture for software checks",
+    "record_id": "comparison_source_artifact:v1:1ecc9e3c5fdbee1ef7692dc27359d09d79d5d7e2fdd804ee05f6cfe885ec716e",
+    "source_artifact_id": "comparison_source_artifact:v1:1ecc9e3c5fdbee1ef7692dc27359d09d79d5d7e2fdd804ee05f6cfe885ec716e"
+  },
+  {
+    "record_type": "comparison_reference_bundle",
+    "schema_version": "1",
+    "assembly": "synthetic_GRCh38_geometry",
+    "identity_kind": "complete_reference_files",
+    "source_artifact_ids": [
+      "comparison_source_artifact:v1:1ecc9e3c5fdbee1ef7692dc27359d09d79d5d7e2fdd804ee05f6cfe885ec716e"
+    ],
+    "source_checksums": [
+      "1f548e4ce50aeb2f86b6a000bddbbbc080781fec5541fb2f2ad8f3e86964b7a7"
+    ],
+    "windows": [],
+    "complete_reference_sha256": {
+      "value": "1f548e4ce50aeb2f86b6a000bddbbbc080781fec5541fb2f2ad8f3e86964b7a7",
+      "reason": null
+    },
+    "transformation_version": "literal-fixture-v1",
+    "record_id": "comparison_reference_bundle:v1:4f29f43434deff3f08a9abe27f9975668211cb53bd111798e1d1b21ec604647b",
+    "reference_bundle_id": "comparison_reference_bundle:v1:4f29f43434deff3f08a9abe27f9975668211cb53bd111798e1d1b21ec604647b"
+  },
+  {
+    "record_type": "comparison_editor_definition",
+    "schema_version": "1",
+    "display_name": "Synthetic ABE",
+    "variant_name": "synthetic-ABE-v1",
+    "editor_class": "ABE",
+    "cas_component": "synthetic-SpCas9",
+    "pam_patterns": [
+      "NGG"
+    ],
+    "guide_geometry": {
+      "spacer_length": 20,
+      "pam_side": "3prime",
+      "pam_length": 3
+    },
+    "conversion": {
+      "substrate_base": "A",
+      "product_base": "G",
+      "strand_convention": "guide_oriented"
+    },
+    "editing_window": {
+      "start_1based": 1,
+      "end_1based": 8,
+      "basis": "Synthetic test declaration"
+    },
+    "source_refs": [],
+    "record_id": "comparison_editor_definition:v1:732a48b7f48407ce1cea502abbfe3ce9fffa09ba3a7a8e0e8122bcffce4e7be8",
+    "editor_definition_id": "comparison_editor_definition:v1:732a48b7f48407ce1cea502abbfe3ce9fffa09ba3a7a8e0e8122bcffce4e7be8"
+  },
+  {
+    "record_type": "comparison_intended_locus",
+    "schema_version": "1",
+    "reference_bundle_id": "comparison_reference_bundle:v1:4f29f43434deff3f08a9abe27f9975668211cb53bd111798e1d1b21ec604647b",
+    "contig": "synthetic_chr11",
+    "start": 100,
+    "end": 123,
+    "strand": "+",
+    "gene": "HBG1",
+    "locus_name": "synthetic-HBG1",
+    "path": [
+      {
+        "kind": "reference",
+        "pos0": 100,
+        "base": "A"
+      },
+      {
+        "kind": "reference",
+        "pos0": 101,
+        "base": "C"
+      },
+      {
+        "kind": "reference",
+        "pos0": 102,
+        "base": "G"
+      },
+      {
+        "kind": "reference",
+        "pos0": 103,
+        "base": "T"
+      },
+      {
+        "kind": "reference",
+        "pos0": 104,
+        "base": "A"
+      },
+      {
+        "kind": "reference",
+        "pos0": 105,
+        "base": "C"
+      },
+      {
+        "kind": "reference",
+        "pos0": 106,
+        "base": "G"
+      },
+      {
+        "kind": "reference",
+        "pos0": 107,
+        "base": "T"
+      },
+      {
+        "kind": "reference",
+        "pos0": 108,
+        "base": "A"
+      },
+      {
+        "kind": "reference",
+        "pos0": 109,
+        "base": "C"
+      },
+      {
+        "kind": "reference",
+        "pos0": 110,
+        "base": "G"
+      },
+      {
+        "kind": "reference",
+        "pos0": 111,
+        "base": "T"
+      },
+      {
+        "kind": "reference",
+        "pos0": 112,
+        "base": "A"
+      },
+      {
+        "kind": "reference",
+        "pos0": 113,
+        "base": "C"
+      },
+      {
+        "kind": "reference",
+        "pos0": 114,
+        "base": "G"
+      },
+      {
+        "kind": "reference",
+        "pos0": 115,
+        "base": "T"
+      },
+      {
+        "kind": "reference",
+        "pos0": 116,
+        "base": "A"
+      },
+      {
+        "kind": "reference",
+        "pos0": 117,
+        "base": "C"
+      },
+      {
+        "kind": "reference",
+        "pos0": 118,
+        "base": "G"
+      },
+      {
+        "kind": "reference",
+        "pos0": 119,
+        "base": "T"
+      },
+      {
+        "kind": "reference",
+        "pos0": 120,
+        "base": "A"
+      },
+      {
+        "kind": "reference",
+        "pos0": 121,
+        "base": "G"
+      },
+      {
+        "kind": "reference",
+        "pos0": 122,
+        "base": "G"
+      }
+    ],
+    "intended_endpoint": "intended_edit_fraction",
+    "copy_resolution": "copy_specific",
+    "source_refs": [
+      {
+        "source_artifact_id": "comparison_source_artifact:v1:1ecc9e3c5fdbee1ef7692dc27359d09d79d5d7e2fdd804ee05f6cfe885ec716e",
+        "locator": {
+          "kind": "file",
+          "member": "reference.fa"
+        },
+        "note": "Artificial sequence; no published biological claim"
+      }
+    ],
+    "record_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+    "intended_locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+  },
+  {
+    "record_type": "comparison_design",
+    "schema_version": "1",
+    "display_name": "Synthetic design A",
+    "guide_sequence": "ACGTACGTACGTACGTACGT",
+    "editor_definition_id": "comparison_editor_definition:v1:732a48b7f48407ce1cea502abbfe3ce9fffa09ba3a7a8e0e8122bcffce4e7be8",
+    "intended_locus_ids": [
+      "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+    ],
+    "desired_edit_definitions": [
+      {
+        "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+        "pos0": 100,
+        "reference_base": "A",
+        "alternate_base": "G",
+        "strand": "+",
+        "purpose": "intended"
+      }
+    ],
+    "source_status": "synthetic",
+    "source_refs": [
+      {
+        "source_artifact_id": "comparison_source_artifact:v1:1ecc9e3c5fdbee1ef7692dc27359d09d79d5d7e2fdd804ee05f6cfe885ec716e",
+        "locator": {
+          "kind": "file",
+          "member": "reference.fa"
+        },
+        "note": "Artificial sequence; no published biological claim"
+      }
+    ],
+    "record_id": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+    "design_id": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+    "definition_hash": "9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136"
+  },
+  {
+    "record_type": "comparison_experimental_context",
+    "schema_version": "1",
+    "organism": "Homo sapiens",
+    "cell_type": "synthetic-HSPC-context",
+    "cell_state": {
+      "value": null,
+      "reason": "not reported in this synthetic fixture"
+    },
+    "cell_provenance": {
+      "value": "artificial",
+      "reason": null
+    },
+    "delivery_method": "synthetic electroporation",
+    "exposure": {
+      "value": {
+        "value": 1,
+        "reason": null
+      },
+      "unit": "hour"
+    },
+    "dose": {
+      "value": {
+        "value": null,
+        "reason": "not reported in this synthetic fixture"
+      },
+      "unit": "declared units"
+    },
+    "condition": "synthetic treated condition",
+    "measurement_timepoint": {
+      "value": {
+        "value": 48,
+        "reason": null
+      },
+      "unit": "hour"
+    },
+    "source_refs": [],
+    "record_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+  },
+  {
+    "record_type": "comparison_endpoint_definition",
+    "schema_version": "1",
+    "name": "intended_edit_fraction",
+    "biological_meaning": "Fraction of reads carrying the specified intended substitution",
+    "unit": "fraction",
+    "denominator": "amplicon reads",
+    "measurement_level": "reads",
+    "favorable_direction": "higher",
+    "locus_resolution": "copy_specific",
+    "allele_resolution": "required",
+    "requires_sequence": true,
+    "required_context_ids": [
+      "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+    ],
+    "record_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+    "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45"
+  },
+  {
+    "record_type": "comparison_domain",
+    "schema_version": "1",
+    "reference_bundle_id": "comparison_reference_bundle:v1:4f29f43434deff3f08a9abe27f9975668211cb53bd111798e1d1b21ec604647b",
+    "intervals": [
+      {
+        "contig": "synthetic_chr11",
+        "start": 100,
+        "end": 123
+      }
+    ],
+    "selection_basis": "synthetic",
+    "description": "One artificial locus for validating the contracts",
+    "record_id": "comparison_domain:v1:bb0548973fb9a79d15336784e546e4f65b0d8fe30fcdfcd2ab0348191024f268",
+    "domain_id": "comparison_domain:v1:bb0548973fb9a79d15336784e546e4f65b0d8fe30fcdfcd2ab0348191024f268"
+  },
+  {
+    "record_type": "comparison_search_profile",
+    "schema_version": "1",
+    "design_id": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+    "domain_id": "comparison_domain:v1:bb0548973fb9a79d15336784e546e4f65b0d8fe30fcdfcd2ab0348191024f268",
+    "pam_patterns": [
+      "NGG"
+    ],
+    "max_mismatches": 4,
+    "max_dna_bulges": 0,
+    "max_rna_bulges": 0,
+    "max_total_edits": 4,
+    "total_edit_accounting": "mismatch_plus_bulged_bases",
+    "strands": [
+      "+",
+      "-"
+    ],
+    "variant_domain": "synthetic_literal",
+    "backend_name": "regional_exhaustive",
+    "backend_version": "fixture-v1",
+    "backend_digest": "187af585112ca5750463975095f0952f7552df8d3f2f75ad488a2931d4822359",
+    "index_id": {
+      "value": null,
+      "reason": "local fixture requires no external index"
+    },
+    "source_panel_id": "synthetic-panel-v1",
+    "source_equivalence": "not_applicable_synthetic",
+    "max_rows": 100,
+    "max_window_variants": 10,
+    "retention": "all",
+    "record_id": "comparison_search_profile:v1:a0f4fd03d081e482fff046ad2897754ab8e13677bcba4f02619b9df2f923d2a8",
+    "search_profile_id": "comparison_search_profile:v1:a0f4fd03d081e482fff046ad2897754ab8e13677bcba4f02619b9df2f923d2a8"
+  },
+  {
+    "record_type": "comparison_donor",
+    "schema_version": "1",
+    "canonical_label": "synthetic-donor-C",
+    "source_panel_id": "synthetic-panel-v1",
+    "sample_ids": [
+      "synthetic-sample-C"
+    ],
+    "independence_group_id": {
+      "value": "synthetic-family-C",
+      "reason": null
+    },
+    "relatedness_policy": "declared_simulation_assumption",
+    "relatedness_basis": "One independent artificial donor by construction",
+    "source_refs": [],
+    "record_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d"
+  },
+  {
+    "record_type": "comparison_locus",
+    "schema_version": "1",
+    "reference_bundle_id": "comparison_reference_bundle:v1:4f29f43434deff3f08a9abe27f9975668211cb53bd111798e1d1b21ec604647b",
+    "contig": "synthetic_chr11",
+    "start": 200,
+    "end": 223,
+    "strand": "+",
+    "locus_name": "synthetic-off-target",
+    "gene": {
+      "value": null,
+      "reason": "no gene annotation in the artificial fixture"
+    },
+    "path": [],
+    "record_id": "comparison_locus:v1:3f0fb5d40721d2a79b8be76130ceb4753592f48b0cead541ca504f08139282c1",
+    "locus_id": "comparison_locus:v1:3f0fb5d40721d2a79b8be76130ceb4753592f48b0cead541ca504f08139282c1"
+  },
+  {
+    "record_type": "comparison_design_alias",
+    "schema_version": "1",
+    "source_name": "source-label-A",
+    "design_id": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+    "source_location": {
+      "source_artifact_id": "comparison_source_artifact:v1:1ecc9e3c5fdbee1ef7692dc27359d09d79d5d7e2fdd804ee05f6cfe885ec716e",
+      "locator": {
+        "kind": "file",
+        "member": "reference.fa"
+      },
+      "note": "Artificial sequence; no published biological claim"
+    },
+    "justification": "Explicit mapping in the artificial fixture",
+    "record_id": "comparison_design_alias:v1:8beba7282050674a411f3fe79207d3cf9b32b6183aca54b7dba592ad66bd7b2f",
+    "alias_id": "comparison_design_alias:v1:8beba7282050674a411f3fe79207d3cf9b32b6183aca54b7dba592ad66bd7b2f"
+  },
+  {
+    "record_type": "comparison_sequence_configuration",
+    "schema_version": "1",
+    "reference_bundle_id": "comparison_reference_bundle:v1:4f29f43434deff3f08a9abe27f9975668211cb53bd111798e1d1b21ec604647b",
+    "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+    "contig": "synthetic_chr11",
+    "strand": "+",
+    "sequence": "ACGTACGTACGTACGTACGTAGG",
+    "path": [
+      {
+        "kind": "reference",
+        "pos0": 100,
+        "base": "A"
+      },
+      {
+        "kind": "reference",
+        "pos0": 101,
+        "base": "C"
+      },
+      {
+        "kind": "reference",
+        "pos0": 102,
+        "base": "G"
+      },
+      {
+        "kind": "reference",
+        "pos0": 103,
+        "base": "T"
+      },
+      {
+        "kind": "reference",
+        "pos0": 104,
+        "base": "A"
+      },
+      {
+        "kind": "reference",
+        "pos0": 105,
+        "base": "C"
+      },
+      {
+        "kind": "reference",
+        "pos0": 106,
+        "base": "G"
+      },
+      {
+        "kind": "reference",
+        "pos0": 107,
+        "base": "T"
+      },
+      {
+        "kind": "reference",
+        "pos0": 108,
+        "base": "A"
+      },
+      {
+        "kind": "reference",
+        "pos0": 109,
+        "base": "C"
+      },
+      {
+        "kind": "reference",
+        "pos0": 110,
+        "base": "G"
+      },
+      {
+        "kind": "reference",
+        "pos0": 111,
+        "base": "T"
+      },
+      {
+        "kind": "reference",
+        "pos0": 112,
+        "base": "A"
+      },
+      {
+        "kind": "reference",
+        "pos0": 113,
+        "base": "C"
+      },
+      {
+        "kind": "reference",
+        "pos0": 114,
+        "base": "G"
+      },
+      {
+        "kind": "reference",
+        "pos0": 115,
+        "base": "T"
+      },
+      {
+        "kind": "reference",
+        "pos0": 116,
+        "base": "A"
+      },
+      {
+        "kind": "reference",
+        "pos0": 117,
+        "base": "C"
+      },
+      {
+        "kind": "reference",
+        "pos0": 118,
+        "base": "G"
+      },
+      {
+        "kind": "reference",
+        "pos0": 119,
+        "base": "T"
+      },
+      {
+        "kind": "reference",
+        "pos0": 120,
+        "base": "A"
+      },
+      {
+        "kind": "reference",
+        "pos0": 121,
+        "base": "G"
+      },
+      {
+        "kind": "reference",
+        "pos0": 122,
+        "base": "G"
+      }
+    ],
+    "variants": [],
+    "support_status": "supported",
+    "support_reason": null,
+    "record_id": "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7",
+    "sequence_configuration_id": "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7"
+  },
+  {
+    "record_type": "comparison_sequence_occurrence",
+    "schema_version": "1",
+    "sequence_configuration_id": "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7",
+    "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "sample_id": "synthetic-sample-C",
+    "copy_index": 0,
+    "phase_block": {
+      "value": "synthetic-block-1",
+      "reason": null
+    },
+    "phase_status": "confirmed",
+    "source_version": "synthetic-panel-v1",
+    "source_refs": [
+      {
+        "source_artifact_id": "comparison_source_artifact:v1:1ecc9e3c5fdbee1ef7692dc27359d09d79d5d7e2fdd804ee05f6cfe885ec716e",
+        "locator": {
+          "kind": "file",
+          "member": "reference.fa"
+        },
+        "note": "Artificial sequence; no published biological claim"
+      }
+    ],
+    "record_id": "comparison_sequence_occurrence:v1:d902a19678438adca1582ea42e941104c86e29fb60e9f9f35efd499f8abbacef",
+    "sequence_occurrence_id": "comparison_sequence_occurrence:v1:d902a19678438adca1582ea42e941104c86e29fb60e9f9f35efd499f8abbacef"
+  },
+  {
+    "record_type": "comparison_design_configuration",
+    "schema_version": "1",
+    "design_id": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+    "sequence_configuration_id": "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7",
+    "role": "intended",
+    "record_id": "comparison_design_configuration:v1:9e39673681d009bf95342bf61f61c08105e2d534382b24d2dde0a1df8ca06419",
+    "design_configuration_id": "comparison_design_configuration:v1:9e39673681d009bf95342bf61f61c08105e2d534382b24d2dde0a1df8ca06419"
+  },
+  {
+    "record_type": "comparison_alignment",
+    "schema_version": "1",
+    "design_configuration_id": "comparison_design_configuration:v1:9e39673681d009bf95342bf61f61c08105e2d534382b24d2dde0a1df8ca06419",
+    "columns": [
+      {
+        "guide": "A",
+        "target": "A",
+        "guide_position_1based": 1,
+        "target_path_index": 0
+      },
+      {
+        "guide": "C",
+        "target": "C",
+        "guide_position_1based": 2,
+        "target_path_index": 1
+      },
+      {
+        "guide": "G",
+        "target": "G",
+        "guide_position_1based": 3,
+        "target_path_index": 2
+      },
+      {
+        "guide": "T",
+        "target": "T",
+        "guide_position_1based": 4,
+        "target_path_index": 3
+      },
+      {
+        "guide": "A",
+        "target": "A",
+        "guide_position_1based": 5,
+        "target_path_index": 4
+      },
+      {
+        "guide": "C",
+        "target": "C",
+        "guide_position_1based": 6,
+        "target_path_index": 5
+      },
+      {
+        "guide": "G",
+        "target": "G",
+        "guide_position_1based": 7,
+        "target_path_index": 6
+      },
+      {
+        "guide": "T",
+        "target": "T",
+        "guide_position_1based": 8,
+        "target_path_index": 7
+      },
+      {
+        "guide": "A",
+        "target": "A",
+        "guide_position_1based": 9,
+        "target_path_index": 8
+      },
+      {
+        "guide": "C",
+        "target": "C",
+        "guide_position_1based": 10,
+        "target_path_index": 9
+      },
+      {
+        "guide": "G",
+        "target": "G",
+        "guide_position_1based": 11,
+        "target_path_index": 10
+      },
+      {
+        "guide": "T",
+        "target": "T",
+        "guide_position_1based": 12,
+        "target_path_index": 11
+      },
+      {
+        "guide": "A",
+        "target": "A",
+        "guide_position_1based": 13,
+        "target_path_index": 12
+      },
+      {
+        "guide": "C",
+        "target": "C",
+        "guide_position_1based": 14,
+        "target_path_index": 13
+      },
+      {
+        "guide": "G",
+        "target": "G",
+        "guide_position_1based": 15,
+        "target_path_index": 14
+      },
+      {
+        "guide": "T",
+        "target": "T",
+        "guide_position_1based": 16,
+        "target_path_index": 15
+      },
+      {
+        "guide": "A",
+        "target": "A",
+        "guide_position_1based": 17,
+        "target_path_index": 16
+      },
+      {
+        "guide": "C",
+        "target": "C",
+        "guide_position_1based": 18,
+        "target_path_index": 17
+      },
+      {
+        "guide": "G",
+        "target": "G",
+        "guide_position_1based": 19,
+        "target_path_index": 18
+      },
+      {
+        "guide": "T",
+        "target": "T",
+        "guide_position_1based": 20,
+        "target_path_index": 19
+      }
+    ],
+    "mismatch_positions": [],
+    "dna_bulge_positions": [],
+    "rna_bulge_positions": [],
+    "pam_sequence": "AGG",
+    "pam_path": [
+      {
+        "kind": "reference",
+        "pos0": 120,
+        "base": "A"
+      },
+      {
+        "kind": "reference",
+        "pos0": 121,
+        "base": "G"
+      },
+      {
+        "kind": "reference",
+        "pos0": 122,
+        "base": "G"
+      }
+    ],
+    "native_row_refs": [
+      {
+        "source_artifact_id": "comparison_source_artifact:v1:1ecc9e3c5fdbee1ef7692dc27359d09d79d5d7e2fdd804ee05f6cfe885ec716e",
+        "locator": {
+          "kind": "file",
+          "member": "reference.fa"
+        },
+        "note": "Artificial sequence; no published biological claim"
+      }
+    ],
+    "record_id": "comparison_alignment:v1:90c0a4b5f05716b7e040ce65501b51a18e2e6b49e9875159fcd7e57a2280178e",
+    "alignment_id": "comparison_alignment:v1:90c0a4b5f05716b7e040ce65501b51a18e2e6b49e9875159fcd7e57a2280178e"
+  },
+  {
+    "record_type": "comparison_donor_configuration",
+    "schema_version": "1",
+    "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "sample_id": "synthetic-sample-C",
+    "sequence_occurrence_id": "comparison_sequence_occurrence:v1:d902a19678438adca1582ea42e941104c86e29fb60e9f9f35efd499f8abbacef",
+    "design_configuration_id": "comparison_design_configuration:v1:9e39673681d009bf95342bf61f61c08105e2d534382b24d2dde0a1df8ca06419",
+    "copy_index": 0,
+    "carrier_status": "supported_carrier",
+    "carrier_of_sequence_id": "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7",
+    "genotype_support": "called",
+    "phase_support": "confirmed",
+    "reason_codes": [],
+    "source_refs": [
+      {
+        "source_artifact_id": "comparison_source_artifact:v1:1ecc9e3c5fdbee1ef7692dc27359d09d79d5d7e2fdd804ee05f6cfe885ec716e",
+        "locator": {
+          "kind": "file",
+          "member": "reference.fa"
+        },
+        "note": "Artificial sequence; no published biological claim"
+      }
+    ],
+    "record_id": "comparison_donor_configuration:v1:e56de47c2b2342e3d2bc8b4fc15f0331581b24347c6fd8e374742669b5bed10f",
+    "donor_configuration_id": "comparison_donor_configuration:v1:e56de47c2b2342e3d2bc8b4fc15f0331581b24347c6fd8e374742669b5bed10f"
+  },
+  {
+    "record_type": "comparison_search_scope",
+    "schema_version": "1",
+    "design_id": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+    "donor_id": {
+      "value": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+      "reason": null
+    },
+    "source_panel_id": "synthetic-panel-v1",
+    "search_profile_id": "comparison_search_profile:v1:a0f4fd03d081e482fff046ad2897754ab8e13677bcba4f02619b9df2f923d2a8",
+    "requested_intervals": [
+      {
+        "contig": "synthetic_chr11",
+        "start": 100,
+        "end": 123
+      }
+    ],
+    "evaluated_intervals": [
+      {
+        "contig": "synthetic_chr11",
+        "start": 100,
+        "end": 123
+      }
+    ],
+    "skipped_intervals": [],
+    "execution_status": "complete",
+    "retention_status": "complete",
+    "backend_limits": {
+      "max_rows": 100,
+      "max_window_variants": 10,
+      "timeout_seconds": 30
+    },
+    "exit_code": {
+      "value": 0,
+      "reason": null
+    },
+    "reason_codes": [],
+    "record_id": "comparison_search_scope:v1:11c0e341ea1b127058e9696188694eee68d5a7f0a82d3afe25aff956a5078408",
+    "search_scope_id": "comparison_search_scope:v1:11c0e341ea1b127058e9696188694eee68d5a7f0a82d3afe25aff956a5078408"
+  },
+  {
+    "record_type": "comparison_variant_effect",
+    "schema_version": "1",
+    "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "donor_configuration_id": {
+      "value": "comparison_design_configuration:v1:9e39673681d009bf95342bf61f61c08105e2d534382b24d2dde0a1df8ca06419",
+      "reason": null
+    },
+    "reference_configuration_id": {
+      "value": "comparison_design_configuration:v1:9e39673681d009bf95342bf61f61c08105e2d534382b24d2dde0a1df8ca06419",
+      "reason": null
+    },
+    "donor_alignment_id": {
+      "value": "comparison_alignment:v1:90c0a4b5f05716b7e040ce65501b51a18e2e6b49e9875159fcd7e57a2280178e",
+      "reason": null
+    },
+    "reference_alignment_id": {
+      "value": "comparison_alignment:v1:90c0a4b5f05716b7e040ce65501b51a18e2e6b49e9875159fcd7e57a2280178e",
+      "reason": null
+    },
+    "status": "unchanged",
+    "reason": "Artificial donor equals reference at this locus",
+    "source_variants": [],
+    "record_id": "comparison_variant_effect:v1:20ded05f2cf92bc1adb7f36955191ffa2127f425232bcf9cf18c297c57814c97",
+    "variant_effect_id": "comparison_variant_effect:v1:20ded05f2cf92bc1adb7f36955191ffa2127f425232bcf9cf18c297c57814c97"
+  },
+  {
+    "record_type": "comparison_intended_assessment",
+    "schema_version": "1",
+    "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "design_id": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+    "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+    "sequence_configuration_id": {
+      "value": "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7",
+      "reason": null
+    },
+    "support_status": "supported",
+    "pam_compatible": {
+      "value": true,
+      "reason": null
+    },
+    "alignment_ids": [
+      "comparison_alignment:v1:90c0a4b5f05716b7e040ce65501b51a18e2e6b49e9875159fcd7e57a2280178e"
+    ],
+    "reference_differences": [],
+    "reason_codes": [],
+    "record_id": "comparison_intended_assessment:v1:ed0d31cd3c97527ba93966311697521158fc62364c7348bc872416eb7ec68ddb",
+    "intended_assessment_id": "comparison_intended_assessment:v1:ed0d31cd3c97527ba93966311697521158fc62364c7348bc872416eb7ec68ddb"
+  },
+  {
+    "record_type": "comparison_source_artifact",
+    "schema_version": "1",
+    "sha256": "3802d8d1ad502322b0aaeacc6df20e170045a95bf40c77198ab150d7bbe522fe",
+    "source_id": "synthetic-observation-table",
+    "release": "contract-fixture-v1",
+    "uri": "urn:bes:synthetic:observation-table",
+    "media_type": "text/tab-separated-values",
+    "scope": "complete_file",
+    "parent_artifact_id": {
+      "value": null,
+      "reason": "original artifact"
+    },
+    "locator": {
+      "kind": "file",
+      "member": "observations.tsv"
+    },
+    "access": "synthetic",
+    "use_terms": "Artificial measurements for software checks",
+    "record_id": "comparison_source_artifact:v1:dae02e9935ac034f97864718d76c7e0bf4e180650b307e4c637cf07d1d85cae0",
+    "source_artifact_id": "comparison_source_artifact:v1:dae02e9935ac034f97864718d76c7e0bf4e180650b307e4c637cf07d1d85cae0"
+  },
+  {
+    "record_type": "comparison_source_observation",
+    "schema_version": "1",
+    "source_artifact_id": "comparison_source_artifact:v1:dae02e9935ac034f97864718d76c7e0bf4e180650b307e4c637cf07d1d85cae0",
+    "locator": {
+      "kind": "table",
+      "sheet": "synthetic-sheet",
+      "table": "measurements",
+      "row": 2,
+      "column": "value",
+      "cell": "D2"
+    },
+    "measurement_key": "synthetic-donor-C:A:intended:1",
+    "source_study": "synthetic-study",
+    "source_experiment": "synthetic-experiment-1",
+    "source_replicate": "1",
+    "raw_row_text": "synthetic-donor-C\tA\t1\t0.2",
+    "raw_value": {
+      "value": "0.2",
+      "reason": null
+    },
+    "raw_unit": "fraction",
+    "source_reported_label": {
+      "value": "measured_fraction",
+      "reason": null
+    },
+    "record_id": "comparison_source_observation:v1:2f9e82a807b7ae6a241091d3b6f4d8e85d7380feb513e3fa97a1547437b03d85",
+    "source_record_id": "comparison_source_observation:v1:2f9e82a807b7ae6a241091d3b6f4d8e85d7380feb513e3fa97a1547437b03d85"
+  },
+  {
+    "record_type": "comparison_observation_revision",
+    "schema_version": "1",
+    "source_record_id": "comparison_source_observation:v1:2f9e82a807b7ae6a241091d3b6f4d8e85d7380feb513e3fa97a1547437b03d85",
+    "extraction_version": "fixture-extractor-v1",
+    "mapping_version": "fixture-map-v1",
+    "normalization_schema_version": "1",
+    "extraction_map_sha256": "dd127fe950a2f8652ca443f997821a108c4e74124fe9b13cba557eb51a42bcd2",
+    "subject": {
+      "level": "donor",
+      "source_subject_id": {
+        "value": "synthetic-donor-C",
+        "reason": null
+      },
+      "donor_id": {
+        "value": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+        "reason": null
+      },
+      "specimen_id": {
+        "value": null,
+        "reason": "not reported"
+      },
+      "resolution_status": "resolved",
+      "reason": null
+    },
+    "design_id": {
+      "value": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+      "reason": null
+    },
+    "unresolved_source_design": {
+      "value": null,
+      "reason": "source design is resolved"
+    },
+    "context_id": {
+      "value": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+      "reason": null
+    },
+    "sequence_configuration_id": {
+      "value": "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7",
+      "reason": null
+    },
+    "locus_ids": [
+      "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+    ],
+    "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+    "normalized_value": {
+      "value": 0.2,
+      "reason": null
+    },
+    "normalized_unit": "fraction",
+    "conversion": {
+      "value": null,
+      "reason": "same raw and normalized units"
+    },
+    "measurement_kind": "individual",
+    "independent_unit_id": {
+      "value": "synthetic-donor-C",
+      "reason": null
+    },
+    "relationship_group": {
+      "value": "synthetic-family-C",
+      "reason": null
+    },
+    "pairing_key": {
+      "value": null,
+      "reason": "not reported in this synthetic fixture"
+    },
+    "read_count": {
+      "value": 20,
+      "reason": null
+    },
+    "denominator": {
+      "value": 100,
+      "reason": null
+    },
+    "sample_size": {
+      "value": 1,
+      "reason": null
+    },
+    "uncertainty": {
+      "value": null,
+      "reason": "not reported in this synthetic fixture"
+    },
+    "assay_id": {
+      "value": "synthetic-amplicon",
+      "reason": null
+    },
+    "control_status": "passed",
+    "qc_status": "passed",
+    "detection_limit": {
+      "value": {
+        "value": 0.01,
+        "reason": null
+      },
+      "unit": "fraction"
+    },
+    "quantification_limit": {
+      "value": {
+        "value": null,
+        "reason": "not reported in this synthetic fixture"
+      },
+      "unit": "fraction"
+    },
+    "source_reported_outcome": {
+      "value": "measured_fraction",
+      "reason": null
+    },
+    "applicability": {
+      "identity": {
+        "status": "applicable",
+        "reason_codes": []
+      },
+      "context": {
+        "status": "applicable",
+        "reason_codes": []
+      },
+      "endpoint": {
+        "status": "applicable",
+        "reason_codes": []
+      },
+      "quality": {
+        "status": "applicable",
+        "reason_codes": []
+      },
+      "classification": "exact_donor_configuration",
+      "empirical_donor_credit": false,
+      "reason_codes": [
+        "synthetic_fixture_no_empirical_credit"
+      ]
+    },
+    "executed_action_id": {
+      "value": null,
+      "reason": "historical synthetic measurement"
+    },
+    "record_id": "comparison_observation_revision:v1:ccd3f22defd02785b1d581f5160693cad9ee5b8fdca0fc7f358b963d31096398",
+    "observation_id": "comparison_observation_revision:v1:ccd3f22defd02785b1d581f5160693cad9ee5b8fdca0fc7f358b963d31096398"
+  },
+  {
+    "record_type": "comparison_observation_state",
+    "schema_version": "1",
+    "source_record_id": "comparison_source_observation:v1:2f9e82a807b7ae6a241091d3b6f4d8e85d7380feb513e3fa97a1547437b03d85",
+    "active_revision_id": "comparison_observation_revision:v1:ccd3f22defd02785b1d581f5160693cad9ee5b8fdca0fc7f358b963d31096398",
+    "revision_ids": [
+      "comparison_observation_revision:v1:ccd3f22defd02785b1d581f5160693cad9ee5b8fdca0fc7f358b963d31096398"
+    ],
+    "supersession_reason": "Initial normalization",
+    "record_id": "comparison_observation_state:v1:2b5459a55ba0b9ab3c6d1e9b3f4409b14b736ad788904032d49ce4f6082b79fe",
+    "observation_state_id": "comparison_observation_state:v1:2b5459a55ba0b9ab3c6d1e9b3f4409b14b736ad788904032d49ce4f6082b79fe"
+  },
+  {
+    "record_type": "comparison_source_observation",
+    "schema_version": "1",
+    "source_artifact_id": "comparison_source_artifact:v1:dae02e9935ac034f97864718d76c7e0bf4e180650b307e4c637cf07d1d85cae0",
+    "locator": {
+      "kind": "table",
+      "sheet": "synthetic-sheet",
+      "table": "measurements",
+      "row": 3,
+      "column": "value",
+      "cell": "D3"
+    },
+    "measurement_key": "synthetic-export-of-row-2",
+    "source_study": "synthetic-study",
+    "source_experiment": "synthetic-experiment-1",
+    "source_replicate": "1",
+    "raw_row_text": "synthetic duplicate export of row 2",
+    "raw_value": {
+      "value": "0.2",
+      "reason": null
+    },
+    "raw_unit": "fraction",
+    "source_reported_label": {
+      "value": "measured_fraction",
+      "reason": null
+    },
+    "record_id": "comparison_source_observation:v1:96d3f4ecc3058aeb93272b5dd8f7812914f3ad41826ea2350fc55c78e84a61d8",
+    "source_record_id": "comparison_source_observation:v1:96d3f4ecc3058aeb93272b5dd8f7812914f3ad41826ea2350fc55c78e84a61d8"
+  },
+  {
+    "record_type": "comparison_observation_equivalence",
+    "schema_version": "1",
+    "source_record_ids": [
+      "comparison_source_observation:v1:2f9e82a807b7ae6a241091d3b6f4d8e85d7380feb513e3fa97a1547437b03d85",
+      "comparison_source_observation:v1:96d3f4ecc3058aeb93272b5dd8f7812914f3ad41826ea2350fc55c78e84a61d8"
+    ],
+    "canonical_source_record_id": "comparison_source_observation:v1:2f9e82a807b7ae6a241091d3b6f4d8e85d7380feb513e3fa97a1547437b03d85",
+    "basis": "Artificial fixture declares the second locator an export of the same measurement",
+    "source_refs": [
+      {
+        "source_artifact_id": "comparison_source_artifact:v1:dae02e9935ac034f97864718d76c7e0bf4e180650b307e4c637cf07d1d85cae0",
+        "locator": {
+          "kind": "table",
+          "sheet": "synthetic-sheet",
+          "table": "measurements",
+          "row": 2,
+          "column": "value",
+          "cell": "D2"
+        },
+        "note": "Explicit equivalence fixture"
+      }
+    ],
+    "record_id": "comparison_observation_equivalence:v1:eb283aff0cd09fc53330feb68b8ddd4cc3a920c2fa2e42d4d303bc42ee8c7fad",
+    "observation_equivalence_id": "comparison_observation_equivalence:v1:eb283aff0cd09fc53330feb68b8ddd4cc3a920c2fa2e42d4d303bc42ee8c7fad"
+  },
+  {
+    "record_type": "comparison_evidence_applicability",
+    "schema_version": "1",
+    "observation_id": "comparison_observation_revision:v1:ccd3f22defd02785b1d581f5160693cad9ee5b8fdca0fc7f358b963d31096398",
+    "design_id": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+    "donor_id": {
+      "value": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+      "reason": null
+    },
+    "sequence_configuration_id": {
+      "value": "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7",
+      "reason": null
+    },
+    "assessment": {
+      "identity": {
+        "status": "applicable",
+        "reason_codes": []
+      },
+      "context": {
+        "status": "applicable",
+        "reason_codes": []
+      },
+      "endpoint": {
+        "status": "applicable",
+        "reason_codes": []
+      },
+      "quality": {
+        "status": "applicable",
+        "reason_codes": []
+      },
+      "classification": "exact_donor_configuration",
+      "empirical_donor_credit": false,
+      "reason_codes": [
+        "synthetic_fixture_no_empirical_credit"
+      ]
+    },
+    "policy_version": "synthetic-evidence-v1",
+    "coverage_basis": "synthetic_truth",
+    "record_id": "comparison_evidence_applicability:v1:bb0fcdddafbb57b9fbfc003d3cf1636c7892aece46f1d56f6957e4eb045244dd",
+    "evidence_applicability_id": "comparison_evidence_applicability:v1:bb0fcdddafbb57b9fbfc003d3cf1636c7892aece46f1d56f6957e4eb045244dd"
+  },
+  {
+    "record_type": "comparison_prediction",
+    "schema_version": "1",
+    "provider": "synthetic-provider",
+    "model": "synthetic-model",
+    "model_version": "fixture-v1",
+    "request_sha256": "5204e4b71093e82122ae013ae183e699dd0ffab865b0579aa5c70d6929529176",
+    "response_sha256": "58837a097481e48a2d8ede85f0aa30391f2b899c15ab5650e81d8128781d89e8",
+    "pre_edit_sequence_id": "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7",
+    "post_edit_scenario": {
+      "sequence": "GCGTACGTACGTACGTACGTAGG",
+      "edits": [
+        {
+          "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+          "pos0": 100,
+          "reference_base": "A",
+          "alternate_base": "G",
+          "strand": "+",
+          "purpose": "intended"
+        }
+      ],
+      "scenario_id": "synthetic-intended-only"
+    },
+    "window": {
+      "reference_bundle_id": "comparison_reference_bundle:v1:4f29f43434deff3f08a9abe27f9975668211cb53bd111798e1d1b21ec604647b",
+      "interval": {
+        "contig": "synthetic_chr11",
+        "start": 100,
+        "end": 123
+      },
+      "sequence": "ACGTACGTACGTACGTACGTAGG",
+      "path": [
+        {
+          "kind": "reference",
+          "pos0": 100,
+          "base": "A"
+        },
+        {
+          "kind": "reference",
+          "pos0": 101,
+          "base": "C"
+        },
+        {
+          "kind": "reference",
+          "pos0": 102,
+          "base": "G"
+        },
+        {
+          "kind": "reference",
+          "pos0": 103,
+          "base": "T"
+        },
+        {
+          "kind": "reference",
+          "pos0": 104,
+          "base": "A"
+        },
+        {
+          "kind": "reference",
+          "pos0": 105,
+          "base": "C"
+        },
+        {
+          "kind": "reference",
+          "pos0": 106,
+          "base": "G"
+        },
+        {
+          "kind": "reference",
+          "pos0": 107,
+          "base": "T"
+        },
+        {
+          "kind": "reference",
+          "pos0": 108,
+          "base": "A"
+        },
+        {
+          "kind": "reference",
+          "pos0": 109,
+          "base": "C"
+        },
+        {
+          "kind": "reference",
+          "pos0": 110,
+          "base": "G"
+        },
+        {
+          "kind": "reference",
+          "pos0": 111,
+          "base": "T"
+        },
+        {
+          "kind": "reference",
+          "pos0": 112,
+          "base": "A"
+        },
+        {
+          "kind": "reference",
+          "pos0": 113,
+          "base": "C"
+        },
+        {
+          "kind": "reference",
+          "pos0": 114,
+          "base": "G"
+        },
+        {
+          "kind": "reference",
+          "pos0": 115,
+          "base": "T"
+        },
+        {
+          "kind": "reference",
+          "pos0": 116,
+          "base": "A"
+        },
+        {
+          "kind": "reference",
+          "pos0": 117,
+          "base": "C"
+        },
+        {
+          "kind": "reference",
+          "pos0": 118,
+          "base": "G"
+        },
+        {
+          "kind": "reference",
+          "pos0": 119,
+          "base": "T"
+        },
+        {
+          "kind": "reference",
+          "pos0": 120,
+          "base": "A"
+        },
+        {
+          "kind": "reference",
+          "pos0": 121,
+          "base": "G"
+        },
+        {
+          "kind": "reference",
+          "pos0": 122,
+          "base": "G"
+        }
+      ],
+      "construction_basis": "complete_donor_reconstruction",
+      "padding_left": 0,
+      "padding_right": 0
+    },
+    "track": "synthetic_expression",
+    "cell_type": {
+      "value": "synthetic-HSPC-context",
+      "reason": null
+    },
+    "tissue": {
+      "value": null,
+      "reason": "not reported in this synthetic fixture"
+    },
+    "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+    "score": {
+      "value": 0.3,
+      "reason": null
+    },
+    "unit": "arbitrary_model_units",
+    "applicability": {
+      "status": "not_evaluated",
+      "reason_codes": [
+        "synthetic_model_contract_only"
+      ]
+    },
+    "uncertainty": {
+      "value": null,
+      "reason": "not reported in this synthetic fixture"
+    },
+    "terms_uri": "urn:bes:synthetic:model-terms",
+    "terms_version": "fixture-v1",
+    "redistribution": "permitted",
+    "record_id": "comparison_prediction:v1:e3ebb0d92f94088d43905e25b402d8b540a6bc7bb7fbd2f3638b48a0d520363d",
+    "prediction_id": "comparison_prediction:v1:e3ebb0d92f94088d43905e25b402d8b540a6bc7bb7fbd2f3638b48a0d520363d"
+  },
+  {
+    "record_type": "comparison_assay_capability",
+    "schema_version": "1",
+    "name": "synthetic-amplicon",
+    "endpoint_ids": [
+      "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45"
+    ],
+    "locus_ids": [
+      "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+    ],
+    "context_ids": [
+      "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+    ],
+    "resolution": "copy_specific",
+    "allele_resolved": true,
+    "feasibility": "simulation_assumption",
+    "required_control_roles": [
+      "mock",
+      "assay_qc"
+    ],
+    "qc_requirements": [
+      "synthetic-read-depth-check"
+    ],
+    "max_targets": 1,
+    "source_refs": [],
+    "record_id": "comparison_assay_capability:v1:5b9279b4a4f312ad13a8c72f03581e9c0b0f8a1d506f432c3178d0ce4abc1bd0",
+    "assay_capability_id": "comparison_assay_capability:v1:5b9279b4a4f312ad13a8c72f03581e9c0b0f8a1d506f432c3178d0ce4abc1bd0"
+  },
+  {
+    "record_type": "comparison_specimen",
+    "schema_version": "1",
+    "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "source_specimen_id": "synthetic-specimen-C",
+    "context_ids": [
+      "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+    ],
+    "availability": "simulation_assumption",
+    "permitted_use": {
+      "value": "software fixture",
+      "reason": null
+    },
+    "capacity": 1,
+    "source_refs": [],
+    "record_id": "comparison_specimen:v1:e8ea7e14722345c52d5f0aeaa00938833fe5c598aeb87454efde21620833f8e1",
+    "specimen_id": "comparison_specimen:v1:e8ea7e14722345c52d5f0aeaa00938833fe5c598aeb87454efde21620833f8e1"
+  },
+  {
+    "record_type": "comparison_resource",
+    "schema_version": "1",
+    "resource_type": "assay_library",
+    "cost": 1,
+    "cost_unit": "simulation_units",
+    "cost_scale": 1,
+    "sharing_key": "synthetic-single-library",
+    "capacities": [
+      {
+        "dimension": "libraries",
+        "capacity": {
+          "kind": "finite",
+          "quantity": 1
+        }
+      }
+    ],
+    "activation_rule": "on_use",
+    "compatibility": {
+      "donor_ids": [
+        "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d"
+      ],
+      "design_ids": [
+        "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136"
+      ],
+      "context_ids": [
+        "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+      ],
+      "batch_ids": [
+        "synthetic-batch-1"
+      ],
+      "assay_capability_ids": [
+        "comparison_assay_capability:v1:5b9279b4a4f312ad13a8c72f03581e9c0b0f8a1d506f432c3178d0ce4abc1bd0"
+      ],
+      "timepoints": [
+        "48 hour"
+      ],
+      "endpoint_ids": [
+        "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45"
+      ],
+      "locus_ids": [
+        "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+      ]
+    },
+    "pool_id": {
+      "value": "synthetic-library-pool",
+      "reason": null
+    },
+    "instance_index": 0,
+    "max_pool_instances": 1,
+    "record_id": "comparison_resource:v1:74e358230246e9519922e6fdc16f6cf800dc62f8cf239c7ba5ecbd22074a1da6",
+    "resource_id": "comparison_resource:v1:74e358230246e9519922e6fdc16f6cf800dc62f8cf239c7ba5ecbd22074a1da6"
+  },
+  {
+    "record_type": "comparison_action",
+    "schema_version": "1",
+    "operation_type": "intended_assay",
+    "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "specimen_id": "comparison_specimen:v1:e8ea7e14722345c52d5f0aeaa00938833fe5c598aeb87454efde21620833f8e1",
+    "design_id": {
+      "value": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "assay_capability_id": "comparison_assay_capability:v1:5b9279b4a4f312ad13a8c72f03581e9c0b0f8a1d506f432c3178d0ce4abc1bd0",
+    "endpoint_ids": [
+      "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45"
+    ],
+    "target_sequence_id": {
+      "value": "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7",
+      "reason": null
+    },
+    "locus_ids": [
+      "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+    ],
+    "replicate_position": 1,
+    "batch_id": "synthetic-batch-1",
+    "experiment_id": "synthetic-experiment-2",
+    "dependency_action_ids": [],
+    "control_requirements": [
+      {
+        "role": "mock",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45"
+        ],
+        "locus_ids": [
+          "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:5b9279b4a4f312ad13a8c72f03581e9c0b0f8a1d506f432c3178d0ce4abc1bd0",
+        "required_qc": [
+          "synthetic-read-depth-check"
+        ]
+      }
+    ],
+    "resource_demands": [
+      {
+        "resource_id": "comparison_resource:v1:74e358230246e9519922e6fdc16f6cf800dc62f8cf239c7ba5ecbd22074a1da6",
+        "dimension": "libraries",
+        "quantity": 1
+      }
+    ],
+    "eligibility_status": "eligible",
+    "reason_codes": [],
+    "memberships": [
+      {
+        "question_id": "comparison_question:v1:f0ebe5689838fa1f150a49b2a9bca3ec1eeba5715237524b154ce08130ca9081",
+        "slot_id": "comparison_requirement_slot:v1:059cafaef5606abd58840f22389fbcf9659bc1e313fbc6729fe957687fe65f25"
+      }
+    ],
+    "record_id": "comparison_action:v1:2969b3031ac5b87a94f3ea495fb236eeb64fb653f61b0f97786e3173261f6ed8",
+    "action_id": "comparison_action:v1:2969b3031ac5b87a94f3ea495fb236eeb64fb653f61b0f97786e3173261f6ed8"
+  },
+  {
+    "record_type": "comparison_requirement_slot",
+    "schema_version": "1",
+    "question_id": "comparison_question:v1:f0ebe5689838fa1f150a49b2a9bca3ec1eeba5715237524b154ce08130ca9081",
+    "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "arm_id": "resolved-donors",
+    "design_id": {
+      "value": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+      "reason": null
+    },
+    "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "locus_id": {
+      "value": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "reason": null
+    },
+    "control_role": "treatment_readout",
+    "replicate_position": 1,
+    "allowed_observation_ids": [],
+    "allowed_action_ids": [
+      "comparison_action:v1:2969b3031ac5b87a94f3ea495fb236eeb64fb653f61b0f97786e3173261f6ed8"
+    ],
+    "record_id": "comparison_requirement_slot:v1:059cafaef5606abd58840f22389fbcf9659bc1e313fbc6729fe957687fe65f25",
+    "slot_id": "comparison_requirement_slot:v1:059cafaef5606abd58840f22389fbcf9659bc1e313fbc6729fe957687fe65f25"
+  },
+  {
+    "record_type": "comparison_question",
+    "schema_version": "1",
+    "template": "candidate_validation",
+    "hypothesis": "Does this artificial candidate yield a measured editing fraction?",
+    "decision": "Check the contract representation of a proposed experiment",
+    "design_ids": [
+      "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136"
+    ],
+    "locus_ids": [
+      "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+    ],
+    "endpoint_ids": [
+      "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45"
+    ],
+    "context_ids": [
+      "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+    ],
+    "genotype_predicate": {
+      "kind": "any_resolved",
+      "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "sequence_configuration_id": {
+        "value": "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7",
+        "reason": null
+      },
+      "variants": [],
+      "dosage": {
+        "value": null,
+        "reason": "dosage is not part of this question"
+      },
+      "phase_requirement": "not_required",
+      "coverage_basis": "synthetic_truth"
+    },
+    "comparability": {
+      "require_same_context": true,
+      "require_same_endpoint": true,
+      "require_same_timepoint": true
+    },
+    "arms": [
+      {
+        "arm_id": "resolved-donors",
+        "membership": "all_resolved",
+        "required_independent_donors": 1
+      }
+    ],
+    "pairing": "none",
+    "relatedness_policy": "declared_simulation_assumption",
+    "technical_replicates": 1,
+    "control_requirements": [
+      {
+        "role": "mock",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45"
+        ],
+        "locus_ids": [
+          "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:5b9279b4a4f312ad13a8c72f03581e9c0b0f8a1d506f432c3178d0ce4abc1bd0",
+        "required_qc": [
+          "synthetic-read-depth-check"
+        ]
+      }
+    ],
+    "requirement_slot_ids": [
+      "comparison_requirement_slot:v1:059cafaef5606abd58840f22389fbcf9659bc1e313fbc6729fe957687fe65f25"
+    ],
+    "evidence_reuse": {
+      "allow_existing": false,
+      "allow_across_questions": false,
+      "require_new": [
+        "experiment"
+      ],
+      "excluded_observation_ids": [
+        "comparison_source_observation:v1:2f9e82a807b7ae6a241091d3b6f4d8e85d7380feb513e3fa97a1547437b03d85"
+      ],
+      "excluded_experiment_ids": [
+        "synthetic-experiment-1"
+      ]
+    },
+    "matching_covariates": [],
+    "priority_weight": 1,
+    "hard_required": true,
+    "rationale": "Artificial software contract exercise",
+    "policy_version": "synthetic-questions-v1",
+    "motivating_observation_ids": [
+      "comparison_source_observation:v1:2f9e82a807b7ae6a241091d3b6f4d8e85d7380feb513e3fa97a1547437b03d85"
+    ],
+    "motivating_configuration_ids": [
+      "comparison_design_configuration:v1:9e39673681d009bf95342bf61f61c08105e2d534382b24d2dde0a1df8ca06419"
+    ],
+    "motivating_prediction_ids": [
+      "comparison_prediction:v1:e3ebb0d92f94088d43905e25b402d8b540a6bc7bb7fbd2f3638b48a0d520363d"
+    ],
+    "planning_status": "unplanned",
+    "evidence_status": "no_measurements",
+    "remaining_gaps": [
+      "requires_a_new_experiment"
+    ],
+    "record_id": "comparison_question:v1:f0ebe5689838fa1f150a49b2a9bca3ec1eeba5715237524b154ce08130ca9081",
+    "question_id": "comparison_question:v1:f0ebe5689838fa1f150a49b2a9bca3ec1eeba5715237524b154ce08130ca9081"
+  },
+  {
+    "record_type": "comparison_source_artifact",
+    "schema_version": "1",
+    "sha256": "5d2af5e341d6f560c45b51b8c93be0f3d320624e213ecb487acde9ba76f51e8f",
+    "source_id": "legacy-synthetic-reference",
+    "release": "v3-synthetic-example",
+    "uri": "urn:bes:synthetic:legacy-reference",
+    "media_type": "text/x-fasta",
+    "scope": "complete_file",
+    "parent_artifact_id": {
+      "value": null,
+      "reason": "original artifact"
+    },
+    "locator": {
+      "kind": "file",
+      "member": "examples/population/synthetic/reference.fa"
+    },
+    "access": "synthetic",
+    "use_terms": "Existing artificial V3 software fixture",
+    "record_id": "comparison_source_artifact:v1:9118f3e35c44075f1a6621d1de5da180fe952a48f9cfc32b83be79cec2fed6c8",
+    "source_artifact_id": "comparison_source_artifact:v1:9118f3e35c44075f1a6621d1de5da180fe952a48f9cfc32b83be79cec2fed6c8"
+  },
+  {
+    "record_type": "comparison_reference_bundle",
+    "schema_version": "1",
+    "assembly": "synthetic_V3",
+    "identity_kind": "complete_reference_files",
+    "source_artifact_ids": [
+      "comparison_source_artifact:v1:9118f3e35c44075f1a6621d1de5da180fe952a48f9cfc32b83be79cec2fed6c8"
+    ],
+    "source_checksums": [
+      "5d2af5e341d6f560c45b51b8c93be0f3d320624e213ecb487acde9ba76f51e8f"
+    ],
+    "windows": [],
+    "complete_reference_sha256": {
+      "value": "5d2af5e341d6f560c45b51b8c93be0f3d320624e213ecb487acde9ba76f51e8f",
+      "reason": null
+    },
+    "transformation_version": "v3-identity-bridge-v1",
+    "record_id": "comparison_reference_bundle:v1:3b8a3dab437a4aeb1b1305a7ada2dd4dd48b4b0a2ccdc37277cab30c430438db",
+    "reference_bundle_id": "comparison_reference_bundle:v1:3b8a3dab437a4aeb1b1305a7ada2dd4dd48b4b0a2ccdc37277cab30c430438db"
+  },
+  {
+    "record_type": "comparison_locus",
+    "schema_version": "1",
+    "reference_bundle_id": "comparison_reference_bundle:v1:3b8a3dab437a4aeb1b1305a7ada2dd4dd48b4b0a2ccdc37277cab30c430438db",
+    "contig": "chrSYNcontrol",
+    "start": 0,
+    "end": 23,
+    "strand": "+",
+    "locus_name": "V3 artificial control locus",
+    "gene": {
+      "value": null,
+      "reason": "artificial sequence has no gene annotation"
+    },
+    "path": [
+      {
+        "base": "A",
+        "kind": "reference",
+        "pos0": 0
+      },
+      {
+        "base": "C",
+        "kind": "reference",
+        "pos0": 1
+      },
+      {
+        "base": "G",
+        "kind": "reference",
+        "pos0": 2
+      },
+      {
+        "base": "T",
+        "kind": "reference",
+        "pos0": 3
+      },
+      {
+        "base": "T",
+        "kind": "reference",
+        "pos0": 4
+      },
+      {
+        "base": "G",
+        "kind": "reference",
+        "pos0": 5
+      },
+      {
+        "base": "C",
+        "kind": "reference",
+        "pos0": 6
+      },
+      {
+        "base": "A",
+        "kind": "reference",
+        "pos0": 7
+      },
+      {
+        "base": "A",
+        "kind": "reference",
+        "pos0": 8
+      },
+      {
+        "base": "T",
+        "kind": "reference",
+        "pos0": 9
+      },
+      {
+        "base": "G",
+        "kind": "reference",
+        "pos0": 10
+      },
+      {
+        "base": "C",
+        "kind": "reference",
+        "pos0": 11
+      },
+      {
+        "base": "T",
+        "kind": "reference",
+        "pos0": 12
+      },
+      {
+        "base": "A",
+        "kind": "reference",
+        "pos0": 13
+      },
+      {
+        "base": "G",
+        "kind": "reference",
+        "pos0": 14
+      },
+      {
+        "base": "C",
+        "kind": "reference",
+        "pos0": 15
+      },
+      {
+        "base": "T",
+        "kind": "reference",
+        "pos0": 16
+      },
+      {
+        "base": "A",
+        "kind": "reference",
+        "pos0": 17
+      },
+      {
+        "base": "A",
+        "kind": "reference",
+        "pos0": 18
+      },
+      {
+        "base": "C",
+        "kind": "reference",
+        "pos0": 19
+      },
+      {
+        "base": "T",
+        "kind": "reference",
+        "pos0": 20
+      },
+      {
+        "base": "G",
+        "kind": "reference",
+        "pos0": 21
+      },
+      {
+        "base": "G",
+        "kind": "reference",
+        "pos0": 22
+      }
+    ],
+    "record_id": "comparison_locus:v1:903c7ff3749c1634e0954ca124a0a5546635f1b13d9ea3c27d6060f76cda255a",
+    "locus_id": "comparison_locus:v1:903c7ff3749c1634e0954ca124a0a5546635f1b13d9ea3c27d6060f76cda255a"
+  },
+  {
+    "record_type": "comparison_sequence_configuration",
+    "schema_version": "1",
+    "reference_bundle_id": "comparison_reference_bundle:v1:3b8a3dab437a4aeb1b1305a7ada2dd4dd48b4b0a2ccdc37277cab30c430438db",
+    "locus_id": "comparison_locus:v1:903c7ff3749c1634e0954ca124a0a5546635f1b13d9ea3c27d6060f76cda255a",
+    "contig": "chrSYNcontrol",
+    "strand": "+",
+    "sequence": "ACGTTGCAATGCTAGCTAACTGG",
+    "path": [
+      {
+        "base": "A",
+        "kind": "reference",
+        "pos0": 0
+      },
+      {
+        "base": "C",
+        "kind": "reference",
+        "pos0": 1
+      },
+      {
+        "base": "G",
+        "kind": "reference",
+        "pos0": 2
+      },
+      {
+        "base": "T",
+        "kind": "reference",
+        "pos0": 3
+      },
+      {
+        "base": "T",
+        "kind": "reference",
+        "pos0": 4
+      },
+      {
+        "base": "G",
+        "kind": "reference",
+        "pos0": 5
+      },
+      {
+        "base": "C",
+        "kind": "reference",
+        "pos0": 6
+      },
+      {
+        "base": "A",
+        "kind": "reference",
+        "pos0": 7
+      },
+      {
+        "base": "A",
+        "kind": "reference",
+        "pos0": 8
+      },
+      {
+        "base": "T",
+        "kind": "reference",
+        "pos0": 9
+      },
+      {
+        "base": "G",
+        "kind": "reference",
+        "pos0": 10
+      },
+      {
+        "base": "C",
+        "kind": "reference",
+        "pos0": 11
+      },
+      {
+        "base": "T",
+        "kind": "reference",
+        "pos0": 12
+      },
+      {
+        "base": "A",
+        "kind": "reference",
+        "pos0": 13
+      },
+      {
+        "base": "G",
+        "kind": "reference",
+        "pos0": 14
+      },
+      {
+        "base": "C",
+        "kind": "reference",
+        "pos0": 15
+      },
+      {
+        "base": "T",
+        "kind": "reference",
+        "pos0": 16
+      },
+      {
+        "base": "A",
+        "kind": "reference",
+        "pos0": 17
+      },
+      {
+        "base": "A",
+        "kind": "reference",
+        "pos0": 18
+      },
+      {
+        "base": "C",
+        "kind": "reference",
+        "pos0": 19
+      },
+      {
+        "base": "T",
+        "kind": "reference",
+        "pos0": 20
+      },
+      {
+        "base": "G",
+        "kind": "reference",
+        "pos0": 21
+      },
+      {
+        "base": "G",
+        "kind": "reference",
+        "pos0": 22
+      }
+    ],
+    "variants": [],
+    "support_status": "supported",
+    "support_reason": null,
+    "record_id": "comparison_sequence_configuration:v1:1a189b87eb0a125465fd46fc2fd75b23a284608df492ce4d104a793c31f33f41",
+    "sequence_configuration_id": "comparison_sequence_configuration:v1:1a189b87eb0a125465fd46fc2fd75b23a284608df492ce4d104a793c31f33f41"
+  },
+  {
+    "record_type": "comparison_identity_bridge",
+    "schema_version": "1",
+    "legacy_family": "population",
+    "legacy_schema_version": "1",
+    "legacy_record_id": "seq:83368a8625a8bcb01f3aea13d60d981e614f7b4aed89aed393dee95c6f085990",
+    "legacy_payload_json": "{\"contig\":\"chrSYNcontrol\",\"deletion_events\":[],\"donor_id\":null,\"excluded_intervals\":[],\"heterozygous_sites\":[],\"interval\":{\"contig\":\"chrSYNcontrol\",\"end\":23,\"start\":0},\"local_copy\":0,\"normalized_variant_keys\":[],\"phase_status\":\"reference\",\"provenance\":[\"run:1466385f3b307d1d7f044b63e01a7b5ff4dd214e7d59929b58c55ee5bbac115e\"],\"record_type\":\"sequence_configuration\",\"reference_evidence\":\"pinned_reference\",\"reference_id\":\"5d2af5e341d6f560c45b51b8c93be0f3d320624e213ecb487acde9ba76f51e8f\",\"run_id\":\"run:1466385f3b307d1d7f044b63e01a7b5ff4dd214e7d59929b58c55ee5bbac115e\",\"schema_version\":\"1\",\"sequence_configuration_id\":\"seq:83368a8625a8bcb01f3aea13d60d981e614f7b4aed89aed393dee95c6f085990\",\"sequence_genomic_forward\":\"ACGTTGCAATGCTAGCTAACTGG\",\"sequence_path\":[{\"base\":\"A\",\"kind\":\"reference\",\"pos0\":0},{\"base\":\"C\",\"kind\":\"reference\",\"pos0\":1},{\"base\":\"G\",\"kind\":\"reference\",\"pos0\":2},{\"base\":\"T\",\"kind\":\"reference\",\"pos0\":3},{\"base\":\"T\",\"kind\":\"reference\",\"pos0\":4},{\"base\":\"G\",\"kind\":\"reference\",\"pos0\":5},{\"base\":\"C\",\"kind\":\"reference\",\"pos0\":6},{\"base\":\"A\",\"kind\":\"reference\",\"pos0\":7},{\"base\":\"A\",\"kind\":\"reference\",\"pos0\":8},{\"base\":\"T\",\"kind\":\"reference\",\"pos0\":9},{\"base\":\"G\",\"kind\":\"reference\",\"pos0\":10},{\"base\":\"C\",\"kind\":\"reference\",\"pos0\":11},{\"base\":\"T\",\"kind\":\"reference\",\"pos0\":12},{\"base\":\"A\",\"kind\":\"reference\",\"pos0\":13},{\"base\":\"G\",\"kind\":\"reference\",\"pos0\":14},{\"base\":\"C\",\"kind\":\"reference\",\"pos0\":15},{\"base\":\"T\",\"kind\":\"reference\",\"pos0\":16},{\"base\":\"A\",\"kind\":\"reference\",\"pos0\":17},{\"base\":\"A\",\"kind\":\"reference\",\"pos0\":18},{\"base\":\"C\",\"kind\":\"reference\",\"pos0\":19},{\"base\":\"T\",\"kind\":\"reference\",\"pos0\":20},{\"base\":\"G\",\"kind\":\"reference\",\"pos0\":21},{\"base\":\"G\",\"kind\":\"reference\",\"pos0\":22}],\"sequence_status\":\"resolved\",\"source_call_ids\":[],\"variant_intervals\":[]}",
+    "legacy_payload_sha256": "298f8d1808ad73729bfc880aa73cf0a961663988108b7d76a86d0126ae8525f4",
+    "new_record_id": "comparison_sequence_configuration:v1:1a189b87eb0a125465fd46fc2fd75b23a284608df492ce4d104a793c31f33f41",
+    "relationship": "incompatible_identity_semantics",
+    "mapping_version": "1",
+    "reason": "Same original DNA and coordinate path; donor-associated V3 identity is replaced by a namespaced sequence-content identity",
+    "record_id": "comparison_identity_bridge:v1:b826114b189ef5fa0063857bd8d480dd109f54670aa8da6eff3dc663265e6eaf",
+    "bridge_id": "comparison_identity_bridge:v1:b826114b189ef5fa0063857bd8d480dd109f54670aa8da6eff3dc663265e6eaf"
+  },
+  {
+    "record_type": "comparison_donor_design_summary",
+    "schema_version": "1",
+    "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "design_id": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+    "domain_id": "comparison_domain:v1:bb0548973fb9a79d15336784e546e4f65b0d8fe30fcdfcd2ab0348191024f268",
+    "intended_assessment_ids": [
+      "comparison_intended_assessment:v1:ed0d31cd3c97527ba93966311697521158fc62364c7348bc872416eb7ec68ddb"
+    ],
+    "search_scope_ids": [
+      "comparison_search_scope:v1:11c0e341ea1b127058e9696188694eee68d5a7f0a82d3afe25aff956a5078408"
+    ],
+    "intended_evaluability": "supported",
+    "search_status": "complete",
+    "nominated_configuration_ids": [
+      "comparison_design_configuration:v1:9e39673681d009bf95342bf61f61c08105e2d534382b24d2dde0a1df8ca06419"
+    ],
+    "nominated_alignment_ids": [
+      "comparison_alignment:v1:90c0a4b5f05716b7e040ce65501b51a18e2e6b49e9875159fcd7e57a2280178e"
+    ],
+    "observed_configuration_count": 1,
+    "observed_alignment_count": 1,
+    "complete_configuration_count": {
+      "value": 1,
+      "reason": null
+    },
+    "reason_codes": [],
+    "evidence_observation_ids": [],
+    "evidence_availability": "not_assessed",
+    "record_id": "comparison_donor_design_summary:v1:e6070172e2122177682bab55c6edb9c93ed3295838083919e2b00666f7f1693f",
+    "donor_design_summary_id": "comparison_donor_design_summary:v1:e6070172e2122177682bab55c6edb9c93ed3295838083919e2b00666f7f1693f"
+  },
+  {
+    "record_type": "comparison_design_summary",
+    "schema_version": "1",
+    "design_id": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+    "domain_id": "comparison_domain:v1:bb0548973fb9a79d15336784e546e4f65b0d8fe30fcdfcd2ab0348191024f268",
+    "search_scope_ids": [
+      "comparison_search_scope:v1:11c0e341ea1b127058e9696188694eee68d5a7f0a82d3afe25aff956a5078408"
+    ],
+    "donor_count": 1,
+    "intended_evaluable_donors": 1,
+    "intended_unresolved_donors": 0,
+    "search_evaluable_donors": 1,
+    "search_unresolved_donors": 0,
+    "observed_locus_count": 1,
+    "observed_sequence_configuration_count": 1,
+    "observed_alignment_count": 1,
+    "complete_locus_count": {
+      "value": 1,
+      "reason": null
+    },
+    "complete_sequence_configuration_count": {
+      "value": 1,
+      "reason": null
+    },
+    "complete_alignment_count": {
+      "value": 1,
+      "reason": null
+    },
+    "supported_carrier_donors": 1,
+    "modeled_carrier_donors": 0,
+    "variant_effect_ids": [
+      "comparison_variant_effect:v1:20ded05f2cf92bc1adb7f36955191ffa2127f425232bcf9cf18c297c57814c97"
+    ],
+    "evidence_observation_ids": [],
+    "reason_codes": [
+      "artificial_contract_fixture"
+    ],
+    "record_id": "comparison_design_summary:v1:0610a6ce79eb76adc2c65a57ac3db6663dccc7d54b670349112bf3f18e914a4f",
+    "design_summary_id": "comparison_design_summary:v1:0610a6ce79eb76adc2c65a57ac3db6663dccc7d54b670349112bf3f18e914a4f"
+  },
+  {
+    "record_type": "comparison_decision",
+    "schema_version": "1",
+    "design_ids": [
+      "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136"
+    ],
+    "domain_id": "comparison_domain:v1:bb0548973fb9a79d15336784e546e4f65b0d8fe30fcdfcd2ab0348191024f268",
+    "state": "insufficient_comparable_evidence",
+    "observation_ids": [],
+    "prediction_ids": [],
+    "reason_codes": [
+      "artificial_contract_fixture"
+    ],
+    "question": "Which experiment would address the declared artificial question?",
+    "record_id": "comparison_decision:v1:cb545b3543f3696d06c2d82340dadaac05ef7494797e2f1828922aa161a5d7f6",
+    "decision_id": "comparison_decision:v1:cb545b3543f3696d06c2d82340dadaac05ef7494797e2f1828922aa161a5d7f6"
+  },
+  {
+    "record_type": "comparison_experiment_plan",
+    "schema_version": "1",
+    "planner_version": "synthetic-contract-v1",
+    "source_sha256": "83e2bd5d57210831f945e9e9f42f29ee3301ba880e783c3a2b10dd59092b4573",
+    "implementation_sha256": "307c9a20587857625daa8a90c28ff3937b74eb003e9df153913e3efd3de4583a",
+    "previous_plan_id": {
+      "value": null,
+      "reason": "first artificial plan"
+    },
+    "selector": "canonical_bundle",
+    "random_seed": 0,
+    "limits": {
+      "beam_width": 1,
+      "max_expansions": 1,
+      "max_alternatives_per_question": 1,
+      "exact_action_cap": 1,
+      "exact_resource_cap": 1,
+      "exact_state_cap": 1
+    },
+    "budget": 0,
+    "fill_policy": "none",
+    "status": "no_feasible_bundle_found",
+    "optimality_established": false,
+    "meets_request": false,
+    "selected_action_ids": [],
+    "resource_assignments": [],
+    "total_cost": 0,
+    "cost_unit": "simulation_units",
+    "cost_scale": 1,
+    "active_resource_ids": [],
+    "mandatory_seed_cost": {
+      "value": null,
+      "reason": "no feasible seed found"
+    },
+    "weighted_completion": 0,
+    "unweighted_completion": 0,
+    "existing_evidence_weight": 0,
+    "newly_planned_weight": 0,
+    "question_states": [
+      {
+        "question_id": "comparison_question:v1:f0ebe5689838fa1f150a49b2a9bca3ec1eeba5715237524b154ce08130ca9081",
+        "planning_status": "no_feasible_bundle_found",
+        "evidence_status": "no_measurements"
+      }
+    ],
+    "audit_sha256": "dd19345d8344426ab4e324af321d0e5c14b034704ad8045454016402524ac3c2",
+    "record_id": "comparison_experiment_plan:v1:578a80e9d4da1fdde495c3640ef0d6b4110b0356e3d0910d6b40ebb78f9586de",
+    "plan_id": "comparison_experiment_plan:v1:578a80e9d4da1fdde495c3640ef0d6b4110b0356e3d0910d6b40ebb78f9586de"
+  }
+]

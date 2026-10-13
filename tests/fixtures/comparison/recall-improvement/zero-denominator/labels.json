@@ -1,0 +1,20 @@
+[
+  {
+    "candidate_id": "q1",
+    "adjudicated_outcome": "tested_no_signal",
+    "evidence_reference": "artificial:fixture:q1",
+    "adjudication_reason": "Declared artificial software expectation; no source measurement"
+  },
+  {
+    "candidate_id": "q2",
+    "adjudicated_outcome": "inconclusive",
+    "evidence_reference": "artificial:fixture:q2",
+    "adjudication_reason": "Declared artificial software expectation; no source measurement"
+  },
+  {
+    "candidate_id": "q3",
+    "adjudicated_outcome": "untested",
+    "evidence_reference": "artificial:fixture:q3",
+    "adjudication_reason": "Declared artificial software expectation; no source measurement"
+  }
+]

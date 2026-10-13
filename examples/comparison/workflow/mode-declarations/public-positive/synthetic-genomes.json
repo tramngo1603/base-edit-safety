@@ -1,0 +1,43 @@
+{
+  "artificial_mode_declarations": {
+    "assay_feasibility": "Hypothetical assay assumption",
+    "availability": "Hypothetical specimen assumption",
+    "case": "public-positive",
+    "counterexample_change": "none",
+    "coverage_basis_under_test": "retained_callset_model",
+    "independence": "C and N are distinct artificial groups by fixture construction",
+    "missing_copy": null,
+    "mode_under_test": "benchmark_simulation",
+    "observed_measurements": [],
+    "permitted_use": "Artificial software declaration checks only",
+    "real_specimens_exist": false,
+    "scope": "Artificial canonical declaration and eligibility checks; no genomic search or real specimen verification",
+    "sequence_support": "The literal two-copy T/L sequences are fixture truth only; no GRCh38 or callability pipeline was run"
+  },
+  "candidate_alternate": "ACGTGCGTACGTACGTACGTAGG",
+  "candidate_reference": "ACGTACGTACGTACGTACGTAGG",
+  "donors": {
+    "C": {
+      "candidate_copies": [
+        "alternate",
+        "reference"
+      ],
+      "intended_copies": [
+        "reference",
+        "reference"
+      ]
+    },
+    "N": {
+      "candidate_copies": [
+        "reference",
+        "reference"
+      ],
+      "intended_copies": [
+        "reference",
+        "reference"
+      ]
+    }
+  },
+  "intended_sequence": "ACGTACGTACGTACGTACGTAGG",
+  "kind": "artificial_diploid_truth"
+}

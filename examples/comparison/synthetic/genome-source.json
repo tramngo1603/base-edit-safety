@@ -1,0 +1,327 @@
+{
+  "assay_policy": {
+    "allele_resolved": true,
+    "assay_cost": 1,
+    "assay_id": "synthetic_assay",
+    "biological_context_id": "context:4cf8b5df43ee7edb5faf97df7a71e862aec70999793bded34775feda3caec9f5",
+    "context": {
+      "cell_type": "synthetic_cells",
+      "condition": "synthetic_condition",
+      "delivery": "synthetic_delivery"
+    },
+    "control_costs_included": true,
+    "extra_context_bases": 0,
+    "feasibility": "declared_feasible",
+    "guide_ids": [
+      "LEGACY_A"
+    ],
+    "locus_resolved": true,
+    "locus_scope": {
+      "loci": [],
+      "mode": "all_admitted_loci_simulation"
+    },
+    "measurement_class": "editing",
+    "resolution_contract_id": "resolution:a188dd6e73cc482bf5a85e63f0f7069f2e3abff9a436f77c36a1a1bfe23e0e84",
+    "specimen_context_id": "synthetic_cells"
+  },
+  "benchmark_policy": {
+    "budget_grid": [
+      0,
+      2,
+      4,
+      6
+    ],
+    "endpoints": [
+      "nomination_changes",
+      "planned_configuration_coverage"
+    ],
+    "relatedness_policy": "All donors are artificial distinct identities; no generalization claim.",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99
+    ],
+    "selectors": [
+      "greedy_cost",
+      "greedy_coverage",
+      "canonical_order",
+      "random_order"
+    ],
+    "split": "transductive"
+  },
+  "coverage_basis": "synthetic_truth",
+  "genotype_policy": {
+    "accepted_sample_filters": [
+      ".",
+      "PASS"
+    ],
+    "accepted_site_filters": [
+      "PASS"
+    ],
+    "min_dp": null,
+    "min_gq": null,
+    "phase": "vcf_implicit_phase_set",
+    "ploidy": 2,
+    "reference_evidence": "synthetic_complete"
+  },
+  "input_sources": {
+    "donors": {
+      "release": "constructed_v1",
+      "sha256": "728267cef9e5dbbbacf1c372282df48f6e78ca99b21f07d8bb7ab489f7ced281",
+      "source_class": "synthetic",
+      "source_id": "synthetic:donors",
+      "url": null,
+      "use_notes": "Artificial sequences, donors and capabilities; no real specimens or measurements."
+    },
+    "guides": {
+      "release": "constructed_v1",
+      "sha256": "09e47ba53fc97243e6777376fb77eb74d68413bf3b7f0204f8fcc410e26907fa",
+      "source_class": "synthetic",
+      "source_id": "synthetic:guides",
+      "url": null,
+      "use_notes": "Artificial sequences, donors and capabilities; no real specimens or measurements."
+    },
+    "intended_loci": {
+      "release": "constructed_v1",
+      "sha256": "9bb273ff09f54147a36919f412f54b1a8c1b5d784f67d8959ebeca30f5a2a753",
+      "source_class": "synthetic",
+      "source_id": "synthetic:intended_loci",
+      "url": null,
+      "use_notes": "Artificial sequences, donors and capabilities; no real specimens or measurements."
+    },
+    "reference": {
+      "release": "constructed_v1",
+      "sha256": "c0f421b6bb327573ff13fda2a0a199272c21f7ba57a2ca591c1dce22e9766905",
+      "source_class": "synthetic",
+      "source_id": "synthetic:reference",
+      "url": null,
+      "use_notes": "Artificial sequences, donors and capabilities; no real specimens or measurements."
+    },
+    "variants": {
+      "release": "constructed_v1",
+      "sha256": "69d7cc1629639a6ca32207a81d93dfc6e0d047ba3d894f1f0de0d5b9dd69059c",
+      "source_class": "synthetic",
+      "source_id": "synthetic:variants",
+      "url": null,
+      "use_notes": "Artificial sequences, donors and capabilities; no real specimens or measurements."
+    }
+  },
+  "inputs": {
+    "callable_intervals": null,
+    "candidate_ledger": null,
+    "donors": "donors.tsv",
+    "guides": "legacy-guides.tsv",
+    "intended_loci": "legacy-intended.tsv",
+    "measurement_linkage": null,
+    "reference": "reference.fa",
+    "variants": "variants.vcf"
+  },
+  "mode": "synthetic_test",
+  "planning_policy": {
+    "algorithm": "greedy_cost",
+    "cost_unit": "synthetic_integer",
+    "default_required_donors": 1,
+    "default_weight": 1,
+    "fixed_overhead": 0,
+    "max_assays": null,
+    "max_cost": 4,
+    "max_donors": null
+  },
+  "record_type": "population_study_config",
+  "reference_policy": {
+    "genome_build": "comparison_synthetic_v1",
+    "contig_alias_map": {
+      "chrSYNHBG1": "chrSYNHBG1",
+      "chrSYNHBG2": "chrSYNHBG2",
+      "chrSYNGAIN": "chrSYNGAIN",
+      "chrSYNREVERSE": "chrSYNREVERSE",
+      "chrSYNMULT": "chrSYNMULT"
+    },
+    "permitted_contigs": [
+      "chrSYNHBG1",
+      "chrSYNHBG2",
+      "chrSYNGAIN",
+      "chrSYNREVERSE",
+      "chrSYNMULT"
+    ]
+  },
+  "resource_limits": {
+    "max_configurations": 100000,
+    "max_donors": 32,
+    "max_hit_rows": 250000,
+    "max_reconstructed_bases": 5000000,
+    "max_reference_bases": 100000,
+    "max_variant_rows": 100000
+  },
+  "schema_version": "1",
+  "scope": {
+    "requested_intervals": [
+      {
+        "contig": "chrSYNHBG1",
+        "start": 0,
+        "end": 23
+      },
+      {
+        "contig": "chrSYNHBG2",
+        "start": 0,
+        "end": 23
+      },
+      {
+        "contig": "chrSYNGAIN",
+        "start": 0,
+        "end": 23
+      },
+      {
+        "contig": "chrSYNREVERSE",
+        "start": 0,
+        "end": 23
+      },
+      {
+        "contig": "chrSYNMULT",
+        "start": 0,
+        "end": 32
+      }
+    ],
+    "materialized_intervals": [
+      {
+        "contig": "chrSYNHBG1",
+        "start": 0,
+        "end": 23
+      },
+      {
+        "contig": "chrSYNHBG2",
+        "start": 0,
+        "end": 23
+      },
+      {
+        "contig": "chrSYNGAIN",
+        "start": 0,
+        "end": 23
+      },
+      {
+        "contig": "chrSYNREVERSE",
+        "start": 0,
+        "end": 23
+      },
+      {
+        "contig": "chrSYNMULT",
+        "start": 0,
+        "end": 32
+      }
+    ]
+  },
+  "search_profile": {
+    "backend": "regional_exhaustive_v1",
+    "max_dna_bulge": 0,
+    "max_mismatches": 0,
+    "max_rna_bulge": 0,
+    "pam_patterns": [
+      "NGG"
+    ],
+    "retention": "all",
+    "spacer_length": 20
+  },
+  "study_id": "comparison-synthetic-genome-source-v1",
+  "variant_policy": {
+    "max_allele_length": 50,
+    "normalizer": "constructed minimal literal variants v1",
+    "unsupported_footprint": "mark_affected_scope_unknown"
+  }
+}

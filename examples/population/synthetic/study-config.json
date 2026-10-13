@@ -1,0 +1,315 @@
+{
+  "assay_policy": {
+    "allele_resolved": true,
+    "assay_cost": 1,
+    "assay_id": "synthetic_assay",
+    "biological_context_id": "context:4cf8b5df43ee7edb5faf97df7a71e862aec70999793bded34775feda3caec9f5",
+    "context": {
+      "cell_type": "synthetic_cells",
+      "condition": "synthetic_condition",
+      "delivery": "synthetic_delivery"
+    },
+    "control_costs_included": true,
+    "extra_context_bases": 0,
+    "feasibility": "declared_feasible",
+    "guide_ids": [
+      "SYN_guide"
+    ],
+    "locus_resolved": true,
+    "locus_scope": {
+      "loci": [],
+      "mode": "all_admitted_loci_simulation"
+    },
+    "measurement_class": "editing",
+    "resolution_contract_id": "resolution:60f43f85fd02d44dc8615b3136dcabb32eb1f405785e340e4b49c1bd3b8a46f1",
+    "specimen_context_id": "synthetic_cells"
+  },
+  "benchmark_policy": {
+    "budget_grid": [
+      0,
+      2,
+      4,
+      6
+    ],
+    "endpoints": [
+      "nomination_changes",
+      "planned_configuration_coverage"
+    ],
+    "relatedness_policy": "All donors are artificial distinct identities; no generalization claim.",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99
+    ],
+    "selectors": [
+      "greedy_cost",
+      "greedy_coverage",
+      "canonical_order",
+      "random_order"
+    ],
+    "split": "transductive"
+  },
+  "coverage_basis": "synthetic_truth",
+  "genotype_policy": {
+    "accepted_sample_filters": [
+      ".",
+      "PASS"
+    ],
+    "accepted_site_filters": [
+      "PASS"
+    ],
+    "min_dp": null,
+    "min_gq": null,
+    "phase": "vcf_implicit_phase_set",
+    "ploidy": 2,
+    "reference_evidence": "synthetic_complete"
+  },
+  "input_sources": {
+    "donors": {
+      "release": "constructed_v1",
+      "sha256": null,
+      "source_class": "synthetic",
+      "source_id": "synthetic:donors",
+      "url": null,
+      "use_notes": "Artificial sequences, donors and capabilities; no real specimens or measurements."
+    },
+    "guides": {
+      "release": "constructed_v1",
+      "sha256": null,
+      "source_class": "synthetic",
+      "source_id": "synthetic:guides",
+      "url": null,
+      "use_notes": "Artificial sequences, donors and capabilities; no real specimens or measurements."
+    },
+    "intended_loci": {
+      "release": "constructed_v1",
+      "sha256": null,
+      "source_class": "synthetic",
+      "source_id": "synthetic:intended_loci",
+      "url": null,
+      "use_notes": "Artificial sequences, donors and capabilities; no real specimens or measurements."
+    },
+    "reference": {
+      "release": "constructed_v1",
+      "sha256": null,
+      "source_class": "synthetic",
+      "source_id": "synthetic:reference",
+      "url": null,
+      "use_notes": "Artificial sequences, donors and capabilities; no real specimens or measurements."
+    },
+    "variants": {
+      "release": "constructed_v1",
+      "sha256": null,
+      "source_class": "synthetic",
+      "source_id": "synthetic:variants",
+      "url": null,
+      "use_notes": "Artificial sequences, donors and capabilities; no real specimens or measurements."
+    }
+  },
+  "inputs": {
+    "callable_intervals": null,
+    "candidate_ledger": null,
+    "donors": "donors.tsv",
+    "guides": "guides.tsv",
+    "intended_loci": "intended-loci.tsv",
+    "measurement_linkage": null,
+    "reference": "reference.fa",
+    "variants": "variants.vcf"
+  },
+  "mode": "synthetic_test",
+  "planning_policy": {
+    "algorithm": "greedy_cost",
+    "cost_unit": "synthetic_integer",
+    "default_required_donors": 1,
+    "default_weight": 1,
+    "fixed_overhead": 0,
+    "max_assays": null,
+    "max_cost": 4,
+    "max_donors": null
+  },
+  "record_type": "population_study_config",
+  "reference_policy": {
+    "contig_alias_map": {
+      "chrSYNcontrol": "chrSYNcontrol",
+      "toy_gain": "toy_gain",
+      "toy_loss": "toy_loss",
+      "toy_reverse": "toy_reverse"
+    },
+    "genome_build": "synthetic_v3_search_1",
+    "permitted_contigs": [
+      "toy_gain",
+      "toy_loss",
+      "toy_reverse",
+      "chrSYNcontrol"
+    ]
+  },
+  "resource_limits": {
+    "max_configurations": 100000,
+    "max_donors": 32,
+    "max_hit_rows": 250000,
+    "max_reconstructed_bases": 5000000,
+    "max_reference_bases": 100000,
+    "max_variant_rows": 100000
+  },
+  "schema_version": "1",
+  "scope": {
+    "materialized_intervals": [
+      {
+        "contig": "toy_gain",
+        "end": 23,
+        "start": 0
+      },
+      {
+        "contig": "toy_loss",
+        "end": 23,
+        "start": 0
+      },
+      {
+        "contig": "toy_reverse",
+        "end": 23,
+        "start": 0
+      },
+      {
+        "contig": "chrSYNcontrol",
+        "end": 23,
+        "start": 0
+      }
+    ],
+    "requested_intervals": [
+      {
+        "contig": "toy_gain",
+        "end": 23,
+        "start": 0
+      },
+      {
+        "contig": "toy_loss",
+        "end": 23,
+        "start": 0
+      },
+      {
+        "contig": "toy_reverse",
+        "end": 23,
+        "start": 0
+      },
+      {
+        "contig": "chrSYNcontrol",
+        "end": 23,
+        "start": 0
+      }
+    ]
+  },
+  "search_profile": {
+    "backend": "regional_exhaustive_v1",
+    "max_dna_bulge": 0,
+    "max_mismatches": 0,
+    "max_rna_bulge": 0,
+    "pam_patterns": [
+      "NGG"
+    ],
+    "retention": "all",
+    "spacer_length": 20
+  },
+  "study_id": "synthetic-created-destroyed-pam-v1",
+  "variant_policy": {
+    "max_allele_length": 50,
+    "normalizer": "constructed minimal literal variants v1",
+    "unsupported_footprint": "mark_affected_scope_unknown"
+  }
+}

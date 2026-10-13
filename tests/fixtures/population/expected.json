@@ -1,0 +1,67 @@
+{
+  "fixture_type": "synthetic_sequence_truth",
+  "schema_version": "1",
+  "reference_build": "synthetic_v3_search_1",
+  "guide": "ACGTTGCAATGCTAGCTAAC",
+  "pam_pattern": "NGG",
+  "max_mismatches": 0,
+  "max_bulges": 0,
+  "reference_callability": "complete_by_synthetic_construction_except_missing_variant_calls",
+  "scope_rule": "one_23_base_window_per_contig_both_strands",
+  "reference_expected_hits": [
+    {
+      "contig": "toy_loss",
+      "strand": "+"
+    }
+  ],
+  "expected_sequences": {
+    "toy_gain": {
+      "ref": "ACGTTGCAATGCTAGCTAACTGC",
+      "alt": "ACGTTGCAATGCTAGCTAACTGG"
+    },
+    "toy_loss": {
+      "ref": "ACGTTGCAATGCTAGCTAACTGG",
+      "alt": "ACGTTGCAATGCTAGCTAACTGC"
+    },
+    "toy_reverse": {
+      "ref": "GCAGTTAGCTAGCATTGCAACGT",
+      "alt": "CCAGTTAGCTAGCATTGCAACGT"
+    }
+  },
+  "expected_donor_hits": {
+    "SYN_REF": [
+      {
+        "contig": "toy_loss",
+        "strand": "+"
+      }
+    ],
+    "SYN_ALT": [
+      {
+        "contig": "toy_gain",
+        "strand": "+"
+      },
+      {
+        "contig": "toy_reverse",
+        "strand": "-"
+      }
+    ],
+    "SYN_HET": [
+      {
+        "contig": "toy_gain",
+        "strand": "+"
+      },
+      {
+        "contig": "toy_loss",
+        "strand": "+"
+      },
+      {
+        "contig": "toy_reverse",
+        "strand": "-"
+      }
+    ]
+  },
+  "expected_unknown_donors": [
+    "SYN_MISSING"
+  ],
+  "warning": "Artificial sequence fixture, not the real rs114518452 locus or a human sample."
+}

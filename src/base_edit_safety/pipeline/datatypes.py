@@ -247,8 +247,7 @@ def spectrum_to_records(
     Match intended edits by promoter offset for one guide, or by genomic coordinate when
     searching the full target table. Other editable positions are bystanders.
 
-    A per-position score above 1 raises an error unless allow_overunity is set. Scores are
-    model outputs, not measured editing rates.
+    A per-position model score above 1 raises an error unless allow_overunity is set.
 
     Positions outside EDIT_WINDOW have no supported rate. Keep them with predicted_rate=None
     and confidence=NOT_EVALUATED, including bystanders, so missing predictions remain visible.
@@ -309,7 +308,7 @@ def spectrum_to_records(
         coord = guide.genomic_coord(proto_pos)
         position_is_on_target = is_on_target(proto_pos)
         # Omit bystanders with a zero model score inside the supported window.
-        # Keep outside-window bases as unassessed; a model zero is not experimental evidence.
+        # Keep outside-window bases as unassessed so missing scores stay visible.
         if evaluated and rate <= 0 and not position_is_on_target:
             continue
         confidence = prediction_confidence if evaluated else NOT_EVALUATED

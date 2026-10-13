@@ -1,0 +1,619 @@
+{
+  "type": "object",
+  "properties": {
+    "assay_policy": {
+      "type": "object",
+      "properties": {
+        "allele_resolved": {
+          "type": "boolean"
+        },
+        "assay_cost": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "assay_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "biological_context_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "context": {
+          "type": "object",
+          "properties": {
+            "cell_type": {
+              "type": "string",
+              "minLength": 1
+            },
+            "condition": {
+              "type": "string",
+              "minLength": 1
+            },
+            "delivery": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "cell_type",
+            "condition",
+            "delivery"
+          ],
+          "additionalProperties": false
+        },
+        "control_costs_included": {
+          "type": "boolean"
+        },
+        "extra_context_bases": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "feasibility": {
+          "type": "string",
+          "minLength": 1
+        },
+        "guide_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "locus_resolved": {
+          "type": "boolean"
+        },
+        "locus_scope": {
+          "type": "object",
+          "properties": {
+            "loci": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "contig": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "start": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "end": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "strand": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "contig",
+                  "start",
+                  "end",
+                  "strand"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "mode": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "loci",
+            "mode"
+          ],
+          "additionalProperties": false
+        },
+        "measurement_class": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resolution_contract_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "specimen_context_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "max_detection_limit_fraction": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "maximum": 1,
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "allele_resolved",
+        "assay_cost",
+        "assay_id",
+        "biological_context_id",
+        "context",
+        "control_costs_included",
+        "extra_context_bases",
+        "feasibility",
+        "guide_ids",
+        "locus_resolved",
+        "locus_scope",
+        "measurement_class",
+        "resolution_contract_id",
+        "specimen_context_id"
+      ],
+      "additionalProperties": false
+    },
+    "benchmark_policy": {
+      "type": "object",
+      "properties": {
+        "budget_grid": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "endpoints": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "relatedness_policy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "seeds": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "selectors": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "split": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "budget_grid",
+        "endpoints",
+        "relatedness_policy",
+        "seeds",
+        "selectors",
+        "split"
+      ],
+      "additionalProperties": false
+    },
+    "coverage_basis": {
+      "enum": [
+        "synthetic_truth",
+        "retained_callset_model",
+        "callable_supported"
+      ]
+    },
+    "genotype_policy": {
+      "type": "object",
+      "properties": {
+        "accepted_sample_filters": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "accepted_site_filters": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "min_dp": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "min_gq": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "phase": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ploidy": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reference_evidence": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "accepted_sample_filters",
+        "accepted_site_filters",
+        "min_dp",
+        "min_gq",
+        "phase",
+        "ploidy",
+        "reference_evidence"
+      ],
+      "additionalProperties": false
+    },
+    "input_sources": {
+      "type": "object"
+    },
+    "inputs": {
+      "type": "object",
+      "properties": {
+        "callable_intervals": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "candidate_ledger": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "donors": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "guides": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "intended_loci": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "measurement_linkage": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reference": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "variants": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "callable_intervals",
+        "candidate_ledger",
+        "donors",
+        "guides",
+        "intended_loci",
+        "measurement_linkage",
+        "reference",
+        "variants"
+      ],
+      "additionalProperties": false
+    },
+    "mode": {
+      "enum": [
+        "synthetic_test",
+        "benchmark_simulation",
+        "research_sample_planning"
+      ]
+    },
+    "planning_policy": {
+      "type": "object",
+      "properties": {
+        "algorithm": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cost_unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "default_required_donors": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "default_weight": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "fixed_overhead": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_assays": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "max_cost": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_donors": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        }
+      },
+      "required": [
+        "algorithm",
+        "cost_unit",
+        "default_required_donors",
+        "default_weight",
+        "fixed_overhead",
+        "max_assays",
+        "max_cost",
+        "max_donors"
+      ],
+      "additionalProperties": false
+    },
+    "record_type": {
+      "const": "population_study_config"
+    },
+    "reference_policy": {
+      "type": "object",
+      "properties": {
+        "contig_alias_map": {
+          "type": "object"
+        },
+        "genome_build": {
+          "type": "string",
+          "minLength": 1
+        },
+        "permitted_contigs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "contig_alias_map",
+        "genome_build",
+        "permitted_contigs"
+      ],
+      "additionalProperties": false
+    },
+    "resource_limits": {
+      "type": "object",
+      "properties": {
+        "max_configurations": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_donors": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_hit_rows": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_reconstructed_bases": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_reference_bases": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_variant_rows": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "max_configurations",
+        "max_donors",
+        "max_hit_rows",
+        "max_reconstructed_bases",
+        "max_reference_bases",
+        "max_variant_rows"
+      ],
+      "additionalProperties": false
+    },
+    "schema_version": {
+      "const": "1"
+    },
+    "scope": {
+      "type": "object",
+      "properties": {
+        "materialized_intervals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "contig": {
+                "type": "string",
+                "minLength": 1
+              },
+              "end": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "start": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "contig",
+              "end",
+              "start"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "requested_intervals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "contig": {
+                "type": "string",
+                "minLength": 1
+              },
+              "end": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "start": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "contig",
+              "end",
+              "start"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "materialized_intervals",
+        "requested_intervals"
+      ],
+      "additionalProperties": false
+    },
+    "search_profile": {
+      "type": "object",
+      "properties": {
+        "backend": {
+          "type": "string",
+          "minLength": 1
+        },
+        "max_dna_bulge": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_mismatches": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_rna_bulge": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pam_patterns": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "retention": {
+          "type": "string",
+          "minLength": 1
+        },
+        "spacer_length": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "backend",
+        "max_dna_bulge",
+        "max_mismatches",
+        "max_rna_bulge",
+        "pam_patterns",
+        "retention",
+        "spacer_length"
+      ],
+      "additionalProperties": false
+    },
+    "study_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "variant_policy": {
+      "type": "object",
+      "properties": {
+        "max_allele_length": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "normalizer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "unsupported_footprint": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "max_allele_length",
+        "normalizer",
+        "unsupported_footprint"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "assay_policy",
+    "benchmark_policy",
+    "coverage_basis",
+    "genotype_policy",
+    "input_sources",
+    "inputs",
+    "mode",
+    "planning_policy",
+    "record_type",
+    "reference_policy",
+    "resource_limits",
+    "schema_version",
+    "scope",
+    "search_profile",
+    "study_id",
+    "variant_policy"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Population study configuration, schema 1",
+  "description": "validate_config additionally checks content identities, mode/basis combinations and scientific policy."
+}

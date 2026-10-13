@@ -1,0 +1,2 @@
+guide_id	genome_build	chrom	start_0based	end_0based_exclusive	strand	locus_name
+alpha_guide	SYNTHETIC	chrSYN1	100	123	+	SYNTH1

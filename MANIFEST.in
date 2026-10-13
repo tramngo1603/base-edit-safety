@@ -1,15 +1,2 @@
-include LICENSE
-include README.md
-include pyproject.toml
-
-# Public Python distributions contain the core analysis package only. Detailed validation material
-# stays in the private research workspace.
-prune data
-prune validation
-prune src/base_edit_safety/evaluation
-prune docs/context
-prune tests
+prune private-history
 exclude AGENTS.md
-
-global-exclude *.xlsx *.xls *.csv *.tsv *.bed *.vcf *.vcf.gz
-global-exclude *.bam *.cram *.fastq *.fastq.gz

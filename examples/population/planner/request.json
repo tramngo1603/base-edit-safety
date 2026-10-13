@@ -1,0 +1,137 @@
+{
+  "record_type": "donor_panel_request",
+  "schema_version": "1",
+  "mode": "synthetic_test",
+  "coverage_basis": "synthetic_truth",
+  "protocol_id": "toy:activation-phase-availability",
+  "universe_id": "toy:three-configuration-units",
+  "cost_unit": "synthetic_integer",
+  "budget": {
+    "max_cost": 6,
+    "max_donors": null,
+    "max_assays": null
+  },
+  "units": [
+    {
+      "id": "u1",
+      "configuration_id": "toy:config-1",
+      "weight": 1,
+      "required_donors": 1
+    },
+    {
+      "id": "u2",
+      "configuration_id": "toy:config-2",
+      "weight": 1,
+      "required_donors": 1
+    },
+    {
+      "id": "u3",
+      "configuration_id": "toy:config-3",
+      "weight": 1,
+      "required_donors": 1
+    }
+  ],
+  "existing_usable_evidence": [],
+  "donors": [
+    {
+      "id": "A",
+      "activation_cost": 2,
+      "availability": "verified_available",
+      "use_permitted": true,
+      "simulation_eligible": true,
+      "specimen_context_id": "toy:cells"
+    },
+    {
+      "id": "B",
+      "activation_cost": 1,
+      "availability": "verified_available",
+      "use_permitted": true,
+      "simulation_eligible": true,
+      "specimen_context_id": "toy:cells"
+    },
+    {
+      "id": "C",
+      "activation_cost": 1,
+      "availability": "verified_available",
+      "use_permitted": true,
+      "simulation_eligible": true,
+      "specimen_context_id": "toy:cells"
+    },
+    {
+      "id": "D",
+      "activation_cost": 0,
+      "availability": "unavailable",
+      "use_permitted": true,
+      "simulation_eligible": false,
+      "specimen_context_id": "toy:cells"
+    }
+  ],
+  "actions": [
+    {
+      "id": "A1",
+      "donor_id": "A",
+      "assay_cost": 1,
+      "covered_units": [
+        "u1"
+      ],
+      "possible_only_units": [],
+      "eligibility": "eligible",
+      "resolution_contract_id": "toy:allele-and-locus-resolved"
+    },
+    {
+      "id": "A2",
+      "donor_id": "A",
+      "assay_cost": 1,
+      "covered_units": [
+        "u2"
+      ],
+      "possible_only_units": [],
+      "eligibility": "eligible",
+      "resolution_contract_id": "toy:allele-and-locus-resolved"
+    },
+    {
+      "id": "B1",
+      "donor_id": "B",
+      "assay_cost": 1,
+      "covered_units": [
+        "u1"
+      ],
+      "possible_only_units": [],
+      "eligibility": "eligible",
+      "resolution_contract_id": "toy:allele-and-locus-resolved"
+    },
+    {
+      "id": "C2",
+      "donor_id": "C",
+      "assay_cost": 1,
+      "covered_units": [],
+      "possible_only_units": [
+        "u2"
+      ],
+      "eligibility": "eligible",
+      "resolution_contract_id": "toy:allele-and-locus-resolved"
+    },
+    {
+      "id": "C3",
+      "donor_id": "C",
+      "assay_cost": 1,
+      "covered_units": [
+        "u3"
+      ],
+      "possible_only_units": [],
+      "eligibility": "eligible",
+      "resolution_contract_id": "toy:allele-and-locus-resolved"
+    },
+    {
+      "id": "D2",
+      "donor_id": "D",
+      "assay_cost": 1,
+      "covered_units": [
+        "u2"
+      ],
+      "possible_only_units": [],
+      "eligibility": "eligible",
+      "resolution_contract_id": "toy:allele-and-locus-resolved"
+    }
+  ]
+}

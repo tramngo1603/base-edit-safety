@@ -1,0 +1,75 @@
+{
+  "basis": "Independent hand-derived exact-match outcomes; no production search used to produce this table",
+  "guide": "ACGTTGCAATGCTAGCTAAC",
+  "nominated_locus_strand_by_donor_design": {
+    "reference:A": [
+      "chrSYNHBG1:+",
+      "chrSYNHBG2:-",
+      "chrSYNMULT:+"
+    ],
+    "reference:B": [
+      "chrSYNGAIN:+",
+      "chrSYNHBG1:+",
+      "chrSYNHBG2:-",
+      "chrSYNMULT:+",
+      "chrSYNREVERSE:-"
+    ],
+    "C:A": [
+      "chrSYNGAIN:+",
+      "chrSYNMULT:+"
+    ],
+    "C:B": [
+      "chrSYNGAIN:+",
+      "chrSYNHBG1:+",
+      "chrSYNMULT:+",
+      "chrSYNREVERSE:-"
+    ],
+    "N:A": [
+      "chrSYNHBG1:+",
+      "chrSYNHBG2:-",
+      "chrSYNMULT:+"
+    ],
+    "N:B": [
+      "chrSYNGAIN:+",
+      "chrSYNHBG1:+",
+      "chrSYNHBG2:-",
+      "chrSYNMULT:+",
+      "chrSYNREVERSE:-"
+    ],
+    "U:A": [
+      "chrSYNHBG2:-",
+      "chrSYNMULT:+"
+    ],
+    "U:B": [
+      "chrSYNHBG2:-",
+      "chrSYNMULT:+",
+      "chrSYNREVERSE:-"
+    ]
+  },
+  "intended_checks": {
+    "C_HBG1_design_A": "supported sequence, incompatible PAM, assessment retained",
+    "C_HBG2": "supported 24-base intended sequence, PAM retained, no ungapped nominated alignment",
+    "U_HBG1": "unresolved phase; cannot meet a future intended-control requirement"
+  },
+  "joint_multiallelic": {
+    "C": [
+      "CTACGTTGCAATGCTAGCTAACTGG",
+      "CTTTGACGTTGCAATGCTAGCTAACTGG"
+    ],
+    "N": [
+      "CTTTGACGTTGCAATGCTAGCTAACTGG",
+      "CTACGTTGCAATGCTAGCTAACTGG"
+    ],
+    "ordered_alt_indexes": {
+      "C": [
+        1,
+        2
+      ],
+      "N": [
+        2,
+        1
+      ]
+    }
+  },
+  "bounded_missingness_note": "The missing MULT deletion occupies reference positions1..8; the nominated target starts at9 and its exact DNA/path remain known. The rest of that donor search domain is still partial."
+}

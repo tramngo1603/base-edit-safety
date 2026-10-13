@@ -1,0 +1,26 @@
+{
+  "record_type": "synthetic_planning_declaration",
+  "schema_version": "1",
+  "real_specimens": false,
+  "real_measurements": false,
+  "coverage_unit_ids": [
+    "u1",
+    "u2",
+    "u3"
+  ],
+  "configuration_ids": [
+    "toy:config-1",
+    "toy:config-2",
+    "toy:config-3"
+  ],
+  "resolution_contract_ids": [
+    "toy:allele-and-locus-resolved"
+  ],
+  "specimen_context_id": "toy:cells",
+  "assumptions": [
+    "All named sequences/donors are mathematical fixtures, not human genotypes.",
+    "covered_units are declared synthetic ground truth; possible_only_units are not credited.",
+    "The synthetic assay is declared to resolve the listed loci and alleles.",
+    "Availability and costs are synthetic inputs; no procurement or scientific validation claim."
+  ]
+}

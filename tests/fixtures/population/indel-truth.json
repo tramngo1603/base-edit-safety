@@ -1,0 +1,255 @@
+{
+  "fixture_type": "synthetic_indel_truth",
+  "schema_version": "1",
+  "guide": "ACGTTGCAATGCTAGCTAAC",
+  "pam": "TGG",
+  "cases": [
+    {
+      "id": "insertion_only",
+      "reference_sequence": "TTTTTTTTTTTTTTTTTTTT",
+      "variant": {
+        "pos1": 10,
+        "ref": "T",
+        "alt": "TACGTTGCAATGCTAGCTAACTGG"
+      },
+      "truth_reconstructed_sequence": "TTTTTTTTTTACGTTGCAATGCTAGCTAACTGGTTTTTTTTTT",
+      "target_sequence_slice": [
+        10,
+        33
+      ],
+      "target_path": [
+        {
+          "kind": "insertion",
+          "boundary0": 10,
+          "offset0": 0
+        },
+        {
+          "kind": "insertion",
+          "boundary0": 10,
+          "offset0": 1
+        },
+        {
+          "kind": "insertion",
+          "boundary0": 10,
+          "offset0": 2
+        },
+        {
+          "kind": "insertion",
+          "boundary0": 10,
+          "offset0": 3
+        },
+        {
+          "kind": "insertion",
+          "boundary0": 10,
+          "offset0": 4
+        },
+        {
+          "kind": "insertion",
+          "boundary0": 10,
+          "offset0": 5
+        },
+        {
+          "kind": "insertion",
+          "boundary0": 10,
+          "offset0": 6
+        },
+        {
+          "kind": "insertion",
+          "boundary0": 10,
+          "offset0": 7
+        },
+        {
+          "kind": "insertion",
+          "boundary0": 10,
+          "offset0": 8
+        },
+        {
+          "kind": "insertion",
+          "boundary0": 10,
+          "offset0": 9
+        },
+        {
+          "kind": "insertion",
+          "boundary0": 10,
+          "offset0": 10
+        },
+        {
+          "kind": "insertion",
+          "boundary0": 10,
+          "offset0": 11
+        },
+        {
+          "kind": "insertion",
+          "boundary0": 10,
+          "offset0": 12
+        },
+        {
+          "kind": "insertion",
+          "boundary0": 10,
+          "offset0": 13
+        },
+        {
+          "kind": "insertion",
+          "boundary0": 10,
+          "offset0": 14
+        },
+        {
+          "kind": "insertion",
+          "boundary0": 10,
+          "offset0": 15
+        },
+        {
+          "kind": "insertion",
+          "boundary0": 10,
+          "offset0": 16
+        },
+        {
+          "kind": "insertion",
+          "boundary0": 10,
+          "offset0": 17
+        },
+        {
+          "kind": "insertion",
+          "boundary0": 10,
+          "offset0": 18
+        },
+        {
+          "kind": "insertion",
+          "boundary0": 10,
+          "offset0": 19
+        },
+        {
+          "kind": "insertion",
+          "boundary0": 10,
+          "offset0": 20
+        },
+        {
+          "kind": "insertion",
+          "boundary0": 10,
+          "offset0": 21
+        },
+        {
+          "kind": "insertion",
+          "boundary0": 10,
+          "offset0": 22
+        }
+      ],
+      "bounding_interval": [
+        10,
+        10
+      ]
+    },
+    {
+      "id": "deletion_junction",
+      "reference_sequence": "ACGTTGCAATCCCCGCTAGCTAACTGG",
+      "variant": {
+        "pos1": 10,
+        "ref": "TCCCC",
+        "alt": "T"
+      },
+      "truth_reconstructed_sequence": "ACGTTGCAATGCTAGCTAACTGG",
+      "target_sequence_slice": [
+        0,
+        23
+      ],
+      "target_path": [
+        {
+          "kind": "reference",
+          "pos0": 0
+        },
+        {
+          "kind": "reference",
+          "pos0": 1
+        },
+        {
+          "kind": "reference",
+          "pos0": 2
+        },
+        {
+          "kind": "reference",
+          "pos0": 3
+        },
+        {
+          "kind": "reference",
+          "pos0": 4
+        },
+        {
+          "kind": "reference",
+          "pos0": 5
+        },
+        {
+          "kind": "reference",
+          "pos0": 6
+        },
+        {
+          "kind": "reference",
+          "pos0": 7
+        },
+        {
+          "kind": "reference",
+          "pos0": 8
+        },
+        {
+          "kind": "reference",
+          "pos0": 9
+        },
+        {
+          "kind": "reference",
+          "pos0": 14
+        },
+        {
+          "kind": "reference",
+          "pos0": 15
+        },
+        {
+          "kind": "reference",
+          "pos0": 16
+        },
+        {
+          "kind": "reference",
+          "pos0": 17
+        },
+        {
+          "kind": "reference",
+          "pos0": 18
+        },
+        {
+          "kind": "reference",
+          "pos0": 19
+        },
+        {
+          "kind": "reference",
+          "pos0": 20
+        },
+        {
+          "kind": "reference",
+          "pos0": 21
+        },
+        {
+          "kind": "reference",
+          "pos0": 22
+        },
+        {
+          "kind": "reference",
+          "pos0": 23
+        },
+        {
+          "kind": "reference",
+          "pos0": 24
+        },
+        {
+          "kind": "reference",
+          "pos0": 25
+        },
+        {
+          "kind": "reference",
+          "pos0": 26
+        }
+      ],
+      "bounding_interval": [
+        0,
+        27
+      ]
+    }
+  ]
+}

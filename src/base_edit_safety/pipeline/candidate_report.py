@@ -7,9 +7,6 @@ import json
 from pathlib import Path
 
 
-DISCLAIMER = "Organizes evidence; does not establish safety."
-
-
 class CandidateReportError(ValueError):
     """Raised when report inputs use an unsupported format."""
 
@@ -85,10 +82,6 @@ def _cell(value: object) -> str:
 
 def _joined(values) -> str:
     return "; ".join(sorted({str(value) for value in values if value not in {None, ""}}))
-
-
-def _section(lines: list[str], title: str) -> None:
-    lines.extend([f"## {title}", "", f"_{DISCLAIMER}_", ""])
 
 
 def _design_rows(design_records: dict, ledger_guides: set[str]) -> list[list[object]]:
@@ -173,15 +166,14 @@ def _table(lines: list[str], headers: list[str], rows: list[list[object]]) -> No
 
 
 def _measurement_tables(lines: list[str], ledger: dict) -> None:
-    _section(lines, "Measurements and follow-up")
+    lines.extend(["## Measurements and follow-up", ""])
     lines.extend([
         "Coverage below applies only to the listed guide/editor, DNA sequence, assay and cell context. "
         "A reference-only negative does not test an alternate sequence. Failed or unreported quality "
         "checks, missing allele evidence and inconclusive results cannot supply a usable negative.",
         "",
-        "Search scores and editable bases describe computational candidates. Editing measurements, "
-        "consequence measurements and human panel choices remain separate. A design's evidence tier "
-        "does not establish measurement coverage for its candidate sites.",
+        "Search scores, editing measurements, consequence measurements and panel choices are shown separately. "
+        "Measurement coverage is checked for each candidate DNA sequence.",
         "",
     ])
     measured = [site for site in ledger["candidates"] if site.get("measurements")]
@@ -194,10 +186,8 @@ def _measurement_tables(lines: list[str], ledger: dict) -> None:
             f"Of {len(measured)} entries with source measurements, {mapped} have mapped candidate DNA; "
             f"{unsupported} lack a supported model for an experimental nomination; "
             f"{len(measured) - mapped - unsupported} have other unresolved models. "
-            "These counts describe this workflow's representations, not experiment quality. "
-            "Source reference identity and tested sample DNA require separate evidence.", "",
-            "Missing-field reasons describe metadata supplied to this workflow. An unreported control "
-            "or QC field does not establish that the experiment lacked controls or failed quality checks.", "",
+            "Counts show how source measurements map to candidate DNA.", "",
+            "Unreported control or QC fields remain unknown; the source measurement is retained.", "",
         ])
     coverage_rows, measurement_rows = [], []
     for site in ledger["candidates"]:
@@ -273,20 +263,18 @@ def render_report(
     lines = [
         "# Base Edit Safety candidate review",
         "",
-        f"_{DISCLAIMER}_",
-        "",
         "Coordinates in candidate tables are zero-based and half-open.",
         "",
     ]
 
-    _section(lines, "Design summary")
+    lines.extend(["## Design summary", ""])
     _table(
         lines,
         ["Guide", "Gene", "Editor", "Intended offsets", "Evidence tier", "Paralog flag"],
         _design_rows(design_records, guide_ids),
     )
 
-    _section(lines, "Nomination summary")
+    lines.extend(["## Nomination summary", ""])
     summary = ledger.get("summary", {})
     lines.extend(
         [
@@ -329,7 +317,7 @@ def render_report(
         lines.extend(f"- {_cell(warning)}" for warning in sorted(set(warnings)))
         lines.append("")
 
-    _section(lines, "Candidate evidence table")
+    lines.extend(["## Candidate evidence table", ""])
     _table(
         lines,
         [
@@ -397,18 +385,18 @@ def render_report(
 
     _measurement_tables(lines, ledger)
 
-    _section(lines, "Panel decision summary")
+    lines.extend(["## Panel decision summary", ""])
     lines.extend(
         [
             f"- Decisions: {_cell(summary.get('by_panel_decision', {}))}",
             f"- Panel notes: {_cell(ledger.get('export_metadata', {}).get('panel_notes')) or 'None supplied.'}",
             "",
-            "Panel exclusion records one proposed panel choice; it is not evidence that a site is safe.",
+            "Panel decisions record which candidates were selected for follow-up.",
             "",
         ]
     )
 
-    _section(lines, "Reproducibility and run diff")
+    lines.extend(["## Reproducibility and run diff", ""])
     runtime = ledger.get("reproducibility", {})
     lines.extend(
         [

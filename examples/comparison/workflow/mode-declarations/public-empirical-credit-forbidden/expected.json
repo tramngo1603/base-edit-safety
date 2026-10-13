@@ -1,0 +1,7 @@
+{
+  "no_real_specimen_claim": true,
+  "reason": "Retained-callset simulations cannot use empirical donor credits",
+  "scientific_validation_claimed": false,
+  "scope": "Artificial canonical declaration and eligibility checks; no genomic search or real specimen verification",
+  "status": "invalid"
+}

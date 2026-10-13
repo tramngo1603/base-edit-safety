@@ -1,0 +1,108 @@
+{
+  "profile_id": "abe710-spcas9-hek293t-plasmid-v1",
+  "version": "1",
+  "status": "proposed; artificial checks only; scientific approval pending",
+  "editor": {
+    "variant_name": "ABE7.10-SpCas9",
+    "editor_class": "ABE",
+    "cas_component": "SpCas9",
+    "pam_patterns": [
+      "NGG"
+    ],
+    "guide_geometry": {
+      "spacer_length": 20,
+      "pam_length": 3,
+      "pam_side": "3prime"
+    },
+    "conversion": {
+      "substrate_base": "A",
+      "product_base": "G",
+      "strand_convention": "guide_oriented"
+    }
+  },
+  "context": {
+    "organism": "Homo sapiens",
+    "cell_type": "HEK293T",
+    "cell_state": "transformed cell line",
+    "delivery_method": "plasmid transfection"
+  },
+  "endpoint_names": [
+    "intended_edit_fraction",
+    "unintended_edit_fraction"
+  ],
+  "search": {
+    "max_mismatches": 6,
+    "max_dna_bulges": 0,
+    "max_rna_bulges": 0,
+    "max_total_edits": 6,
+    "strands": [
+      "+",
+      "-"
+    ],
+    "retention": "all"
+  },
+  "editing_window": {
+    "start_1based": 4,
+    "end_1based": 8,
+    "basis": "declared heuristic; other positions remain visible"
+  },
+  "reference": {
+    "assembly": "GCA_000001405.15",
+    "filename": "GRCh38_full_analysis_set_plus_decoy_hla.fa",
+    "primary_contigs": [
+      "chr1",
+      "chr2",
+      "chr3",
+      "chr4",
+      "chr5",
+      "chr6",
+      "chr7",
+      "chr8",
+      "chr9",
+      "chr10",
+      "chr11",
+      "chr12",
+      "chr13",
+      "chr14",
+      "chr15",
+      "chr16",
+      "chr17",
+      "chr18",
+      "chr19",
+      "chr20",
+      "chr21",
+      "chr22",
+      "chrX",
+      "chrY"
+    ],
+    "excluded": "mitochondrial, alternate, decoy, HLA-added, patch, unplaced and unlocalized sequences"
+  },
+  "alternate_sequences": {
+    "max_literal_allele_length": 50,
+    "xy_ploidy_support": "pending",
+    "callability": "must be evidenced per donor and interval"
+  },
+  "source_evidence": {
+    "doi": "10.1038/s41467-018-07988-z",
+    "workbook_sha256": "1951af1f7a3dba33b195dcef62e5208d323f6308464a433d82ff2f4218f89177",
+    "mapping": "Figure 2d, 48 hour; general methods say 72 hour; unresolved",
+    "status": "development source; treated labels remain inconclusive pending review"
+  },
+  "native_route": {
+    "tool": "Cas-OFFinder",
+    "version": "2.4.1",
+    "source_commit": "9816b94c20c4cba2e79b039e1e2a6dee684b7b66",
+    "conformance": "pending"
+  },
+  "pending_biological_reasons": [
+    "domain_scientific_approval_pending",
+    "domain_exposure_conflict_unresolved"
+  ],
+  "pending_coverage_reasons": [
+    "domain_full_primary_reference_coverage_unverified",
+    "domain_alternate_xy_ploidy_unsupported",
+    "domain_native_conformance_pending"
+  ],
+  "subsequent_dependency": "paired group interval for fixed-budget recall improvement; evaluator does not emit it",
+  "ranking": "score = -mismatches; lexical candidate ID breaks ties"
+}

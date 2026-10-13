@@ -1,0 +1,3 @@
+guide_id	spacer_sequence	editor	editor_class	pam_class	editing_window_start_1based	editing_window_end_1based_inclusive	intended_target_description	locus_system
+alpha_guide	ACGTACGTACGTACGTACGT	ABE8e	ABE	NGG	4	8	Artificial fixture guide; no genomic sequence or coordinate is represented.	other
+beta_guide	TTGCAAGTCCGTAGGAATCG	ABE8e	ABE	NGG	4	8	Artificial fixture guide; no genomic sequence or coordinate is represented.	other

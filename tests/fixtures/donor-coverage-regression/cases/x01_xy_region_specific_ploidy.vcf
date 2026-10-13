@@ -1,0 +1,5 @@
+##fileformat=VCFv4.2
+##reference=artificial
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	sample
+chrX	201	v200	C	G	.	PASS	.	GT	0/1
+chrX	601	v600	C	G	.	PASS	.	GT	1

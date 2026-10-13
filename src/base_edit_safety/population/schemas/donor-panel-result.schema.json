@@ -1,0 +1,184 @@
+{
+  "type": "object",
+  "properties": {
+    "record_type": {
+      "const": "donor_panel_result"
+    },
+    "schema_version": {
+      "const": "1"
+    },
+    "mode": {
+      "enum": [
+        "synthetic_test",
+        "benchmark_simulation",
+        "research_sample_planning"
+      ]
+    },
+    "coverage_basis": {
+      "enum": [
+        "synthetic_truth",
+        "retained_callset_model",
+        "callable_supported"
+      ]
+    },
+    "protocol_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "universe_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "algorithm": {
+      "enum": [
+        "greedy_cost",
+        "exact_tiny",
+        "greedy_coverage",
+        "canonical_order",
+        "random_order",
+        "stratified_random"
+      ]
+    },
+    "plan_status": {
+      "enum": [
+        "planned",
+        "no_remaining_demand",
+        "no_positive_gain",
+        "no_feasible_action"
+      ]
+    },
+    "cost_unit": {
+      "type": "string",
+      "minLength": 1
+    },
+    "selected_actions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "selected_donors": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "total_cost": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "unused_budget": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "objective_numerator": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "objective_denominator": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "gain_numerator": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "gain_denominator": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "fully_covered_units": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "uncovered_units": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "unit_coverage": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "unit_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "required_donors": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "existing_donors": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "planned_donors": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "combined_donor_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "fully_satisfied": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "unit_id",
+          "required_donors",
+          "existing_donors",
+          "planned_donors",
+          "combined_donor_count",
+          "fully_satisfied"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "record_type",
+    "schema_version",
+    "mode",
+    "coverage_basis",
+    "protocol_id",
+    "universe_id",
+    "algorithm",
+    "plan_status",
+    "cost_unit",
+    "selected_actions",
+    "selected_donors",
+    "total_cost",
+    "unused_budget",
+    "objective_numerator",
+    "objective_denominator",
+    "gain_numerator",
+    "gain_denominator",
+    "fully_covered_units",
+    "uncovered_units",
+    "unit_coverage"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Base Edit Safety V3 donor-panel result, proposed schema 1"
+}

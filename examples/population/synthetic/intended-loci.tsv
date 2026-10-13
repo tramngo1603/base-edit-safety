@@ -1,0 +1,2 @@
+guide_id	genome_build	chrom	start_0based	end_0based_exclusive	strand	locus_name
+SYN_guide	synthetic_v3_search_1	chrSYNcontrol	0	23	+	control

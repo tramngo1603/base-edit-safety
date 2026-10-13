@@ -1,0 +1,2 @@
+guide_id	genome_build	chrom	start_0based	end_0based_exclusive	strand	locus_name
+LEGACY_A	comparison_synthetic_v1	chrSYNHBG1	0	23	+	control

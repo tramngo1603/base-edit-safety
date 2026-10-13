@@ -1,0 +1,14 @@
+{
+  "genome_build": "artificial",
+  "record_type": "reference_windows",
+  "schema_version": "1",
+  "windows": [
+    {
+      "contig": "artificial_1",
+      "end": 2160,
+      "sequence": "TTTTTTTTTTACGATTCGATGCTACGTAGCTGGTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTACGATTCGATGCTACGTAGCAGCTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
+      "sequence_sha256": "2062f95600908d291219eb2643b533342a17f01d4e8ebd9231b46c00030a03ac",
+      "start": 2000
+    }
+  ]
+}

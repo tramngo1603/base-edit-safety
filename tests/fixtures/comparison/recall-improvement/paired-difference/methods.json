@@ -1,0 +1,78 @@
+[
+  {
+    "method_id": "baseline",
+    "enumerated_ids": [
+      "p1",
+      "n1",
+      "p2",
+      "n2",
+      "p3",
+      "n3"
+    ],
+    "scores": [
+      {
+        "candidate_id": "n1",
+        "score": "30"
+      },
+      {
+        "candidate_id": "p2",
+        "score": "29"
+      },
+      {
+        "candidate_id": "n2",
+        "score": "28"
+      },
+      {
+        "candidate_id": "p1",
+        "score": "10"
+      },
+      {
+        "candidate_id": "p3",
+        "score": "9"
+      },
+      {
+        "candidate_id": "n3",
+        "score": "8"
+      }
+    ],
+    "runtime_seconds": "0"
+  },
+  {
+    "method_id": "proposed",
+    "enumerated_ids": [
+      "p1",
+      "n1",
+      "p2",
+      "n2",
+      "p3",
+      "n3"
+    ],
+    "scores": [
+      {
+        "candidate_id": "p1",
+        "score": "30"
+      },
+      {
+        "candidate_id": "p2",
+        "score": "29"
+      },
+      {
+        "candidate_id": "p3",
+        "score": "28"
+      },
+      {
+        "candidate_id": "n1",
+        "score": "20"
+      },
+      {
+        "candidate_id": "n2",
+        "score": "19"
+      },
+      {
+        "candidate_id": "n3",
+        "score": "18"
+      }
+    ],
+    "runtime_seconds": "0"
+  }
+]

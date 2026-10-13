@@ -4,8 +4,8 @@ These boundaries decide whether an off-target counts as landing in a driver gene
 across Ensembl releases: four of the twelve differ against release 115, nine against release 110, by
 up to 586 bp. Without a pinned release and a fixture, a refresh would silently move flags.
 
-If one of these fails, that is not a bug to paper over. Work out which release the new value comes
-from, update the pin and the fixture together, and check what it does to the flags.
+When a boundary changes, check its source release, update the pin and fixture together,
+and review the affected overlap flags.
 """
 from __future__ import annotations
 

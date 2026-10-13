@@ -100,11 +100,6 @@ PRIMARY_CD34_TRANSPLANT = LocusArchitecture(
 ACCESS_ORDER = ("not_accessed", "abstract_only", "database_record", "full_text")
 FULL_TEXT, ABSTRACT_ONLY, NOT_ACCESSED = "full_text", "abstract_only", "not_accessed"
 
-# Record transplantation/engraftment evidence separately from an HSPC evidence label.
-# An HSPC experiment alone does not show durability after transplantation.
-NO_ENGRAFTMENT_DATA = "no_engraftment_data"
-XENOTRANSPLANT = "xenotransplant_engraftment_shown"
-
 
 def _claim(pmid: str, role: str, access: str = NOT_ACCESSED, audit: str = NOT_REVIEWED,
            architecture: LocusArchitecture | None = None, engraftment: bool = False,
@@ -244,28 +239,6 @@ _CITATIONS = {
         _DOERFLER_TESTED("proximal_nfy_independent"),
     ),
 }
-
-
-def durability_for(offset: int, ref: str, alt: str) -> str:
-    """Return the recorded engraftment evidence separately from other evidence labels."""
-    claims = _CITATIONS.get((abs(offset), ref, alt), ())
-    return XENOTRANSPLANT if any(c.get("demonstrates_engraftment") for c in claims) \
-        else NO_ENGRAFTMENT_DATA
-
-
-def mechanism_projectable_onto(gene: str, offset: int, ref: str, alt: str) -> bool:
-    """Can a mechanism claim here be projected onto this paralog?
-
-    Only if some mechanism claim was made in a system where that paralog's locus was intact. A
-    mechanism shown in a HUDEP-2 line with Ggamma deleted says nothing about HBG2.
-    """
-    for c in _CITATIONS.get((abs(offset), ref, alt), ()):
-        if not c["role"].startswith("mechanism"):
-            continue
-        arch = c.get("locus_architecture")
-        if arch and gene in arch["intact_paralogs"]:
-            return True
-    return False
 
 
 # How well the mechanism named for each position is supported. Three have been read; all three turned

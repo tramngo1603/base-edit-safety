@@ -1,4 +1,4 @@
-"""Completeness and provenance checks for clinical HBG-promoter programs."""
+"""Check the completeness and sources of HBG-promoter program records."""
 
 from base_edit_safety import hbg_registry
 

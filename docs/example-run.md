@@ -1,6 +1,6 @@
 # Try the example and read its output
 
-I included this example so you can inspect the records without installing prediction tools or
+This example is included so you can inspect the records without installing prediction tools or
 downloading a genome or paper workbook. It uses the repository's HBG coordinate definitions.
 It runs no model, includes no experimental measurement and leaves unrun checks clearly marked.
 
@@ -33,7 +33,7 @@ the copies apart. `predicted_rate` is null and `confidence` is `not_evaluated` b
 | `off_target.kinds` | Separate sequence-match, editor-specific, guide-independent DNA and RNA concerns |
 | `off_target.candidate_sites` | Search matches to review, not experimental results |
 | `hbg_paralog_flags` | The two HBG copies, their spacing, possible deletions or rearrangements, and required assays |
-| `ch_annotation` | Overlap with the recorded blood-cell clonal expansion genes, without a clinical-risk estimate |
+| `ch_annotation` | Gene names and coordinates for overlaps with the recorded blood-cell clonal expansion genes |
 | `registry_match` | Related published evidence; this is separate from a measurement of this design |
 | `evidence_tier` | `predicted_only`, `analog_supported` or `empirically_measured`; the last requires attached measurements |
 | `empirical_support` | Measurements attached to this design, kept separate from predictions |
@@ -48,11 +48,9 @@ the copies apart. `predicted_rate` is null and `confidence` is `not_evaluated` b
 
 A nomination proposes a site. A prediction estimates an outcome. A measurement reports what an
 experiment found under stated conditions. An experimentally nominated site without follow-up is
-still an unmeasured candidate. A high CFD score is not a measurement, and an empty prediction is
-not zero editing.
+still an unmeasured candidate. Missing predictions remain unknown.
 
-The candidate report checks measurements separately for each DNA version. A design's evidence
-tier does not establish that all its candidate sites or alleles were tested.
+The candidate report checks measurements separately for each DNA version.
 
 ## Run searches and predictions
 

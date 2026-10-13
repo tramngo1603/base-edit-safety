@@ -1,0 +1,64 @@
+{
+  "record_type": "donor_panel_result",
+  "schema_version": "1",
+  "mode": "synthetic_test",
+  "coverage_basis": "synthetic_truth",
+  "protocol_id": "toy:activation-phase-availability",
+  "universe_id": "toy:three-configuration-units",
+  "algorithm": "exact_tiny",
+  "plan_status": "planned",
+  "cost_unit": "synthetic_integer",
+  "selected_actions": [
+    "A1",
+    "A2",
+    "C3"
+  ],
+  "selected_donors": [
+    "A",
+    "C"
+  ],
+  "total_cost": 6,
+  "unused_budget": 0,
+  "objective_numerator": 3,
+  "objective_denominator": 1,
+  "gain_numerator": 3,
+  "gain_denominator": 1,
+  "fully_covered_units": [
+    "u1",
+    "u2",
+    "u3"
+  ],
+  "uncovered_units": [],
+  "unit_coverage": [
+    {
+      "unit_id": "u1",
+      "required_donors": 1,
+      "existing_donors": [],
+      "planned_donors": [
+        "A"
+      ],
+      "combined_donor_count": 1,
+      "fully_satisfied": true
+    },
+    {
+      "unit_id": "u2",
+      "required_donors": 1,
+      "existing_donors": [],
+      "planned_donors": [
+        "A"
+      ],
+      "combined_donor_count": 1,
+      "fully_satisfied": true
+    },
+    {
+      "unit_id": "u3",
+      "required_donors": 1,
+      "existing_donors": [],
+      "planned_donors": [
+        "C"
+      ],
+      "combined_donor_count": 1,
+      "fully_satisfied": true
+    }
+  ]
+}

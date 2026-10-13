@@ -1,1 +1,1 @@
-"""The steps that turn a promoter window into design records, plus the types they pass around."""
+"""Pipeline entry points and shared types for the review workflows."""

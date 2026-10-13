@@ -1,0 +1,75 @@
+{
+  "assay_policy": {
+    "allele_resolved": true,
+    "feasibility": "simulation_assumption",
+    "mock_shared_across_designs": true,
+    "package_basis": "Each 2-unit treated panel measures T and L with its assay controls/QC; each 1-unit donor mock measures T and L with its assay controls/QC",
+    "qc_requirements": [
+      "assay_qc"
+    ],
+    "resolution": "copy_specific"
+  },
+  "batch_id": "section9-new-batch",
+  "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+  "costs": {
+    "additional_replicate": 0,
+    "cost_scale": 1,
+    "cost_unit": "simulation_units",
+    "donor_activation": 1,
+    "mock_panel": 1,
+    "sequencing_batch": 0,
+    "specimen_preparation": 0,
+    "study_setup": 2,
+    "treated_panel": 2,
+    "treatment": 1
+  },
+  "donor_ids": [
+    "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c"
+  ],
+  "experiment_id": "section9-new-experiment",
+  "max_action_questions": 1,
+  "max_donor_alternatives_per_arm": 2,
+  "policy_version": "section9-declared-v1",
+  "record_type": "comparison_experiment_policy",
+  "relatedness_policy": "strict",
+  "resources": {
+    "max_sequencing_instances": 1,
+    "mock_capacity": 1,
+    "panel_capacity": 1,
+    "sequencing_capacity": 6,
+    "specimen_capacity": 100,
+    "study_setup_activation": "nonempty_plan"
+  },
+  "rules": [
+    {
+      "allow_across_questions": true,
+      "allow_existing": false,
+      "candidate_endpoint_id": "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0",
+      "design_ids": [
+        "comparison_design:v1:69eff3ddce8c826b6f96a98133f935a4babd9c15e781b0ead11fd86aa0e1de43",
+        "comparison_design:v1:8639cd01f970e2400c5e047e705800e3856ec5f339454c66931215e7da023301"
+      ],
+      "hard_required": true,
+      "intended_endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+      "matching_covariates": [],
+      "priority_weight": 1,
+      "replication_dimensions": [],
+      "required_donors_per_arm": 1,
+      "rule_id": "complete-design-by-variant",
+      "technical_replicates": 1,
+      "templates": [
+        "design_by_variant"
+      ],
+      "trigger": "variant_candidate"
+    }
+  ],
+  "schema_version": "1",
+  "specimen_policy": {
+    "assumption": "Artificial specimens exist by fixture construction",
+    "capacity": 100,
+    "create_simulation_specimens": true,
+    "permitted_use": "Artificial software fixture only",
+    "use_authorized": true
+  }
+}

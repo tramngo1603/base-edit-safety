@@ -1,0 +1,89 @@
+[
+  {
+    "method_id": "proposed",
+    "enumerated_ids": [
+      "c1",
+      "c2",
+      "c3",
+      "c4",
+      "c5",
+      "c6",
+      "c7"
+    ],
+    "scores": [
+      {
+        "candidate_id": "c3",
+        "score": "10"
+      },
+      {
+        "candidate_id": "c1",
+        "score": "9"
+      },
+      {
+        "candidate_id": "c5",
+        "score": "8"
+      },
+      {
+        "candidate_id": "c4",
+        "score": "7"
+      },
+      {
+        "candidate_id": "c2",
+        "score": "6"
+      },
+      {
+        "candidate_id": "c7",
+        "score": "5"
+      }
+    ],
+    "runtime_seconds": "0"
+  },
+  {
+    "method_id": "baseline",
+    "enumerated_ids": [
+      "c1",
+      "c2",
+      "c3",
+      "c4",
+      "c5",
+      "c6",
+      "c7",
+      "c8"
+    ],
+    "scores": [
+      {
+        "candidate_id": "c2",
+        "score": "10"
+      },
+      {
+        "candidate_id": "c1",
+        "score": "9"
+      },
+      {
+        "candidate_id": "c7",
+        "score": "8"
+      },
+      {
+        "candidate_id": "c4",
+        "score": "7"
+      },
+      {
+        "candidate_id": "c3",
+        "score": "6"
+      },
+      {
+        "candidate_id": "c6",
+        "score": "5"
+      },
+      {
+        "candidate_id": "c5",
+        "score": "4"
+      },
+      {
+        "candidate_id": "c8",
+        "score": "3"
+      }
+    ],
+    "runtime_seconds": "0"
+  }
+]

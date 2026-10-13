@@ -27,10 +27,7 @@ from base_edit_safety.pipeline.enumerate_guides import run_enumeration  # noqa: 
 
 @pytest.fixture(scope="module")
 def records():
-    try:
-        return run_enumeration(write=False)
-    except Exception as exc:
-        pytest.skip(f"enumeration could not run: {exc}")
+    return run_enumeration(write=False)
 
 
 def test_guides_for_both_promoters(records):

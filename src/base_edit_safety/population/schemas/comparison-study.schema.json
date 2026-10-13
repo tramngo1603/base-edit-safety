@@ -1,0 +1,595 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "record_type",
+    "schema_version",
+    "study_id",
+    "mode",
+    "coverage_basis",
+    "input_refs",
+    "catalogs",
+    "policies"
+  ],
+  "properties": {
+    "record_type": {
+      "type": "string",
+      "const": "comparison_study"
+    },
+    "schema_version": {
+      "type": "string",
+      "const": "1"
+    },
+    "study_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "synthetic_test",
+        "benchmark_simulation",
+        "research_sample_planning"
+      ]
+    },
+    "coverage_basis": {
+      "type": "string",
+      "enum": [
+        "synthetic_truth",
+        "retained_callset_model",
+        "callable_supported"
+      ]
+    },
+    "input_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "input_id",
+          "role",
+          "path",
+          "sha256",
+          "format",
+          "stages"
+        ],
+        "properties": {
+          "input_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "reference",
+              "variants",
+              "donor_map",
+              "callability",
+              "source_transformation",
+              "raw_observations",
+              "extraction_map",
+              "annotations",
+              "prediction_inputs",
+              "specimen_inventory",
+              "published_alignments",
+              "reference_validation",
+              "experiment_policy",
+              "question_inventory",
+              "plan_history",
+              "observation_history"
+            ]
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "json",
+              "jsonl",
+              "tsv",
+              "csv",
+              "fasta",
+              "vcf",
+              "bcf",
+              "bed",
+              "xlsx",
+              "text",
+              "binary"
+            ]
+          },
+          "stages": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "search",
+                "observation_normalization",
+                "evidence_applicability",
+                "predictions",
+                "comparison",
+                "questions",
+                "planning",
+                "report"
+              ]
+            },
+            "minItems": 1,
+            "uniqueItems": true,
+            "x-set": true
+          }
+        }
+      },
+      "minItems": 1,
+      "uniqueItems": true,
+      "x-set": true
+    },
+    "catalogs": {
+      "type": "array",
+      "items": {
+        "$ref": "comparison-record.schema.json"
+      },
+      "minItems": 1
+    },
+    "policies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "search",
+        "evidence",
+        "comparison",
+        "questions",
+        "planning",
+        "report",
+        "predictions"
+      ],
+      "properties": {
+        "search": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "policy_version",
+            "domain_id",
+            "design_ids",
+            "profile_ids",
+            "source_transformation_version",
+            "require_source_equivalence"
+          ],
+          "properties": {
+            "policy_version": {
+              "type": "string",
+              "minLength": 1
+            },
+            "domain_id": {
+              "type": "string",
+              "pattern": "^comparison_[a-z_]+:v1:[0-9a-f]{64}$",
+              "x-record-types": [
+                "comparison_domain"
+              ]
+            },
+            "design_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^comparison_[a-z_]+:v1:[0-9a-f]{64}$",
+                "x-record-types": [
+                  "comparison_design"
+                ]
+              },
+              "minItems": 1,
+              "uniqueItems": true,
+              "x-set": true
+            },
+            "profile_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^comparison_[a-z_]+:v1:[0-9a-f]{64}$",
+                "x-record-types": [
+                  "comparison_search_profile"
+                ]
+              },
+              "minItems": 1,
+              "uniqueItems": true,
+              "x-set": true
+            },
+            "source_transformation_version": {
+              "type": "string",
+              "minLength": 1
+            },
+            "require_source_equivalence": {
+              "type": "boolean"
+            },
+            "execution_limits": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "local": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "timeout_seconds": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "max_resident_bytes": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  }
+                },
+                "host": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "timeout_seconds": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "max_resident_bytes": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  }
+                },
+                "native": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "timeout_seconds": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "memory_bytes": {
+                      "type": "integer",
+                      "minimum": 134217728,
+                      "maximum": 6442450944
+                    },
+                    "cpus": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 4
+                    },
+                    "disk_bytes": {
+                      "type": "integer",
+                      "minimum": 1048576
+                    },
+                    "pids": {
+                      "type": "integer",
+                      "minimum": 16,
+                      "maximum": 512
+                    },
+                    "max_rows": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "evidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "policy_version",
+            "require_controls",
+            "require_qc",
+            "require_detection_limit_for_zero",
+            "allow_related_context",
+            "allow_empirical_donor_credit"
+          ],
+          "properties": {
+            "policy_version": {
+              "type": "string",
+              "minLength": 1
+            },
+            "require_controls": {
+              "type": "boolean"
+            },
+            "require_qc": {
+              "type": "boolean"
+            },
+            "require_detection_limit_for_zero": {
+              "type": "boolean"
+            },
+            "allow_related_context": {
+              "type": "boolean"
+            },
+            "allow_empirical_donor_credit": {
+              "type": "boolean"
+            },
+            "supported_domain": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "profile_id",
+                "context_id",
+                "endpoint_ids"
+              ],
+              "properties": {
+                "profile_id": {
+                  "type": "string",
+                  "const": "abe710-spcas9-hek293t-plasmid-v1"
+                },
+                "context_id": {
+                  "type": "string",
+                  "pattern": "^comparison_[a-z_]+:v1:[0-9a-f]{64}$",
+                  "x-record-types": [
+                    "comparison_experimental_context"
+                  ]
+                },
+                "endpoint_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^comparison_[a-z_]+:v1:[0-9a-f]{64}$",
+                    "x-record-types": [
+                      "comparison_endpoint_definition"
+                    ]
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "x-set": true
+                }
+              }
+            }
+          }
+        },
+        "comparison": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "policy_version",
+            "domain_id",
+            "dimensions",
+            "include_predictions"
+          ],
+          "properties": {
+            "policy_version": {
+              "type": "string",
+              "minLength": 1
+            },
+            "domain_id": {
+              "type": "string",
+              "pattern": "^comparison_[a-z_]+:v1:[0-9a-f]{64}$",
+              "x-record-types": [
+                "comparison_domain"
+              ]
+            },
+            "dimensions": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "intended_evaluability",
+                  "nomination_counts",
+                  "carriage_support",
+                  "published_observations",
+                  "unresolved_scope",
+                  "predictions"
+                ]
+              },
+              "minItems": 1,
+              "uniqueItems": true,
+              "x-set": true
+            },
+            "include_predictions": {
+              "type": "boolean"
+            }
+          }
+        },
+        "questions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "policy_version",
+            "templates",
+            "required_donors_per_arm",
+            "technical_replicates",
+            "relatedness_policy",
+            "allow_existing_evidence",
+            "control_roles"
+          ],
+          "properties": {
+            "policy_version": {
+              "type": "string",
+              "minLength": 1
+            },
+            "templates": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "candidate_validation",
+                  "paired_design_comparison",
+                  "variant_association",
+                  "design_by_variant",
+                  "evidence_replication"
+                ]
+              },
+              "minItems": 1,
+              "uniqueItems": true,
+              "x-set": true
+            },
+            "required_donors_per_arm": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "technical_replicates": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "relatedness_policy": {
+              "type": "string",
+              "enum": [
+                "strict",
+                "declared_simulation_assumption"
+              ]
+            },
+            "allow_existing_evidence": {
+              "type": "boolean"
+            },
+            "control_roles": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1,
+              "uniqueItems": true,
+              "x-set": true
+            }
+          }
+        },
+        "planning": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "policy_version",
+            "total_budget",
+            "cost_unit",
+            "algorithm",
+            "seed",
+            "beam_width",
+            "max_expansions",
+            "max_alternatives_per_question",
+            "exact_action_cap",
+            "fill_policy"
+          ],
+          "properties": {
+            "policy_version": {
+              "type": "string",
+              "minLength": 1
+            },
+            "total_budget": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "cost_unit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "algorithm": {
+              "type": "string",
+              "enum": [
+                "complete_bundle_greedy",
+                "donor_first",
+                "adapted_coverage",
+                "canonical_bundle",
+                "random_bundle",
+                "exact_tiny"
+              ]
+            },
+            "seed": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "beam_width": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "max_expansions": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "max_alternatives_per_question": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "exact_action_cap": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "fill_policy": {
+              "type": "string",
+              "enum": [
+                "none"
+              ]
+            }
+          }
+        },
+        "report": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "policy_version",
+            "include_donor_identifiers",
+            "include_local_paths",
+            "formats"
+          ],
+          "properties": {
+            "policy_version": {
+              "type": "string",
+              "minLength": 1
+            },
+            "include_donor_identifiers": {
+              "type": "boolean"
+            },
+            "include_local_paths": {
+              "type": "boolean"
+            },
+            "formats": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "md",
+                  "tsv",
+                  "json",
+                  "html"
+                ]
+              },
+              "minItems": 1,
+              "uniqueItems": true,
+              "x-set": true
+            }
+          }
+        },
+        "predictions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "policy_version",
+            "enabled",
+            "shortlist_ids",
+            "remote_execution"
+          ],
+          "properties": {
+            "policy_version": {
+              "type": "string",
+              "minLength": 1
+            },
+            "enabled": {
+              "type": "boolean"
+            },
+            "shortlist_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^comparison_[a-z_]+:v1:[0-9a-f]{64}$"
+              },
+              "minItems": 0,
+              "uniqueItems": true,
+              "x-set": true
+            },
+            "remote_execution": {
+              "type": "string",
+              "enum": [
+                "disabled",
+                "authorized_public_only"
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Comparative study version 1"
+}

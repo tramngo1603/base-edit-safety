@@ -1,0 +1,1313 @@
+{
+  "record_type": "comparison_study",
+  "schema_version": "1",
+  "study_id": "artificial-observation-import",
+  "mode": "synthetic_test",
+  "coverage_basis": "synthetic_truth",
+  "input_refs": [
+    {
+      "input_id": "reference",
+      "role": "reference",
+      "path": "../contracts/reference.fa",
+      "sha256": "1f548e4ce50aeb2f86b6a000bddbbbc080781fec5541fb2f2ad8f3e86964b7a7",
+      "format": "fasta",
+      "stages": [
+        "search"
+      ]
+    },
+    {
+      "input_id": "raw_observations",
+      "role": "raw_observations",
+      "path": "measurements.json",
+      "sha256": "1e27f4eb1ac816eb2a9853f755155b8b5d50de94a5f7463c01ee758c73452914",
+      "format": "json",
+      "stages": [
+        "observation_normalization"
+      ]
+    },
+    {
+      "input_id": "extraction_map",
+      "role": "extraction_map",
+      "path": "extraction-map.json",
+      "sha256": "f0d48bb1f4ce6d033f948c93fc7755cbbd6f5705103efc02491290f805d9ea3a",
+      "format": "json",
+      "stages": [
+        "observation_normalization"
+      ]
+    }
+  ],
+  "catalogs": [
+    {
+      "record_type": "comparison_source_artifact",
+      "schema_version": "1",
+      "sha256": "1f548e4ce50aeb2f86b6a000bddbbbc080781fec5541fb2f2ad8f3e86964b7a7",
+      "source_id": "synthetic-reference",
+      "release": "contract-fixture-v1",
+      "uri": "urn:bes:synthetic:contract-reference",
+      "media_type": "text/x-fasta",
+      "scope": "complete_file",
+      "parent_artifact_id": {
+        "value": null,
+        "reason": "original artifact"
+      },
+      "locator": {
+        "kind": "file",
+        "member": "reference.fa"
+      },
+      "access": "synthetic",
+      "use_terms": "Artificial fixture for software checks",
+      "record_id": "comparison_source_artifact:v1:1ecc9e3c5fdbee1ef7692dc27359d09d79d5d7e2fdd804ee05f6cfe885ec716e",
+      "source_artifact_id": "comparison_source_artifact:v1:1ecc9e3c5fdbee1ef7692dc27359d09d79d5d7e2fdd804ee05f6cfe885ec716e"
+    },
+    {
+      "record_type": "comparison_reference_bundle",
+      "schema_version": "1",
+      "assembly": "synthetic_GRCh38_geometry",
+      "identity_kind": "complete_reference_files",
+      "source_artifact_ids": [
+        "comparison_source_artifact:v1:1ecc9e3c5fdbee1ef7692dc27359d09d79d5d7e2fdd804ee05f6cfe885ec716e"
+      ],
+      "source_checksums": [
+        "1f548e4ce50aeb2f86b6a000bddbbbc080781fec5541fb2f2ad8f3e86964b7a7"
+      ],
+      "windows": [],
+      "complete_reference_sha256": {
+        "value": "1f548e4ce50aeb2f86b6a000bddbbbc080781fec5541fb2f2ad8f3e86964b7a7",
+        "reason": null
+      },
+      "transformation_version": "literal-fixture-v1",
+      "record_id": "comparison_reference_bundle:v1:4f29f43434deff3f08a9abe27f9975668211cb53bd111798e1d1b21ec604647b",
+      "reference_bundle_id": "comparison_reference_bundle:v1:4f29f43434deff3f08a9abe27f9975668211cb53bd111798e1d1b21ec604647b"
+    },
+    {
+      "record_type": "comparison_editor_definition",
+      "schema_version": "1",
+      "display_name": "Synthetic ABE",
+      "variant_name": "synthetic-ABE-v1",
+      "editor_class": "ABE",
+      "cas_component": "synthetic-SpCas9",
+      "pam_patterns": [
+        "NGG"
+      ],
+      "guide_geometry": {
+        "spacer_length": 20,
+        "pam_side": "3prime",
+        "pam_length": 3
+      },
+      "conversion": {
+        "substrate_base": "A",
+        "product_base": "G",
+        "strand_convention": "guide_oriented"
+      },
+      "editing_window": {
+        "start_1based": 1,
+        "end_1based": 8,
+        "basis": "Synthetic test declaration"
+      },
+      "source_refs": [],
+      "record_id": "comparison_editor_definition:v1:732a48b7f48407ce1cea502abbfe3ce9fffa09ba3a7a8e0e8122bcffce4e7be8",
+      "editor_definition_id": "comparison_editor_definition:v1:732a48b7f48407ce1cea502abbfe3ce9fffa09ba3a7a8e0e8122bcffce4e7be8"
+    },
+    {
+      "record_type": "comparison_intended_locus",
+      "schema_version": "1",
+      "reference_bundle_id": "comparison_reference_bundle:v1:4f29f43434deff3f08a9abe27f9975668211cb53bd111798e1d1b21ec604647b",
+      "contig": "synthetic_chr11",
+      "start": 100,
+      "end": 123,
+      "strand": "+",
+      "gene": "HBG1",
+      "locus_name": "synthetic-HBG1",
+      "path": [
+        {
+          "kind": "reference",
+          "pos0": 100,
+          "base": "A"
+        },
+        {
+          "kind": "reference",
+          "pos0": 101,
+          "base": "C"
+        },
+        {
+          "kind": "reference",
+          "pos0": 102,
+          "base": "G"
+        },
+        {
+          "kind": "reference",
+          "pos0": 103,
+          "base": "T"
+        },
+        {
+          "kind": "reference",
+          "pos0": 104,
+          "base": "A"
+        },
+        {
+          "kind": "reference",
+          "pos0": 105,
+          "base": "C"
+        },
+        {
+          "kind": "reference",
+          "pos0": 106,
+          "base": "G"
+        },
+        {
+          "kind": "reference",
+          "pos0": 107,
+          "base": "T"
+        },
+        {
+          "kind": "reference",
+          "pos0": 108,
+          "base": "A"
+        },
+        {
+          "kind": "reference",
+          "pos0": 109,
+          "base": "C"
+        },
+        {
+          "kind": "reference",
+          "pos0": 110,
+          "base": "G"
+        },
+        {
+          "kind": "reference",
+          "pos0": 111,
+          "base": "T"
+        },
+        {
+          "kind": "reference",
+          "pos0": 112,
+          "base": "A"
+        },
+        {
+          "kind": "reference",
+          "pos0": 113,
+          "base": "C"
+        },
+        {
+          "kind": "reference",
+          "pos0": 114,
+          "base": "G"
+        },
+        {
+          "kind": "reference",
+          "pos0": 115,
+          "base": "T"
+        },
+        {
+          "kind": "reference",
+          "pos0": 116,
+          "base": "A"
+        },
+        {
+          "kind": "reference",
+          "pos0": 117,
+          "base": "C"
+        },
+        {
+          "kind": "reference",
+          "pos0": 118,
+          "base": "G"
+        },
+        {
+          "kind": "reference",
+          "pos0": 119,
+          "base": "T"
+        },
+        {
+          "kind": "reference",
+          "pos0": 120,
+          "base": "A"
+        },
+        {
+          "kind": "reference",
+          "pos0": 121,
+          "base": "G"
+        },
+        {
+          "kind": "reference",
+          "pos0": 122,
+          "base": "G"
+        }
+      ],
+      "intended_endpoint": "intended_edit_fraction",
+      "copy_resolution": "copy_specific",
+      "source_refs": [
+        {
+          "source_artifact_id": "comparison_source_artifact:v1:1ecc9e3c5fdbee1ef7692dc27359d09d79d5d7e2fdd804ee05f6cfe885ec716e",
+          "locator": {
+            "kind": "file",
+            "member": "reference.fa"
+          },
+          "note": "Artificial sequence; no published biological claim"
+        }
+      ],
+      "record_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "intended_locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+    },
+    {
+      "record_type": "comparison_design",
+      "schema_version": "1",
+      "display_name": "Synthetic design A",
+      "guide_sequence": "ACGTACGTACGTACGTACGT",
+      "editor_definition_id": "comparison_editor_definition:v1:732a48b7f48407ce1cea502abbfe3ce9fffa09ba3a7a8e0e8122bcffce4e7be8",
+      "intended_locus_ids": [
+        "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+      ],
+      "desired_edit_definitions": [
+        {
+          "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+          "pos0": 100,
+          "reference_base": "A",
+          "alternate_base": "G",
+          "strand": "+",
+          "purpose": "intended"
+        }
+      ],
+      "source_status": "synthetic",
+      "source_refs": [
+        {
+          "source_artifact_id": "comparison_source_artifact:v1:1ecc9e3c5fdbee1ef7692dc27359d09d79d5d7e2fdd804ee05f6cfe885ec716e",
+          "locator": {
+            "kind": "file",
+            "member": "reference.fa"
+          },
+          "note": "Artificial sequence; no published biological claim"
+        }
+      ],
+      "record_id": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+      "design_id": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+      "definition_hash": "9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136"
+    },
+    {
+      "record_type": "comparison_experimental_context",
+      "schema_version": "1",
+      "organism": "Homo sapiens",
+      "cell_type": "synthetic-HSPC-context",
+      "cell_state": {
+        "value": null,
+        "reason": "not reported in this synthetic fixture"
+      },
+      "cell_provenance": {
+        "value": "artificial",
+        "reason": null
+      },
+      "delivery_method": "synthetic electroporation",
+      "exposure": {
+        "value": {
+          "value": 1,
+          "reason": null
+        },
+        "unit": "hour"
+      },
+      "dose": {
+        "value": {
+          "value": null,
+          "reason": "not reported in this synthetic fixture"
+        },
+        "unit": "declared units"
+      },
+      "condition": "synthetic treated condition",
+      "measurement_timepoint": {
+        "value": {
+          "value": 48,
+          "reason": null
+        },
+        "unit": "hour"
+      },
+      "source_refs": [],
+      "record_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+      "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+    },
+    {
+      "record_type": "comparison_endpoint_definition",
+      "schema_version": "1",
+      "name": "intended_edit_fraction",
+      "biological_meaning": "Fraction of reads carrying the specified intended substitution",
+      "unit": "fraction",
+      "denominator": "amplicon reads",
+      "measurement_level": "reads",
+      "favorable_direction": "higher",
+      "locus_resolution": "copy_specific",
+      "allele_resolution": "required",
+      "requires_sequence": true,
+      "required_context_ids": [
+        "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+      ],
+      "record_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+      "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45"
+    },
+    {
+      "record_type": "comparison_domain",
+      "schema_version": "1",
+      "reference_bundle_id": "comparison_reference_bundle:v1:4f29f43434deff3f08a9abe27f9975668211cb53bd111798e1d1b21ec604647b",
+      "intervals": [
+        {
+          "contig": "synthetic_chr11",
+          "start": 100,
+          "end": 123
+        }
+      ],
+      "selection_basis": "synthetic",
+      "description": "One artificial locus for validating the contracts",
+      "record_id": "comparison_domain:v1:bb0548973fb9a79d15336784e546e4f65b0d8fe30fcdfcd2ab0348191024f268",
+      "domain_id": "comparison_domain:v1:bb0548973fb9a79d15336784e546e4f65b0d8fe30fcdfcd2ab0348191024f268"
+    },
+    {
+      "record_type": "comparison_search_profile",
+      "schema_version": "1",
+      "design_id": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+      "domain_id": "comparison_domain:v1:bb0548973fb9a79d15336784e546e4f65b0d8fe30fcdfcd2ab0348191024f268",
+      "pam_patterns": [
+        "NGG"
+      ],
+      "max_mismatches": 4,
+      "max_dna_bulges": 0,
+      "max_rna_bulges": 0,
+      "max_total_edits": 4,
+      "total_edit_accounting": "mismatch_plus_bulged_bases",
+      "strands": [
+        "+",
+        "-"
+      ],
+      "variant_domain": "synthetic_literal",
+      "backend_name": "regional_exhaustive",
+      "backend_version": "fixture-v1",
+      "backend_digest": "187af585112ca5750463975095f0952f7552df8d3f2f75ad488a2931d4822359",
+      "index_id": {
+        "value": null,
+        "reason": "local fixture requires no external index"
+      },
+      "source_panel_id": "synthetic-panel-v1",
+      "source_equivalence": "not_applicable_synthetic",
+      "max_rows": 100,
+      "max_window_variants": 10,
+      "retention": "all",
+      "record_id": "comparison_search_profile:v1:a0f4fd03d081e482fff046ad2897754ab8e13677bcba4f02619b9df2f923d2a8",
+      "search_profile_id": "comparison_search_profile:v1:a0f4fd03d081e482fff046ad2897754ab8e13677bcba4f02619b9df2f923d2a8"
+    },
+    {
+      "record_type": "comparison_donor",
+      "schema_version": "1",
+      "canonical_label": "synthetic-donor-C",
+      "source_panel_id": "synthetic-panel-v1",
+      "sample_ids": [
+        "synthetic-sample-C"
+      ],
+      "independence_group_id": {
+        "value": "synthetic-family-C",
+        "reason": null
+      },
+      "relatedness_policy": "declared_simulation_assumption",
+      "relatedness_basis": "One independent artificial donor by construction",
+      "source_refs": [],
+      "record_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+      "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d"
+    },
+    {
+      "record_type": "comparison_locus",
+      "schema_version": "1",
+      "reference_bundle_id": "comparison_reference_bundle:v1:4f29f43434deff3f08a9abe27f9975668211cb53bd111798e1d1b21ec604647b",
+      "contig": "synthetic_chr11",
+      "start": 200,
+      "end": 223,
+      "strand": "+",
+      "locus_name": "synthetic-off-target",
+      "gene": {
+        "value": null,
+        "reason": "no gene annotation in the artificial fixture"
+      },
+      "path": [],
+      "record_id": "comparison_locus:v1:3f0fb5d40721d2a79b8be76130ceb4753592f48b0cead541ca504f08139282c1",
+      "locus_id": "comparison_locus:v1:3f0fb5d40721d2a79b8be76130ceb4753592f48b0cead541ca504f08139282c1"
+    },
+    {
+      "record_type": "comparison_design_alias",
+      "schema_version": "1",
+      "source_name": "source-label-A",
+      "design_id": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+      "source_location": {
+        "source_artifact_id": "comparison_source_artifact:v1:1ecc9e3c5fdbee1ef7692dc27359d09d79d5d7e2fdd804ee05f6cfe885ec716e",
+        "locator": {
+          "kind": "file",
+          "member": "reference.fa"
+        },
+        "note": "Artificial sequence; no published biological claim"
+      },
+      "justification": "Explicit mapping in the artificial fixture",
+      "record_id": "comparison_design_alias:v1:8beba7282050674a411f3fe79207d3cf9b32b6183aca54b7dba592ad66bd7b2f",
+      "alias_id": "comparison_design_alias:v1:8beba7282050674a411f3fe79207d3cf9b32b6183aca54b7dba592ad66bd7b2f"
+    },
+    {
+      "record_type": "comparison_sequence_configuration",
+      "schema_version": "1",
+      "reference_bundle_id": "comparison_reference_bundle:v1:4f29f43434deff3f08a9abe27f9975668211cb53bd111798e1d1b21ec604647b",
+      "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "contig": "synthetic_chr11",
+      "strand": "+",
+      "sequence": "ACGTACGTACGTACGTACGTAGG",
+      "path": [
+        {
+          "kind": "reference",
+          "pos0": 100,
+          "base": "A"
+        },
+        {
+          "kind": "reference",
+          "pos0": 101,
+          "base": "C"
+        },
+        {
+          "kind": "reference",
+          "pos0": 102,
+          "base": "G"
+        },
+        {
+          "kind": "reference",
+          "pos0": 103,
+          "base": "T"
+        },
+        {
+          "kind": "reference",
+          "pos0": 104,
+          "base": "A"
+        },
+        {
+          "kind": "reference",
+          "pos0": 105,
+          "base": "C"
+        },
+        {
+          "kind": "reference",
+          "pos0": 106,
+          "base": "G"
+        },
+        {
+          "kind": "reference",
+          "pos0": 107,
+          "base": "T"
+        },
+        {
+          "kind": "reference",
+          "pos0": 108,
+          "base": "A"
+        },
+        {
+          "kind": "reference",
+          "pos0": 109,
+          "base": "C"
+        },
+        {
+          "kind": "reference",
+          "pos0": 110,
+          "base": "G"
+        },
+        {
+          "kind": "reference",
+          "pos0": 111,
+          "base": "T"
+        },
+        {
+          "kind": "reference",
+          "pos0": 112,
+          "base": "A"
+        },
+        {
+          "kind": "reference",
+          "pos0": 113,
+          "base": "C"
+        },
+        {
+          "kind": "reference",
+          "pos0": 114,
+          "base": "G"
+        },
+        {
+          "kind": "reference",
+          "pos0": 115,
+          "base": "T"
+        },
+        {
+          "kind": "reference",
+          "pos0": 116,
+          "base": "A"
+        },
+        {
+          "kind": "reference",
+          "pos0": 117,
+          "base": "C"
+        },
+        {
+          "kind": "reference",
+          "pos0": 118,
+          "base": "G"
+        },
+        {
+          "kind": "reference",
+          "pos0": 119,
+          "base": "T"
+        },
+        {
+          "kind": "reference",
+          "pos0": 120,
+          "base": "A"
+        },
+        {
+          "kind": "reference",
+          "pos0": 121,
+          "base": "G"
+        },
+        {
+          "kind": "reference",
+          "pos0": 122,
+          "base": "G"
+        }
+      ],
+      "variants": [],
+      "support_status": "supported",
+      "support_reason": null,
+      "record_id": "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7",
+      "sequence_configuration_id": "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7"
+    },
+    {
+      "record_type": "comparison_sequence_occurrence",
+      "schema_version": "1",
+      "sequence_configuration_id": "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7",
+      "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+      "sample_id": "synthetic-sample-C",
+      "copy_index": 0,
+      "phase_block": {
+        "value": "synthetic-block-1",
+        "reason": null
+      },
+      "phase_status": "confirmed",
+      "source_version": "synthetic-panel-v1",
+      "source_refs": [
+        {
+          "source_artifact_id": "comparison_source_artifact:v1:1ecc9e3c5fdbee1ef7692dc27359d09d79d5d7e2fdd804ee05f6cfe885ec716e",
+          "locator": {
+            "kind": "file",
+            "member": "reference.fa"
+          },
+          "note": "Artificial sequence; no published biological claim"
+        }
+      ],
+      "record_id": "comparison_sequence_occurrence:v1:d902a19678438adca1582ea42e941104c86e29fb60e9f9f35efd499f8abbacef",
+      "sequence_occurrence_id": "comparison_sequence_occurrence:v1:d902a19678438adca1582ea42e941104c86e29fb60e9f9f35efd499f8abbacef"
+    },
+    {
+      "record_type": "comparison_design_configuration",
+      "schema_version": "1",
+      "design_id": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+      "sequence_configuration_id": "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7",
+      "role": "intended",
+      "record_id": "comparison_design_configuration:v1:9e39673681d009bf95342bf61f61c08105e2d534382b24d2dde0a1df8ca06419",
+      "design_configuration_id": "comparison_design_configuration:v1:9e39673681d009bf95342bf61f61c08105e2d534382b24d2dde0a1df8ca06419"
+    },
+    {
+      "record_type": "comparison_alignment",
+      "schema_version": "1",
+      "design_configuration_id": "comparison_design_configuration:v1:9e39673681d009bf95342bf61f61c08105e2d534382b24d2dde0a1df8ca06419",
+      "columns": [
+        {
+          "guide": "A",
+          "target": "A",
+          "guide_position_1based": 1,
+          "target_path_index": 0
+        },
+        {
+          "guide": "C",
+          "target": "C",
+          "guide_position_1based": 2,
+          "target_path_index": 1
+        },
+        {
+          "guide": "G",
+          "target": "G",
+          "guide_position_1based": 3,
+          "target_path_index": 2
+        },
+        {
+          "guide": "T",
+          "target": "T",
+          "guide_position_1based": 4,
+          "target_path_index": 3
+        },
+        {
+          "guide": "A",
+          "target": "A",
+          "guide_position_1based": 5,
+          "target_path_index": 4
+        },
+        {
+          "guide": "C",
+          "target": "C",
+          "guide_position_1based": 6,
+          "target_path_index": 5
+        },
+        {
+          "guide": "G",
+          "target": "G",
+          "guide_position_1based": 7,
+          "target_path_index": 6
+        },
+        {
+          "guide": "T",
+          "target": "T",
+          "guide_position_1based": 8,
+          "target_path_index": 7
+        },
+        {
+          "guide": "A",
+          "target": "A",
+          "guide_position_1based": 9,
+          "target_path_index": 8
+        },
+        {
+          "guide": "C",
+          "target": "C",
+          "guide_position_1based": 10,
+          "target_path_index": 9
+        },
+        {
+          "guide": "G",
+          "target": "G",
+          "guide_position_1based": 11,
+          "target_path_index": 10
+        },
+        {
+          "guide": "T",
+          "target": "T",
+          "guide_position_1based": 12,
+          "target_path_index": 11
+        },
+        {
+          "guide": "A",
+          "target": "A",
+          "guide_position_1based": 13,
+          "target_path_index": 12
+        },
+        {
+          "guide": "C",
+          "target": "C",
+          "guide_position_1based": 14,
+          "target_path_index": 13
+        },
+        {
+          "guide": "G",
+          "target": "G",
+          "guide_position_1based": 15,
+          "target_path_index": 14
+        },
+        {
+          "guide": "T",
+          "target": "T",
+          "guide_position_1based": 16,
+          "target_path_index": 15
+        },
+        {
+          "guide": "A",
+          "target": "A",
+          "guide_position_1based": 17,
+          "target_path_index": 16
+        },
+        {
+          "guide": "C",
+          "target": "C",
+          "guide_position_1based": 18,
+          "target_path_index": 17
+        },
+        {
+          "guide": "G",
+          "target": "G",
+          "guide_position_1based": 19,
+          "target_path_index": 18
+        },
+        {
+          "guide": "T",
+          "target": "T",
+          "guide_position_1based": 20,
+          "target_path_index": 19
+        }
+      ],
+      "mismatch_positions": [],
+      "dna_bulge_positions": [],
+      "rna_bulge_positions": [],
+      "pam_sequence": "AGG",
+      "pam_path": [
+        {
+          "kind": "reference",
+          "pos0": 120,
+          "base": "A"
+        },
+        {
+          "kind": "reference",
+          "pos0": 121,
+          "base": "G"
+        },
+        {
+          "kind": "reference",
+          "pos0": 122,
+          "base": "G"
+        }
+      ],
+      "native_row_refs": [
+        {
+          "source_artifact_id": "comparison_source_artifact:v1:1ecc9e3c5fdbee1ef7692dc27359d09d79d5d7e2fdd804ee05f6cfe885ec716e",
+          "locator": {
+            "kind": "file",
+            "member": "reference.fa"
+          },
+          "note": "Artificial sequence; no published biological claim"
+        }
+      ],
+      "record_id": "comparison_alignment:v1:90c0a4b5f05716b7e040ce65501b51a18e2e6b49e9875159fcd7e57a2280178e",
+      "alignment_id": "comparison_alignment:v1:90c0a4b5f05716b7e040ce65501b51a18e2e6b49e9875159fcd7e57a2280178e"
+    },
+    {
+      "record_type": "comparison_donor_configuration",
+      "schema_version": "1",
+      "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+      "sample_id": "synthetic-sample-C",
+      "sequence_occurrence_id": "comparison_sequence_occurrence:v1:d902a19678438adca1582ea42e941104c86e29fb60e9f9f35efd499f8abbacef",
+      "design_configuration_id": "comparison_design_configuration:v1:9e39673681d009bf95342bf61f61c08105e2d534382b24d2dde0a1df8ca06419",
+      "copy_index": 0,
+      "carrier_status": "supported_carrier",
+      "carrier_of_sequence_id": "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7",
+      "genotype_support": "called",
+      "phase_support": "confirmed",
+      "reason_codes": [],
+      "source_refs": [
+        {
+          "source_artifact_id": "comparison_source_artifact:v1:1ecc9e3c5fdbee1ef7692dc27359d09d79d5d7e2fdd804ee05f6cfe885ec716e",
+          "locator": {
+            "kind": "file",
+            "member": "reference.fa"
+          },
+          "note": "Artificial sequence; no published biological claim"
+        }
+      ],
+      "record_id": "comparison_donor_configuration:v1:e56de47c2b2342e3d2bc8b4fc15f0331581b24347c6fd8e374742669b5bed10f",
+      "donor_configuration_id": "comparison_donor_configuration:v1:e56de47c2b2342e3d2bc8b4fc15f0331581b24347c6fd8e374742669b5bed10f"
+    },
+    {
+      "record_type": "comparison_search_scope",
+      "schema_version": "1",
+      "design_id": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+      "donor_id": {
+        "value": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+        "reason": null
+      },
+      "source_panel_id": "synthetic-panel-v1",
+      "search_profile_id": "comparison_search_profile:v1:a0f4fd03d081e482fff046ad2897754ab8e13677bcba4f02619b9df2f923d2a8",
+      "requested_intervals": [
+        {
+          "contig": "synthetic_chr11",
+          "start": 100,
+          "end": 123
+        }
+      ],
+      "evaluated_intervals": [
+        {
+          "contig": "synthetic_chr11",
+          "start": 100,
+          "end": 123
+        }
+      ],
+      "skipped_intervals": [],
+      "execution_status": "complete",
+      "retention_status": "complete",
+      "backend_limits": {
+        "max_rows": 100,
+        "max_window_variants": 10,
+        "timeout_seconds": 30
+      },
+      "exit_code": {
+        "value": 0,
+        "reason": null
+      },
+      "reason_codes": [],
+      "record_id": "comparison_search_scope:v1:11c0e341ea1b127058e9696188694eee68d5a7f0a82d3afe25aff956a5078408",
+      "search_scope_id": "comparison_search_scope:v1:11c0e341ea1b127058e9696188694eee68d5a7f0a82d3afe25aff956a5078408"
+    },
+    {
+      "record_type": "comparison_variant_effect",
+      "schema_version": "1",
+      "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+      "donor_configuration_id": {
+        "value": "comparison_design_configuration:v1:9e39673681d009bf95342bf61f61c08105e2d534382b24d2dde0a1df8ca06419",
+        "reason": null
+      },
+      "reference_configuration_id": {
+        "value": "comparison_design_configuration:v1:9e39673681d009bf95342bf61f61c08105e2d534382b24d2dde0a1df8ca06419",
+        "reason": null
+      },
+      "donor_alignment_id": {
+        "value": "comparison_alignment:v1:90c0a4b5f05716b7e040ce65501b51a18e2e6b49e9875159fcd7e57a2280178e",
+        "reason": null
+      },
+      "reference_alignment_id": {
+        "value": "comparison_alignment:v1:90c0a4b5f05716b7e040ce65501b51a18e2e6b49e9875159fcd7e57a2280178e",
+        "reason": null
+      },
+      "status": "unchanged",
+      "reason": "Artificial donor equals reference at this locus",
+      "source_variants": [],
+      "record_id": "comparison_variant_effect:v1:20ded05f2cf92bc1adb7f36955191ffa2127f425232bcf9cf18c297c57814c97",
+      "variant_effect_id": "comparison_variant_effect:v1:20ded05f2cf92bc1adb7f36955191ffa2127f425232bcf9cf18c297c57814c97"
+    },
+    {
+      "record_type": "comparison_intended_assessment",
+      "schema_version": "1",
+      "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+      "design_id": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+      "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "sequence_configuration_id": {
+        "value": "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7",
+        "reason": null
+      },
+      "support_status": "supported",
+      "pam_compatible": {
+        "value": true,
+        "reason": null
+      },
+      "alignment_ids": [
+        "comparison_alignment:v1:90c0a4b5f05716b7e040ce65501b51a18e2e6b49e9875159fcd7e57a2280178e"
+      ],
+      "reference_differences": [],
+      "reason_codes": [],
+      "record_id": "comparison_intended_assessment:v1:ed0d31cd3c97527ba93966311697521158fc62364c7348bc872416eb7ec68ddb",
+      "intended_assessment_id": "comparison_intended_assessment:v1:ed0d31cd3c97527ba93966311697521158fc62364c7348bc872416eb7ec68ddb"
+    },
+    {
+      "record_type": "comparison_source_artifact",
+      "schema_version": "1",
+      "sha256": "3802d8d1ad502322b0aaeacc6df20e170045a95bf40c77198ab150d7bbe522fe",
+      "source_id": "synthetic-observation-table",
+      "release": "contract-fixture-v1",
+      "uri": "urn:bes:synthetic:observation-table",
+      "media_type": "text/tab-separated-values",
+      "scope": "complete_file",
+      "parent_artifact_id": {
+        "value": null,
+        "reason": "original artifact"
+      },
+      "locator": {
+        "kind": "file",
+        "member": "observations.tsv"
+      },
+      "access": "synthetic",
+      "use_terms": "Artificial measurements for software checks",
+      "record_id": "comparison_source_artifact:v1:dae02e9935ac034f97864718d76c7e0bf4e180650b307e4c637cf07d1d85cae0",
+      "source_artifact_id": "comparison_source_artifact:v1:dae02e9935ac034f97864718d76c7e0bf4e180650b307e4c637cf07d1d85cae0"
+    },
+    {
+      "record_type": "comparison_source_artifact",
+      "schema_version": "1",
+      "sha256": "5d2af5e341d6f560c45b51b8c93be0f3d320624e213ecb487acde9ba76f51e8f",
+      "source_id": "legacy-synthetic-reference",
+      "release": "v3-synthetic-example",
+      "uri": "urn:bes:synthetic:legacy-reference",
+      "media_type": "text/x-fasta",
+      "scope": "complete_file",
+      "parent_artifact_id": {
+        "value": null,
+        "reason": "original artifact"
+      },
+      "locator": {
+        "kind": "file",
+        "member": "examples/population/synthetic/reference.fa"
+      },
+      "access": "synthetic",
+      "use_terms": "Existing artificial V3 software fixture",
+      "record_id": "comparison_source_artifact:v1:9118f3e35c44075f1a6621d1de5da180fe952a48f9cfc32b83be79cec2fed6c8",
+      "source_artifact_id": "comparison_source_artifact:v1:9118f3e35c44075f1a6621d1de5da180fe952a48f9cfc32b83be79cec2fed6c8"
+    },
+    {
+      "record_type": "comparison_reference_bundle",
+      "schema_version": "1",
+      "assembly": "synthetic_V3",
+      "identity_kind": "complete_reference_files",
+      "source_artifact_ids": [
+        "comparison_source_artifact:v1:9118f3e35c44075f1a6621d1de5da180fe952a48f9cfc32b83be79cec2fed6c8"
+      ],
+      "source_checksums": [
+        "5d2af5e341d6f560c45b51b8c93be0f3d320624e213ecb487acde9ba76f51e8f"
+      ],
+      "windows": [],
+      "complete_reference_sha256": {
+        "value": "5d2af5e341d6f560c45b51b8c93be0f3d320624e213ecb487acde9ba76f51e8f",
+        "reason": null
+      },
+      "transformation_version": "v3-identity-bridge-v1",
+      "record_id": "comparison_reference_bundle:v1:3b8a3dab437a4aeb1b1305a7ada2dd4dd48b4b0a2ccdc37277cab30c430438db",
+      "reference_bundle_id": "comparison_reference_bundle:v1:3b8a3dab437a4aeb1b1305a7ada2dd4dd48b4b0a2ccdc37277cab30c430438db"
+    },
+    {
+      "record_type": "comparison_locus",
+      "schema_version": "1",
+      "reference_bundle_id": "comparison_reference_bundle:v1:3b8a3dab437a4aeb1b1305a7ada2dd4dd48b4b0a2ccdc37277cab30c430438db",
+      "contig": "chrSYNcontrol",
+      "start": 0,
+      "end": 23,
+      "strand": "+",
+      "locus_name": "V3 artificial control locus",
+      "gene": {
+        "value": null,
+        "reason": "artificial sequence has no gene annotation"
+      },
+      "path": [
+        {
+          "base": "A",
+          "kind": "reference",
+          "pos0": 0
+        },
+        {
+          "base": "C",
+          "kind": "reference",
+          "pos0": 1
+        },
+        {
+          "base": "G",
+          "kind": "reference",
+          "pos0": 2
+        },
+        {
+          "base": "T",
+          "kind": "reference",
+          "pos0": 3
+        },
+        {
+          "base": "T",
+          "kind": "reference",
+          "pos0": 4
+        },
+        {
+          "base": "G",
+          "kind": "reference",
+          "pos0": 5
+        },
+        {
+          "base": "C",
+          "kind": "reference",
+          "pos0": 6
+        },
+        {
+          "base": "A",
+          "kind": "reference",
+          "pos0": 7
+        },
+        {
+          "base": "A",
+          "kind": "reference",
+          "pos0": 8
+        },
+        {
+          "base": "T",
+          "kind": "reference",
+          "pos0": 9
+        },
+        {
+          "base": "G",
+          "kind": "reference",
+          "pos0": 10
+        },
+        {
+          "base": "C",
+          "kind": "reference",
+          "pos0": 11
+        },
+        {
+          "base": "T",
+          "kind": "reference",
+          "pos0": 12
+        },
+        {
+          "base": "A",
+          "kind": "reference",
+          "pos0": 13
+        },
+        {
+          "base": "G",
+          "kind": "reference",
+          "pos0": 14
+        },
+        {
+          "base": "C",
+          "kind": "reference",
+          "pos0": 15
+        },
+        {
+          "base": "T",
+          "kind": "reference",
+          "pos0": 16
+        },
+        {
+          "base": "A",
+          "kind": "reference",
+          "pos0": 17
+        },
+        {
+          "base": "A",
+          "kind": "reference",
+          "pos0": 18
+        },
+        {
+          "base": "C",
+          "kind": "reference",
+          "pos0": 19
+        },
+        {
+          "base": "T",
+          "kind": "reference",
+          "pos0": 20
+        },
+        {
+          "base": "G",
+          "kind": "reference",
+          "pos0": 21
+        },
+        {
+          "base": "G",
+          "kind": "reference",
+          "pos0": 22
+        }
+      ],
+      "record_id": "comparison_locus:v1:903c7ff3749c1634e0954ca124a0a5546635f1b13d9ea3c27d6060f76cda255a",
+      "locus_id": "comparison_locus:v1:903c7ff3749c1634e0954ca124a0a5546635f1b13d9ea3c27d6060f76cda255a"
+    },
+    {
+      "record_type": "comparison_sequence_configuration",
+      "schema_version": "1",
+      "reference_bundle_id": "comparison_reference_bundle:v1:3b8a3dab437a4aeb1b1305a7ada2dd4dd48b4b0a2ccdc37277cab30c430438db",
+      "locus_id": "comparison_locus:v1:903c7ff3749c1634e0954ca124a0a5546635f1b13d9ea3c27d6060f76cda255a",
+      "contig": "chrSYNcontrol",
+      "strand": "+",
+      "sequence": "ACGTTGCAATGCTAGCTAACTGG",
+      "path": [
+        {
+          "base": "A",
+          "kind": "reference",
+          "pos0": 0
+        },
+        {
+          "base": "C",
+          "kind": "reference",
+          "pos0": 1
+        },
+        {
+          "base": "G",
+          "kind": "reference",
+          "pos0": 2
+        },
+        {
+          "base": "T",
+          "kind": "reference",
+          "pos0": 3
+        },
+        {
+          "base": "T",
+          "kind": "reference",
+          "pos0": 4
+        },
+        {
+          "base": "G",
+          "kind": "reference",
+          "pos0": 5
+        },
+        {
+          "base": "C",
+          "kind": "reference",
+          "pos0": 6
+        },
+        {
+          "base": "A",
+          "kind": "reference",
+          "pos0": 7
+        },
+        {
+          "base": "A",
+          "kind": "reference",
+          "pos0": 8
+        },
+        {
+          "base": "T",
+          "kind": "reference",
+          "pos0": 9
+        },
+        {
+          "base": "G",
+          "kind": "reference",
+          "pos0": 10
+        },
+        {
+          "base": "C",
+          "kind": "reference",
+          "pos0": 11
+        },
+        {
+          "base": "T",
+          "kind": "reference",
+          "pos0": 12
+        },
+        {
+          "base": "A",
+          "kind": "reference",
+          "pos0": 13
+        },
+        {
+          "base": "G",
+          "kind": "reference",
+          "pos0": 14
+        },
+        {
+          "base": "C",
+          "kind": "reference",
+          "pos0": 15
+        },
+        {
+          "base": "T",
+          "kind": "reference",
+          "pos0": 16
+        },
+        {
+          "base": "A",
+          "kind": "reference",
+          "pos0": 17
+        },
+        {
+          "base": "A",
+          "kind": "reference",
+          "pos0": 18
+        },
+        {
+          "base": "C",
+          "kind": "reference",
+          "pos0": 19
+        },
+        {
+          "base": "T",
+          "kind": "reference",
+          "pos0": 20
+        },
+        {
+          "base": "G",
+          "kind": "reference",
+          "pos0": 21
+        },
+        {
+          "base": "G",
+          "kind": "reference",
+          "pos0": 22
+        }
+      ],
+      "variants": [],
+      "support_status": "supported",
+      "support_reason": null,
+      "record_id": "comparison_sequence_configuration:v1:1a189b87eb0a125465fd46fc2fd75b23a284608df492ce4d104a793c31f33f41",
+      "sequence_configuration_id": "comparison_sequence_configuration:v1:1a189b87eb0a125465fd46fc2fd75b23a284608df492ce4d104a793c31f33f41"
+    },
+    {
+      "record_type": "comparison_source_artifact",
+      "schema_version": "1",
+      "sha256": "1e27f4eb1ac816eb2a9853f755155b8b5d50de94a5f7463c01ee758c73452914",
+      "source_id": "Artificial observation example",
+      "release": "contract-fixture-v1",
+      "uri": "synthetic:comparison-observations",
+      "media_type": "text/x-fasta",
+      "scope": "complete_file",
+      "parent_artifact_id": {
+        "value": null,
+        "reason": "original artifact"
+      },
+      "locator": {
+        "kind": "file",
+        "member": "measurements.json"
+      },
+      "access": "synthetic",
+      "use_terms": "Artificial fixture for software checks",
+      "record_id": "comparison_source_artifact:v1:9fb755396f722b87dec38eced948c0231374233afac2516f36c2e437642f6705",
+      "source_artifact_id": "comparison_source_artifact:v1:9fb755396f722b87dec38eced948c0231374233afac2516f36c2e437642f6705"
+    }
+  ],
+  "policies": {
+    "search": {
+      "policy_version": "synthetic-search-v1",
+      "domain_id": "comparison_domain:v1:bb0548973fb9a79d15336784e546e4f65b0d8fe30fcdfcd2ab0348191024f268",
+      "design_ids": [
+        "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136"
+      ],
+      "profile_ids": [
+        "comparison_search_profile:v1:a0f4fd03d081e482fff046ad2897754ab8e13677bcba4f02619b9df2f923d2a8"
+      ],
+      "source_transformation_version": "literal-fixture-v1",
+      "require_source_equivalence": true
+    },
+    "evidence": {
+      "policy_version": "synthetic-evidence-v1",
+      "require_controls": true,
+      "require_qc": true,
+      "require_detection_limit_for_zero": true,
+      "allow_related_context": true,
+      "allow_empirical_donor_credit": false
+    },
+    "comparison": {
+      "policy_version": "synthetic-comparison-v1",
+      "domain_id": "comparison_domain:v1:bb0548973fb9a79d15336784e546e4f65b0d8fe30fcdfcd2ab0348191024f268",
+      "dimensions": [
+        "intended_evaluability",
+        "nomination_counts",
+        "published_observations",
+        "unresolved_scope"
+      ],
+      "include_predictions": false
+    },
+    "questions": {
+      "policy_version": "synthetic-questions-v1",
+      "templates": [
+        "candidate_validation"
+      ],
+      "required_donors_per_arm": 1,
+      "technical_replicates": 1,
+      "relatedness_policy": "declared_simulation_assumption",
+      "allow_existing_evidence": false,
+      "control_roles": [
+        "mock",
+        "assay_qc"
+      ]
+    },
+    "planning": {
+      "policy_version": "synthetic-planning-v1",
+      "total_budget": 18,
+      "cost_unit": "simulation_units",
+      "algorithm": "complete_bundle_greedy",
+      "seed": 17,
+      "beam_width": 32,
+      "max_expansions": 1000,
+      "max_alternatives_per_question": 8,
+      "exact_action_cap": 18,
+      "fill_policy": "none"
+    },
+    "report": {
+      "policy_version": "synthetic-report-v1",
+      "include_donor_identifiers": false,
+      "include_local_paths": false,
+      "formats": [
+        "md",
+        "tsv",
+        "json"
+      ]
+    },
+    "predictions": {
+      "policy_version": "synthetic-prediction-v1",
+      "enabled": false,
+      "shortlist_ids": [],
+      "remote_execution": "disabled"
+    }
+  }
+}

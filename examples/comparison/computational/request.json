@@ -1,0 +1,43 @@
+{
+  "assembly": "artificial",
+  "format_version": "1",
+  "genotype_policy": {
+    "accepted_sample_filters": [
+      "PASS",
+      "."
+    ],
+    "accepted_site_filters": [
+      "PASS"
+    ],
+    "min_dp": null,
+    "min_gq": null,
+    "phase": "explicit_ps"
+  },
+  "guide": {
+    "id": "invented_guide",
+    "max_mismatches": 0,
+    "pam": "NGG",
+    "spacer": "ACGATTCGATGCTACGTAGC"
+  },
+  "input_kind": "artificial",
+  "purpose": "computational_only",
+  "reference": {
+    "path": "reference.json",
+    "sha256": "247ae3e3b0056c9d97b65337aaf1fe7592e9f0449228eecca5bf803759618da4"
+  },
+  "region": {
+    "contig": "artificial_1",
+    "end": 2160,
+    "start": 2000
+  },
+  "samples": [
+    "PHASED",
+    "MISSING",
+    "UNPHASED"
+  ],
+  "variants": {
+    "normalization": "Hand-constructed artificial SNVs; no downloaded biological sequence",
+    "path": "variants.vcf",
+    "sha256": "8824a68d3c30a97d89a89f9d56c861ef0d2f3d278ea6514dd546c33edd542426"
+  }
+}

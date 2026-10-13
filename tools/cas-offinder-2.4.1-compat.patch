@@ -1,0 +1,63 @@
+--- a/cas-offinder.cl
++++ b/cas-offinder.cl
+@@ -13,7 +13,7 @@
+ 	unsigned int old;
+ 	int k;
+ 
+-	unsigned int li = i - get_group_id(0)*get_local_size(0);
++	unsigned int li = get_local_id(0);
+ 	if (li == 0) {
+ 		for (k = 0; k < patternlen * 2; k++) {
+ 			l_pat[k] = pat[k];
+@@ -79,7 +79,7 @@
+ 	unsigned int j, lmm_count, old;
+ 	int k;
+ 
+-	unsigned int li = i - get_group_id(0)*get_local_size(0);
++	unsigned int li = get_local_id(0);
+ 	if (li == 0) {
+ 		for (k = 0; k < patternlen*2; k++) {
+ 			l_comp[k] = comp[k];
+--- a/cas-offinder.cpp
++++ b/cas-offinder.cpp
+@@ -160,6 +160,7 @@
+ 	unsigned int dev_index;
+ 
+ 	m_chrdatasize = chrdata.size();
++	chrdata.append(m_patternlen - 1, ';');
+ 	m_totalanalyzedsize = 0;
+ 	m_lasttotalanalyzedsize = 0;
+ 	m_lastloci = 0;
+@@ -178,8 +179,8 @@
+ 		); // No more than maximum allocation per device
+ 		// cerr << "Dicesize: " << m_dicesizes[dev_index] << endl;
+ 		m_chrdatabufs.push_back(oclCreateBuffer(m_contexts[dev_index], CL_MEM_READ_ONLY, sizeof(cl_char)* (m_dicesizes[dev_index] + m_patternlen - 1), 0));
+-		m_flagbufs.push_back(oclCreateBuffer(m_contexts[dev_index], CL_MEM_WRITE_ONLY, sizeof(cl_char)* m_dicesizes[dev_index], 0));
+-		m_locibufs.push_back(oclCreateBuffer(m_contexts[dev_index], CL_MEM_WRITE_ONLY, sizeof(cl_uint)* m_dicesizes[dev_index], 0));
++		m_flagbufs.push_back(oclCreateBuffer(m_contexts[dev_index], CL_MEM_READ_WRITE, sizeof(cl_char)* m_dicesizes[dev_index], 0));
++		m_locibufs.push_back(oclCreateBuffer(m_contexts[dev_index], CL_MEM_READ_WRITE, sizeof(cl_uint)* m_dicesizes[dev_index], 0));
+ 
+ 		oclSetKernelArg(m_finderkernels[dev_index], 0, sizeof(cl_mem), &m_chrdatabufs[dev_index]);
+ 		oclSetKernelArg(m_finderkernels[dev_index], 4, sizeof(cl_mem), &m_flagbufs[dev_index]);
+@@ -205,8 +206,11 @@
+ 	for (dev_index = 0; dev_index < m_devnum; dev_index++) {
+ 		tailsize = m_chrdatasize - m_totalanalyzedsize;
+ 		m_activedevnum++;
++		// Stage uploads at an allocation boundary for OpenCL host-pointer alignment.
++		vector<cl_char> upload(chrdata.begin() + m_totalanalyzedsize,
++			chrdata.begin() + m_totalanalyzedsize + MIN(tailsize, m_dicesizes[dev_index]) + m_patternlen - 1);
+ 		if (tailsize <= m_dicesizes[dev_index]) {
+-			oclEnqueueWriteBuffer(m_queues[dev_index], m_chrdatabufs[dev_index], CL_TRUE, 0, (size_t)(sizeof(cl_char)* (tailsize + m_patternlen - 1)), (cl_char *)chrdata.c_str() + m_totalanalyzedsize, 0, 0, 0);
++			oclEnqueueWriteBuffer(m_queues[dev_index], m_chrdatabufs[dev_index], CL_TRUE, 0, (size_t)(sizeof(cl_char)* (tailsize + m_patternlen - 1)), &upload[0], 0, 0, 0);
+ 			m_totalanalyzedsize += tailsize;
+ 			m_worksizes.push_back(tailsize);
+ #ifdef DEBUG
+@@ -215,7 +219,7 @@
+ 			break;
+ 		}
+ 		else {
+-			oclEnqueueWriteBuffer(m_queues[dev_index], m_chrdatabufs[dev_index], CL_TRUE, 0, sizeof(cl_char)* (m_dicesizes[dev_index] + m_patternlen - 1), (cl_char *)chrdata.c_str() + m_totalanalyzedsize, 0, 0, 0);
++			oclEnqueueWriteBuffer(m_queues[dev_index], m_chrdatabufs[dev_index], CL_TRUE, 0, sizeof(cl_char)* (m_dicesizes[dev_index] + m_patternlen - 1), &upload[0], 0, 0, 0);
+ 			m_totalanalyzedsize += m_dicesizes[dev_index];
+ 			m_worksizes.push_back(m_dicesizes[dev_index]);
+ #ifdef DEBUG

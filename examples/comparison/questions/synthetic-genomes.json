@@ -1,0 +1,28 @@
+{
+  "kind": "artificial_diploid_truth",
+  "intended_sequence": "ACGTACGTACGTACGTACGTAGG",
+  "candidate_reference": "ACGTACGTACGTACGTACGTAGG",
+  "candidate_alternate": "ACGTGCGTACGTACGTACGTAGG",
+  "donors": {
+    "C": {
+      "intended_copies": [
+        "reference",
+        "reference"
+      ],
+      "candidate_copies": [
+        "alternate",
+        "reference"
+      ]
+    },
+    "N": {
+      "intended_copies": [
+        "reference",
+        "reference"
+      ],
+      "candidate_copies": [
+        "reference",
+        "reference"
+      ]
+    }
+  }
+}

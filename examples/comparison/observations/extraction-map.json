@@ -1,0 +1,137 @@
+{
+  "record_type": "comparison_extraction_map",
+  "schema_version": "1",
+  "source_artifact_id": "comparison_source_artifact:v1:9fb755396f722b87dec38eced948c0231374233afac2516f36c2e437642f6705",
+  "artifact_format": "json",
+  "extraction_version": "generic-v1",
+  "mapping_version": "synthetic-observation-v1",
+  "expected_count": 1,
+  "rows": [
+    {
+      "measurement_key": "artificial-treated-1",
+      "source_study": "Artificial observation example",
+      "source_experiment": "experiment-1",
+      "source_replicate": "replicate-1",
+      "raw_unit": "percent",
+      "locator": {
+        "kind": "file",
+        "member": "rows/1"
+      },
+      "expected_raw_value": {
+        "value": "9.8000000000000007",
+        "reason": null
+      },
+      "source_reported_label": {
+        "value": "treated",
+        "reason": null
+      },
+      "normalization": {
+        "subject": {
+          "level": "donor",
+          "source_subject_id": {
+            "value": "synthetic-donor-C",
+            "reason": null
+          },
+          "donor_id": {
+            "value": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+            "reason": null
+          },
+          "specimen_id": {
+            "value": null,
+            "reason": "not reported"
+          },
+          "resolution_status": "resolved",
+          "reason": null
+        },
+        "design_id": {
+          "value": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+          "reason": null
+        },
+        "unresolved_source_design": {
+          "value": null,
+          "reason": "source design is resolved"
+        },
+        "context_id": {
+          "value": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+          "reason": null
+        },
+        "sequence_configuration_id": {
+          "value": "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7",
+          "reason": null
+        },
+        "locus_ids": [
+          "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+        ],
+        "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+        "normalized_unit": "fraction",
+        "conversion": {
+          "value": {
+            "method": "Percent divided by 100 exactly",
+            "factor": 0.01,
+            "offset": 0
+          },
+          "reason": null
+        },
+        "measurement_kind": "individual",
+        "independent_unit_id": {
+          "value": "synthetic-donor-C",
+          "reason": null
+        },
+        "relationship_group": {
+          "value": "synthetic-family-C",
+          "reason": null
+        },
+        "pairing_key": {
+          "value": null,
+          "reason": "not reported in this synthetic fixture"
+        },
+        "read_count": {
+          "value": 20,
+          "reason": null
+        },
+        "denominator": {
+          "value": 100,
+          "reason": null
+        },
+        "sample_size": {
+          "value": 1,
+          "reason": null
+        },
+        "uncertainty": {
+          "value": null,
+          "reason": "not reported in this synthetic fixture"
+        },
+        "assay_id": {
+          "value": "synthetic-amplicon",
+          "reason": null
+        },
+        "control_status": "unknown",
+        "qc_status": "unknown",
+        "detection_limit": {
+          "value": {
+            "value": 0.01,
+            "reason": null
+          },
+          "unit": "fraction"
+        },
+        "quantification_limit": {
+          "value": {
+            "value": null,
+            "reason": "not reported in this synthetic fixture"
+          },
+          "unit": "fraction"
+        },
+        "source_reported_outcome": {
+          "value": "measured_fraction",
+          "reason": null
+        },
+        "executed_action_id": {
+          "value": null,
+          "reason": "historical synthetic measurement"
+        }
+      },
+      "normalization_unavailable_reason": null,
+      "assertions": []
+    }
+  ]
+}

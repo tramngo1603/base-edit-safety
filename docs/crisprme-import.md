@@ -5,7 +5,7 @@ The importer expects the native `*_integrated_results.tsv` format from CRISPRme+
 2.3.2. The deposited sg1617 XLSX layout from the original CRISPRme paper is supported only for an
 older-format check. Both formats use the same row checks. No extra Python dependency is needed.
 
-This version defines the accepted file format. The [bounded HBG pilot](validation.md#v2-bounded-hbg-pilot)
+This version defines the accepted file format. The [bounded HBG pilot](validation.md#bounded-hbg-pilot)
 checked an actual 2.3.2 run with recorded reference and variant inputs. Search/merge completed,
 but plotting failed; a separate unchanged export step produced the imported tables. This does
 not establish complete-command success or compatibility with other inputs and search settings.
@@ -13,14 +13,14 @@ Later changes address incorrect variant frequencies and missing candidates; revi
 [upstream changelog](https://github.com/pinellolab/crisprme-plus/blob/main/CHANGELOG.md)
 before choosing the runtime for another analysis.
 
-The earlier migration notes record the official
-[`v2.3.2` release tag](https://github.com/pinellolab/crisprme-plus/releases/tag/v2.3.2) at source
+The official
+[`v2.3.2` release tag](https://github.com/pinellolab/crisprme-plus/releases/tag/v2.3.2) is at source
 revision `f33bcba150c116bf294125d4b5c5a7d413661474`. The recorded Docker image is
 `pinellolab/crisprme:v2.3.2`; its multi-platform image-index digest is
 `sha256:17e1f20464d0b942a363f7aeeb5359b5cde6f227fa45e52369ceda2776641ca8`.
-The regional pilot verified that source revision and observed runtime version 2.3.2 using the
+A separate check verified that source revision and observed runtime version 2.3.2 using the
 Linux ARM64 image `pinellolab/crisprme@sha256:33ddaa089d449d458402c89a08b6e44a4ab413f0899af9b3e8dd725833354038`.
-Record the resolved platform digest and exact invocation in the private run record. CRISPRme+ calls
+Record the resolved platform digest and exact invocation with the run's files. CRISPRme+ calls
 its sequence-similarity score `CFD`; neither the release nor its CLI defines a `CFD++` score.
 
 CRISPRme+ is distributed separately. Review its upstream installation instructions and license
@@ -142,7 +142,7 @@ Compute the checksum without copying the native table into this repository:
 shasum -a 256 /data/crisprme/Results/hbg-v2/hbg.integrated_results.tsv
 ```
 
-Declaration fields are copied into provenance. Use non-identifying run labels and paths, and do
+Declaration fields are copied into the source record. Use non-identifying run labels and paths, and do
 not put donor/sample identifiers, credentials, or patient information in filenames,
 `source_command`, `guide_id`, or other declaration text.
 
@@ -173,22 +173,22 @@ bes-normalize-nominations crisprme \
   --provenance-output crisprme.source.json
 ```
 
-The normalized TSV uses the existing nomination schema. Its generated provenance is schema v2
+The normalized TSV uses the existing nomination schema. Its generated source record is schema v2
 and carries the verified declaration plus aggregate input/emitted/skipped counts. Recoverable bad
 rows are counted by fixed reason; row contents are not written to diagnostics.
 
 When rows are skipped, the importer sets `all_candidate_coordinates_retained` to `false` and
-changes `complete` to `filtered`. Provenance preserves the original declaration alongside the
+changes `complete` to `filtered`. The source record preserves the original declaration alongside the
 one used for the import. The panel loader rejects an incomplete import that still claims
 completeness. These counts describe imported rows, not exhaustive genome or allele coverage.
 
 The importer drops `Variant_samples*` columns before constructing a logical row. It never reads a
 private-target sheet through the validation adapter, and no sample-level values are copied into
-the normalized TSV, provenance, ledger, logs, or report.
+the normalized TSV, source record, ledger, logs, or report.
 
 ## Compare with CRISPOR
 
-Pass both normalized sources and both provenance records to the candidate-panel command:
+Pass both normalized sources and both source records to the candidate-panel command:
 
 ```bash
 bes-candidate-panel \
@@ -223,16 +223,14 @@ The ledger keeps the original `Variant_MAF` text with the declared source/releas
 that text to a particular allele, population, AC/AN, or callability, and does not interpret it
 as ALT AF or patient prevalence. This importer does not read genotypes or phase.
 The reported highest-CFD sequences do not establish exhaustive haplotypes. Rejected rows
-remove the effective import's completeness claim; provenance preserves the original declaration.
-See the [validation summary](validation.md#v2-bounded-hbg-pilot) for tests, replay results, and remaining limits.
+remove the effective import's completeness claim; the source record preserves the original declaration.
+See the [validation summary](validation.md#bounded-hbg-pilot) for tests, replay results, and remaining limits.
 
 Regenerate older converted files and ledgers to include these allele and window checks. Source-row
 IDs include the retained DNA versions; an unsupported ALT mapping may have no interval.
 Ledger v3 also checks measurements for each reported DNA version and keeps unusable results with
 the reason and a follow-up question. See the [measurement fields](candidate-panel.md#measurement-table)
-and [validation summary](validation.md#v2-bounded-hbg-pilot). A search result is not an experiment.
-
-The workflow organizes evidence; it does not establish safety or biological sensitivity.
+and [validation summary](validation.md#bounded-hbg-pilot).
 
 ## Legacy deposited-workbook validation
 

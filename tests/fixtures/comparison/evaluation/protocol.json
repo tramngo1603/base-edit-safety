@@ -1,0 +1,15 @@
+{
+  "format_version": "1",
+  "data_kind": "artificial",
+  "protocol_id": "artificial-evaluator-demonstration-v1",
+  "budget_per_editor_assay": 4,
+  "targets": [
+    "0",
+    "0.5",
+    "0.75",
+    "1"
+  ],
+  "bootstrap_seed": 23,
+  "bootstrap_replicates": 200,
+  "baseline_method": "baseline"
+}

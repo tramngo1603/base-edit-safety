@@ -1,0 +1,62 @@
+[
+  {
+    "fixture": "ungapped-ngg.targets.tsv",
+    "image": "pinellolab/crisprme@sha256:3d5fc92e7c96cddef37e2d550e96966ac3d378966d93f2a1e9ea602258db15a6",
+    "native_executable_hashes": {
+      "/opt/conda/bin/crispritz.py": "14101f079a6e271f88530ee9f71496902fa24388df58da9552f5579dabb3f9ef",
+      "/opt/conda/bin/crisprme.py": "53ed8096b2f6af510641bf41fa7dc3e5b9662e8cd5f2208c1004456e1ff19fad",
+      "/opt/conda/opt/crispritz/buildTST": "138b0bdf84e658c9d5005ec72b4dbab71feb26ad4f9fdbf2f82e8a3dd4fe0a95",
+      "/opt/conda/opt/crispritz/searchBruteForce": "72d660f04effd821361086a269ed0c4e3d5ba3cfa913a1782384b181fcc323c5",
+      "/opt/conda/opt/crispritz/searchTST": "9939777e2c853d915731c13d242e5fb99c85f277c919fa2645638f6dea8a6374"
+    },
+    "native_exit_code": 0,
+    "native_filename": "windows_20bp-NGG-SpCas9.txt_guides.txt_1_0_0.targets.txt",
+    "note": "Actual retained native rows from synthetic fixtures; gapped file has nine leading-DNA-gap omissions recorded by the independent oracle.",
+    "raw_rows": 4,
+    "sha256": "1ee735ed6522f6a24e81c6e858b7eb71b1a5403135299e0bfcb04d98e6591eb4",
+    "source_genome_map_sha256": "a82f4afb401896c92ba38c74107ac434e4f67dc0a3245e9be8c3cedaf804dfda",
+    "source_job_key": "2b64ae95a507eceac44b2894bc494851567cd801913c6a8e5c6ac1dcc0746cf2",
+    "source_revision": "c005098e05ebbf83f049d9de5fd2598ceed65685",
+    "version": "v2.5.5"
+  },
+  {
+    "fixture": "gapped-ngg.targets.tsv",
+    "image": "pinellolab/crisprme@sha256:3d5fc92e7c96cddef37e2d550e96966ac3d378966d93f2a1e9ea602258db15a6",
+    "native_executable_hashes": {
+      "/opt/conda/bin/crispritz.py": "14101f079a6e271f88530ee9f71496902fa24388df58da9552f5579dabb3f9ef",
+      "/opt/conda/bin/crisprme.py": "53ed8096b2f6af510641bf41fa7dc3e5b9662e8cd5f2208c1004456e1ff19fad",
+      "/opt/conda/opt/crispritz/buildTST": "138b0bdf84e658c9d5005ec72b4dbab71feb26ad4f9fdbf2f82e8a3dd4fe0a95",
+      "/opt/conda/opt/crispritz/searchBruteForce": "72d660f04effd821361086a269ed0c4e3d5ba3cfa913a1782384b181fcc323c5",
+      "/opt/conda/opt/crispritz/searchTST": "9939777e2c853d915731c13d242e5fb99c85f277c919fa2645638f6dea8a6374"
+    },
+    "native_exit_code": 0,
+    "native_filename": "windows_20bp-NGG-SpCas9.txt_guides.txt_1_1_1.targets.txt",
+    "note": "Actual retained native rows from synthetic fixtures; gapped file has nine leading-DNA-gap omissions recorded by the independent oracle.",
+    "raw_rows": 151,
+    "sha256": "3ef88a4566b78ea100b5d4f53f33209f616c08af82448852db95f23b31991572",
+    "source_genome_map_sha256": "a82f4afb401896c92ba38c74107ac434e4f67dc0a3245e9be8c3cedaf804dfda",
+    "source_job_key": "d31ea8e5aaf14f3df5ea3a13979c3e74a64a2b70505090c11465c37eb7fe0fdc",
+    "source_revision": "c005098e05ebbf83f049d9de5fd2598ceed65685",
+    "version": "v2.5.5"
+  },
+  {
+    "fixture": "ungapped-ng.targets.tsv",
+    "image": "pinellolab/crisprme@sha256:3d5fc92e7c96cddef37e2d550e96966ac3d378966d93f2a1e9ea602258db15a6",
+    "native_executable_hashes": {
+      "/opt/conda/bin/crispritz.py": "14101f079a6e271f88530ee9f71496902fa24388df58da9552f5579dabb3f9ef",
+      "/opt/conda/bin/crisprme.py": "53ed8096b2f6af510641bf41fa7dc3e5b9662e8cd5f2208c1004456e1ff19fad",
+      "/opt/conda/opt/crispritz/buildTST": "138b0bdf84e658c9d5005ec72b4dbab71feb26ad4f9fdbf2f82e8a3dd4fe0a95",
+      "/opt/conda/opt/crispritz/searchBruteForce": "72d660f04effd821361086a269ed0c4e3d5ba3cfa913a1782384b181fcc323c5",
+      "/opt/conda/opt/crispritz/searchTST": "9939777e2c853d915731c13d242e5fb99c85f277c919fa2645638f6dea8a6374"
+    },
+    "native_exit_code": 0,
+    "native_filename": "windows_20bp-NG-SpCas9.txt_guides.txt_1_0_0.targets.txt",
+    "note": "Actual retained native rows from synthetic fixtures; gapped file has nine leading-DNA-gap omissions recorded by the independent oracle.",
+    "raw_rows": 5,
+    "sha256": "02caad0b59afcb7bf7151bb6f4f5770eff275de9b21ba8e63b3420abd273395e",
+    "source_genome_map_sha256": "a82f4afb401896c92ba38c74107ac434e4f67dc0a3245e9be8c3cedaf804dfda",
+    "source_job_key": "075fa9fbb08ea42423a413a08904448226ed09b6e8239bc52f1711b244bcad3d",
+    "source_revision": "c005098e05ebbf83f049d9de5fd2598ceed65685",
+    "version": "v2.5.5"
+  }
+]

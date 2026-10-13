@@ -23,7 +23,7 @@ from ..pipeline.datatypes import CandidateGuide
 
 PROTO_LEN = 20
 # Keep reported NAG/NGA matches even below CRISPOR's default MIT score cutoff of 1.0.
-# Retain their scores for review; this does not establish an exhaustive search.
+# Preserve the source scores for review.
 MIN_ALT_PAM_SCORE = 0.0
 CRISPRON_CONTEXT_PREFIX = 4
 CRISPRON_CONTEXT_SUFFIX = 3

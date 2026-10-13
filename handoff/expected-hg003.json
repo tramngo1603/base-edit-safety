@@ -1,0 +1,21 @@
+{
+  "candidate_configurations": 735979,
+  "changed_sequence_loci": 7205,
+  "coverage_sha256": "f981e4e632c8092dc58ddf435c7324893aa5f380a3e1168f97d2462e9a2d5465",
+  "genotype_status": "complete_conditional_model",
+  "locus_changes": {
+    "gained": 9073,
+    "lost": 3701,
+    "retained": 648369,
+    "unpaired_indel_path": 13003,
+    "unresolved": 54542
+  },
+  "reference_loci": 706588,
+  "sample_loci": 676534,
+  "scientific_rows_sha256": {
+    "candidates.tsv": "db92412f83ace9fdb88e00bc210bb4312e191ce9da37db318ad566c939ebe056",
+    "exclusions.tsv": "a1a1ed5f4548f82f6c159ae4df050b80420f4161028b1a13ccc1fc4be2190945",
+    "locus-changes.tsv": "02eb4a8759dd8d20d604b3aa04643975a0e7780f28e07ab64aa0e56d10a63f4d"
+  },
+  "status": "complete"
+}

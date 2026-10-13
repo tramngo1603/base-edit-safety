@@ -1,0 +1,2 @@
+guide_id	genome_build	chrom	start_0based	end_0based_exclusive	strand	locus_name
+LEGACY_A	synthetic_GRCh38_geometry	synthetic_chr11	100	123	+	T

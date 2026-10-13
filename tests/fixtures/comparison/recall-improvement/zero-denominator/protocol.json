@@ -1,0 +1,13 @@
+{
+  "format_version": "1",
+  "data_kind": "artificial",
+  "protocol_id": "artificial-recall-improvement-zero-denominator-fixture-v1",
+  "budget_per_editor_assay": 1,
+  "targets": [
+    "0",
+    "1"
+  ],
+  "bootstrap_seed": 23,
+  "bootstrap_replicates": 100,
+  "baseline_method": "baseline"
+}

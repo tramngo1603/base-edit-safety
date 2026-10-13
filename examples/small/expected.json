@@ -1,0 +1,12 @@
+{
+  "status": "complete",
+  "genotype_status": "complete_conditional_model",
+  "reference_loci": 1,
+  "sample_loci": 2,
+  "candidate_configurations": 3,
+  "changed_sequence_loci": 1,
+  "locus_changes": {
+    "gained": 1,
+    "retained": 1
+  }
+}

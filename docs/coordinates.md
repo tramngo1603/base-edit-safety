@@ -57,7 +57,7 @@ Sources: NCBI annotation release RS_2025_08 (records updated 3 June 2026) and En
 - HBG2: chr11:5,254,861-5,254,991
 
 The promoters have similar sequences, so a guide can match both. The coordinate table includes
-both copies; a sequence match alone does not demonstrate editing at either one.
+both copies.
 
 ## Positions in scope
 
@@ -91,8 +91,7 @@ copied across.
 | HBG2 -114 | rs34809449 | RCV000016130 / VCV000014990 (multiallelic: store the G>A allele, not just the rsID) |
 
 **db_unverified**: the recorded review found experimental support in CD34+ HSPCs and a RefSeq
-coordinate, but no ClinVar record for that gene. This label is not a recommendation to edit it
-and does not establish that it is a catalogued natural variant.
+coordinate, but no ClinVar record for that gene.
 
 A dbSNP rsID may still exist, and for two of these it does. A dbSNP submission is not curation, so it
 does not promote the status. The five recorded rows are:

@@ -1,0 +1,43 @@
+{
+  "artificial_mode_declarations": {
+    "assay_feasibility": "Verified by artificial construction only",
+    "availability": "Verified by artificial construction only",
+    "case": "research-specimen-unresolved",
+    "counterexample_change": "specimen_unresolved",
+    "coverage_basis_under_test": "callable_supported",
+    "independence": "C and N are distinct artificial groups by fixture construction",
+    "missing_copy": null,
+    "mode_under_test": "research_sample_planning",
+    "observed_measurements": [],
+    "permitted_use": "Artificial software declaration checks only",
+    "real_specimens_exist": false,
+    "scope": "Artificial canonical declaration and eligibility checks; no genomic search or real specimen verification",
+    "sequence_support": "The literal two-copy T/L sequences are fixture truth only; no GRCh38 or callability pipeline was run"
+  },
+  "candidate_alternate": "ACGTGCGTACGTACGTACGTAGG",
+  "candidate_reference": "ACGTACGTACGTACGTACGTAGG",
+  "donors": {
+    "C": {
+      "candidate_copies": [
+        "alternate",
+        "reference"
+      ],
+      "intended_copies": [
+        "reference",
+        "reference"
+      ]
+    },
+    "N": {
+      "candidate_copies": [
+        "reference",
+        "reference"
+      ],
+      "intended_copies": [
+        "reference",
+        "reference"
+      ]
+    }
+  },
+  "intended_sequence": "ACGTACGTACGTACGTACGTAGG",
+  "kind": "artificial_diploid_truth"
+}

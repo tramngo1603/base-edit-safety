@@ -1,0 +1,3 @@
+guide_id	spacer_sequence	editor	editor_class	pam_class	editing_window_start_1based	editing_window_end_1based_inclusive	intended_target_description	locus_system
+beta_guide_one	TTGCAAGTCCGTAGGAATCG	ABE8e	ABE	NGG	4	8	Artificial shared-spacer fixture guide one.	other
+beta_guide_two	TTGCAAGTCCGTAGGAATCG	ABE8e	ABE	NGG	4	8	Artificial shared-spacer fixture guide two.	other

@@ -1,13 +1,14 @@
 """Flag edits and candidate sites that overlap recorded clonal-hematopoiesis driver genes.
 
-The output gives the gene, coordinate, feature and source score for review. It does not estimate
-patient outcomes. The 12-gene list follows boostDM-CH; its per-mutation scores are not included.
+The output gives gene names, coordinates, features and available source scores.
+The 12-gene list follows boostDM-CH; its per-mutation scores are not included.
 """
 from __future__ import annotations
 
 from typing import Optional
 
 from .pipeline.datatypes import EditRecord
+from .io.reference import ucsc_chromosome
 
 # boostDM-CH driver-gene panel (12 genes; upstream scores are CC-BY-NC).
 CH_DRIVER_GENES = frozenset(
@@ -17,13 +18,8 @@ CH_DRIVER_GENES = frozenset(
 
 # GRCh38 gene spans, 1-based and inclusive, looked up in Ensembl by symbol.
 #
-# The release is pinned because these boundaries move. Against release 115, four of the twelve
-# differ, SRSF2 by 524 bp; against release 110, nine of twelve differ, by up to 586 bp. A silent
-# upstream refresh would therefore change which off-targets get flagged, with nothing in the diff to
-# show for it. tests/test_ch_gene_spans.py holds these values so a refresh has to be deliberate.
-#
-# Each span is the full gene interval, all transcripts, UTRs included, which is what an overlap check
-# for "did this site land in a driver gene" wants.
+# Spans include all transcripts and UTRs. The release is pinned because boundary changes
+# affect overlap flags. Tests in test_ch_gene_spans.py check the exact intervals.
 CH_GENE_SPANS_ENSEMBL_RELEASE = "116"
 CH_GENE_SPANS_ASSEMBLY = "GRCh38.p14"
 CH_GENE_SPANS = {
@@ -46,13 +42,9 @@ CH_DRIVER_SET_PROVENANCE = (
 )
 
 
-def _norm_chrom(chrom: str) -> str:
-    return chrom if chrom.startswith("chr") else f"chr{chrom}"
-
-
 def gene_at(chrom: str, pos_1based: int) -> Optional[str]:
     """The CH-driver gene containing this coordinate, or None."""
-    chrom = _norm_chrom(chrom)
+    chrom = ucsc_chromosome(chrom)
     for gene, (gchrom, start, end) in CH_GENE_SPANS.items():
         if chrom == gchrom and start <= pos_1based <= end:
             return gene
@@ -104,7 +96,7 @@ def ch_driver_offtargets(offtarget_sites: list[dict]) -> list[dict]:
             feature = locus_desc.split(":", 1)[0] if ":" in locus_desc else "unknown"
             hits.append({
                 "ch_driver_gene": gene,
-                "chrom": _norm_chrom(chrom),
+                "chrom": ucsc_chromosome(chrom),
                 "start": pos,
                 "strand": site.get("strand"),
                 "mismatch_count": site.get("mismatchCount"),
@@ -118,7 +110,7 @@ def ch_driver_offtargets(offtarget_sites: list[dict]) -> list[dict]:
 
 # What a coding edit would mean differs by driver gene, so the two are read together below. Most CH
 # drivers are tumor suppressors where breaking the protein is the concern; a few only matter at
-# specific residues. This is context for a reviewer, not a score.
+# specific residues.
 CH_DRIVER_MECHANISM = {
     "ASXL1": "lof_tumor_suppressor",
     "CHEK2": "lof_tumor_suppressor",

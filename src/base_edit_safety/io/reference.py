@@ -37,7 +37,8 @@ class ReferenceWindow:
     fetched_utc: str | None = None
 
 
-def _ucsc_chrom(chrom: str) -> str:
+def ucsc_chromosome(chrom: str) -> str:
+    """Return a chromosome name with the UCSC chr prefix."""
     return chrom if chrom.startswith("chr") else f"chr{chrom}"
 
 
@@ -50,7 +51,7 @@ def fetch_window(
     timeout: int = 30,
 ) -> ReferenceWindow:
     """Get the plus-strand sequence for an inclusive window, from the cache or from UCSC."""
-    key = f"{genome_build}_{_ucsc_chrom(chrom)}_{start_1based}_{end_1based}.json"
+    key = f"{genome_build}_{ucsc_chromosome(chrom)}_{start_1based}_{end_1based}.json"
     cache_path = os.path.join(_CACHE_DIR, key)
     if use_cache and os.path.isfile(cache_path):
         with open(cache_path) as handle:
@@ -59,7 +60,7 @@ def fetch_window(
 
     start0 = start_1based - 1  # UCSC API uses 0-based, half-open coordinates
     url = (
-        f"{_UCSC_SEQUENCE_API}?genome={genome_build};chrom={_ucsc_chrom(chrom)}"
+        f"{_UCSC_SEQUENCE_API}?genome={genome_build};chrom={ucsc_chromosome(chrom)}"
         f";start={start0};end={end_1based}"
     )
     with urllib.request.urlopen(url, timeout=timeout) as response:
@@ -67,7 +68,7 @@ def fetch_window(
     seq = data["dna"].upper()
     window = ReferenceWindow(
         genome_build=genome_build,
-        chrom=_ucsc_chrom(chrom),
+        chrom=ucsc_chromosome(chrom),
         start_1based=start_1based,
         end_1based=end_1based,
         plus_sequence=seq,
@@ -93,7 +94,7 @@ def window_provenance(chrom: str, start_1based: int, end_1based: int,
     length. Legacy cache entries honestly return ``fetched_utc=None`` because their original fetch
     time was not recorded and cannot be reconstructed.
     """
-    key = f"{genome_build}_{_ucsc_chrom(chrom)}_{start_1based}_{end_1based}.json"
+    key = f"{genome_build}_{ucsc_chromosome(chrom)}_{start_1based}_{end_1based}.json"
     path = os.path.join(_CACHE_DIR, key)
     if not os.path.isfile(path):
         return {"cache_key": key, "cached": False}

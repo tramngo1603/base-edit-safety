@@ -1,0 +1,24 @@
+{
+  "record_type": "known_case_carrier_protocol",
+  "schema_version": "1",
+  "study_id": "rs114518452-nygc-20220422-v1",
+  "release": "NYGC 20220422_3202_phased_SNV_INDEL_SV",
+  "assembly": "GRCh38",
+  "assembly_evidence_url": "https://www.internationalgenome.org/announcements/3202-samples-at-high-coverage-from-NYGC/",
+  "recorded_acquisition": {
+    "source_subset_sha256": "2698d96021709d5281bc5f0ab707c3aea4b507ecb4cbd8dddd99464bfab2ef1f",
+    "retrieved_date": "2026-09-17",
+    "verification": "The exact bounded VCF was retrieved from this protocol's source URL and independently reacquired with pysam 0.24.1. Both copies had this checksum. The GRCh38 source collection is documented by IGSR; the chr2 header length was checked. This contract binds those recorded bytes, not arbitrary caller-provided checksums or missing metadata in other files."
+  },
+  "source_vcf_url": "https://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20220422_3202_phased_SNV_INDEL_SV/1kGP_high_coverage_Illumina.chr2.filtered.SNV_INDEL_SV_phased_panel.vcf.gz",
+  "contig": "chr2",
+  "contig_length": 242193529,
+  "position_1based": 210530659,
+  "ref": "G",
+  "alt": "C",
+  "sample_selection": "All sample columns at the exact allele; one source sample represents one donor in this release.",
+  "accepted_site_filters": ["PASS", "."],
+  "accepted_sample_filters": ["PASS", "."],
+  "quality_policy": "Count complete diploid GT calls at a source PASS or dot record. Preserve dot as unfiltered; do not infer a PASS, DP or GQ check. Exclude missing, partial, non-diploid or sample-filtered calls. Count original ALT indexes without splitting the record.",
+  "interpretation": "Separate BCL11A/SpCas9 nuclease known-case count of the supplied genotypes. Source verification distinguishes recorded or direct public acquisition from unverified local inputs; expected protocol provenance alone does not establish a file's source. No callable whole-target DNA, available specimen, editing outcome or HBG base-editor validation is established. Keep individual source rows and carrier memberships protected locally."
+}

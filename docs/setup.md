@@ -1,24 +1,25 @@
-# Install and run the tool
+# Advanced workflows after installation
 
-The core package uses the Python standard library. CRISPOR, BE-DICT, and the conditional
-CRISPRon-ABE fallback are configured as separate tools and keep their own installation and license
-terms.
+For source installation, follow the [README](../README.md#install). For a complete
+offline handoff, use the [app quickstart](../handoff/QUICKSTART.html) and
+**Start.command**, which installs the included Python 3.12.12 runtime and pinned dependencies. The supported, tested platform
+is macOS 14.4.1 arm64 on an Apple M3 Pro with 18 GiB RAM. See the handoff's
+RELEASE.json for completed checks and [ADVANCED.md](../handoff/ADVANCED.md) for
+reproducible builds and installed-package testing.
 
-## Install the package
+The commands below are optional analyst workflows. From the extracted handoff,
+add its installed command directory and locate the bundled examples:
 
-The package requires Python 3.10 or newer. My recorded installation checks used Python 3.14.4
-on macOS ARM64; those checks do not establish support on every listed version or platform.
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e ".[test]"
-python -m pytest -q
+```sh
+export PATH="$PWD/.venv/bin:$PATH"
+BES_RESOURCE_ROOT="$(.venv/bin/python -I -c 'import sysconfig; print(sysconfig.get_path("data") + "/share/base-edit-safety")')"
+cd "$BES_RESOURCE_ROOT"
 ```
 
-The unit tests run without external predictors. Tests marked `integration` skip until their
-corresponding tools are configured.
+The wheel includes mock examples, schemas and documentation. Public genomes
+are prepared separately. CRISPOR, BE-DICT and the conditional CRISPRon-ABE fallback
+are optional tools with their own installation and license terms; the lab search
+launcher uses the supplied Cas-OFFinder backend.
 
 ## Run the included example
 
@@ -48,7 +49,8 @@ bes-candidate-panel \
 ```
 
 See the [candidate-panel guide](candidate-panel.md). Real broader searches still require a
-separately installed search engine. Included adapters normalize Cas-OFFinder, CHANGE-seq-BE
+separately installed search engine. Included adapters normalize Cas-OFFinder output (the
+official nine-column layout and the pinned 2.4.1 six/seven-column layout), CHANGE-seq-BE
 identified tables, experimental BED6 lists, and declared CRISPRme+ 2.3.2 integrated-results TSVs
 while recording the source files, versions and settings. CRISPRme+ setup and import are documented separately in the
 [CRISPRme+ import guide](crisprme-import.md).

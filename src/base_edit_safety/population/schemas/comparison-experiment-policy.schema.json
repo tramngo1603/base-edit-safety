@@ -1,0 +1,376 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "record_type",
+    "schema_version",
+    "policy_version",
+    "context_id",
+    "experiment_id",
+    "batch_id",
+    "donor_ids",
+    "rules",
+    "max_action_questions",
+    "max_donor_alternatives_per_arm",
+    "relatedness_policy",
+    "specimen_policy",
+    "assay_policy",
+    "costs",
+    "resources"
+  ],
+  "properties": {
+    "record_type": {
+      "type": "string",
+      "const": "comparison_experiment_policy"
+    },
+    "schema_version": {
+      "type": "string",
+      "const": "1"
+    },
+    "policy_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "context_id": {
+      "type": "string",
+      "pattern": "^comparison_[a-z_]+:v1:[0-9a-f]{64}$"
+    },
+    "experiment_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "batch_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "donor_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^comparison_[a-z_]+:v1:[0-9a-f]{64}$"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "rule_id",
+          "trigger",
+          "templates",
+          "design_ids",
+          "candidate_endpoint_id",
+          "intended_endpoint_id",
+          "required_donors_per_arm",
+          "technical_replicates",
+          "priority_weight",
+          "hard_required",
+          "allow_existing",
+          "allow_across_questions",
+          "replication_dimensions",
+          "matching_covariates"
+        ],
+        "properties": {
+          "rule_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "trigger": {
+            "type": "string",
+            "enum": [
+              "candidate_nomination",
+              "variant_intended",
+              "variant_candidate",
+              "search_profile_difference",
+              "observed_conflict",
+              "missing_functional_evidence",
+              "prediction_followup",
+              "existing_observation"
+            ]
+          },
+          "templates": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "candidate_validation",
+                "paired_design_comparison",
+                "variant_association",
+                "design_by_variant",
+                "evidence_replication"
+              ]
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "design_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^comparison_[a-z_]+:v1:[0-9a-f]{64}$"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "candidate_endpoint_id": {
+            "type": "string",
+            "pattern": "^comparison_[a-z_]+:v1:[0-9a-f]{64}$"
+          },
+          "intended_endpoint_id": {
+            "type": "string",
+            "pattern": "^comparison_[a-z_]+:v1:[0-9a-f]{64}$"
+          },
+          "required_donors_per_arm": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "technical_replicates": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "priority_weight": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "hard_required": {
+            "type": "boolean"
+          },
+          "allow_existing": {
+            "type": "boolean"
+          },
+          "allow_across_questions": {
+            "type": "boolean"
+          },
+          "replication_dimensions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "experiment",
+                "batch",
+                "specimen",
+                "donor"
+              ]
+            },
+            "minItems": 0,
+            "uniqueItems": true
+          },
+          "matching_covariates": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 0,
+            "uniqueItems": true
+          }
+        }
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "max_action_questions": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "max_donor_alternatives_per_arm": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "relatedness_policy": {
+      "type": "string",
+      "enum": [
+        "strict",
+        "declared_simulation_assumption"
+      ]
+    },
+    "specimen_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "create_simulation_specimens",
+        "permitted_use",
+        "use_authorized",
+        "capacity",
+        "assumption"
+      ],
+      "properties": {
+        "create_simulation_specimens": {
+          "type": "boolean"
+        },
+        "permitted_use": {
+          "type": "string",
+          "minLength": 1
+        },
+        "use_authorized": {
+          "type": "boolean"
+        },
+        "capacity": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "assumption": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "assay_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "feasibility",
+        "resolution",
+        "allele_resolved",
+        "qc_requirements",
+        "mock_shared_across_designs",
+        "package_basis"
+      ],
+      "properties": {
+        "feasibility": {
+          "type": "string",
+          "enum": [
+            "verified",
+            "simulation_assumption",
+            "unverified",
+            "infeasible"
+          ]
+        },
+        "resolution": {
+          "type": "string",
+          "enum": [
+            "copy_specific",
+            "locus_specific",
+            "combined_copies",
+            "not_applicable"
+          ]
+        },
+        "allele_resolved": {
+          "type": "boolean"
+        },
+        "qc_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "mock_shared_across_designs": {
+          "type": "boolean"
+        },
+        "package_basis": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "costs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cost_unit",
+        "cost_scale",
+        "study_setup",
+        "donor_activation",
+        "specimen_preparation",
+        "treatment",
+        "treated_panel",
+        "mock_panel",
+        "sequencing_batch",
+        "additional_replicate"
+      ],
+      "properties": {
+        "cost_unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cost_scale": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "study_setup": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "donor_activation": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "specimen_preparation": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "treatment": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "treated_panel": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "mock_panel": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sequencing_batch": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "additional_replicate": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "study_setup_activation",
+        "specimen_capacity",
+        "panel_capacity",
+        "mock_capacity",
+        "sequencing_capacity",
+        "max_sequencing_instances"
+      ],
+      "properties": {
+        "study_setup_activation": {
+          "type": "string",
+          "enum": [
+            "always",
+            "nonempty_plan",
+            "on_use"
+          ]
+        },
+        "specimen_capacity": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "panel_capacity": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "mock_capacity": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sequencing_capacity": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_sequencing_instances": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "comparison-experiment-policy.schema.json",
+  "title": "Explicit prospective experiment generation policy"
+}

@@ -1,0 +1,9 @@
+##fileformat=VCFv4.2
+##reference=comparison_synthetic_v1
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	C	N	U
+chrSYNHBG1	3	unphased1	G	A	.	PASS	.	GT:PS	0|0:1	0|0:1	0/1:.
+chrSYNHBG1	9	unphased2	A	G	.	PASS	.	GT:PS	0|0:1	0|0:1	0/1:.
+chrSYNHBG1	23	pam_loss	G	A	.	PASS	.	GT:PS	1|1:1	0|0:1	0|0:1
+chrSYNHBG2	5	intended_insertion	T	TC	.	PASS	.	GT:PS	1|1:1	0|0:1	0|0:1
+chrSYNGAIN	23	pam_gain	A	G	.	PASS	.	GT:PS	1|1:1	0|0:1	./.:.
+chrSYNMULT	2	joint_deletion	TTTGTTTG	T,TTTG	.	PASS	.	GT:PS	1|2:1	2|1:1	./.:.

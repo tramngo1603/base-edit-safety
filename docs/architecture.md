@@ -1,8 +1,28 @@
 # How the parts fit together
 
-I use two paths: one searches for guides and makes supported predictions; the other checks
-candidate lists and experimental results supplied by the researcher. They share guide and
-genome identities but run as separate commands.
+The original paths search for guides and supported predictions, or check candidate lists and
+experimental results supplied by the researcher. V3 adds bounded donor-sequence search and
+proposed assays. These paths share guide and genome identities and use separate commands.
+
+## Reference and sample search
+
+`bes-search` runs the request through `population/research.py`. It checks pinned inputs,
+searches declared primary chromosomes, compares reference and sample candidates, and writes
+coverage, exclusions and optional evidence links. `research_genotypes.py` reconstructs local
+sample sequences from the VCF and declared ploidy. `research_native.py` runs Cas-OFFinder,
+records execution limits and validates every returned row. See the [search guide](research-quickstart.md).
+
+## Donor sequences and proposed assays
+
+`population/` handles strict study contracts, donor-linked variants, local sequence paths,
+bounded search, evidence applicability and assay actions. `pipeline/population.py` exposes
+the file-based stages. `pipeline/donor_panel.py` resolves their source details before selecting
+actions under the declared cost limits. The planner counts distinct biological donors and
+keeps proposed coverage separate from measurements.
+
+The core uses the Python standard library. Optional indexed public-data acquisition and
+normalization use pysam and its bundled bcftools. The local scanner does not require an external
+search tool. Read the [population guide](population.md) for contracts and interpretation limits.
 
 ## Guide searches and predictions
 
@@ -41,7 +61,7 @@ A panel decision records what the researcher plans to test; it does not change t
 
 A usable editing result must match the guide, editor, location, strand and tested DNA. It also
 needs supplied allele evidence, cell context, controls and passed quality checks. A negative
-needs a detection limit. These are checks of the supplied details, not an audit of the experiment.
+needs a detection limit.
 
 ## Limits built into the checks
 
@@ -53,7 +73,7 @@ needs a detection limit. These are checks of the supplied details, not an audit 
 - Separate imports can cover broader search settings. This version accepts supported DNA-only
   or RNA-only gaps, not mixed DNA/RNA gaps. Unknown mappings and phase remain unresolved.
 - Sequence matches, editor-specific effects, guide-independent DNA editing and RNA editing
-  stay separate. None of these checks establishes safety.
+  stay separate.
 
 See the [coordinate definitions](coordinates.md), [local data rules](../data/README.md) and
 [validation results](validation.md).

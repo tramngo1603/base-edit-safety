@@ -1,0 +1,137 @@
+{
+  "artifact_format": "json",
+  "expected_count": 1,
+  "extraction_version": "generic-v1",
+  "mapping_version": "artificial-workflow-historical-mismatch-v1",
+  "record_type": "comparison_extraction_map",
+  "rows": [
+    {
+      "assertions": [],
+      "expected_raw_value": {
+        "reason": null,
+        "value": "9.8000000000000007"
+      },
+      "locator": {
+        "kind": "file",
+        "member": "rows/1"
+      },
+      "measurement_key": "artificial-treated-1",
+      "normalization": {
+        "assay_id": {
+          "reason": null,
+          "value": "synthetic-amplicon"
+        },
+        "context_id": {
+          "reason": null,
+          "value": "comparison_experimental_context:v1:415372ebfdb81e2b0b338f78b869bf283f2d97a30c0e9add96b42d4288deb954"
+        },
+        "control_status": "unknown",
+        "conversion": {
+          "reason": null,
+          "value": {
+            "factor": 0.01,
+            "method": "Percent divided by 100 exactly",
+            "offset": 0
+          }
+        },
+        "denominator": {
+          "reason": null,
+          "value": 100
+        },
+        "design_id": {
+          "reason": null,
+          "value": "comparison_design:v1:69eff3ddce8c826b6f96a98133f935a4babd9c15e781b0ead11fd86aa0e1de43"
+        },
+        "detection_limit": {
+          "unit": "fraction",
+          "value": {
+            "reason": null,
+            "value": 0.01
+          }
+        },
+        "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+        "executed_action_id": {
+          "reason": "historical synthetic measurement",
+          "value": null
+        },
+        "independent_unit_id": {
+          "reason": null,
+          "value": "historical-artificial-subject"
+        },
+        "locus_ids": [
+          "comparison_intended_locus:v1:e0e081ff626db790a8ec207e0ba993179bb03b3886c72376fe58125f5d3c7854"
+        ],
+        "measurement_kind": "individual",
+        "normalized_unit": "fraction",
+        "pairing_key": {
+          "reason": "not reported in this synthetic fixture",
+          "value": null
+        },
+        "qc_status": "unknown",
+        "quantification_limit": {
+          "unit": "fraction",
+          "value": {
+            "reason": "not reported in this synthetic fixture",
+            "value": null
+          }
+        },
+        "read_count": {
+          "reason": null,
+          "value": 20
+        },
+        "relationship_group": {
+          "reason": "Historical artificial relationship group not supplied",
+          "value": null
+        },
+        "sample_size": {
+          "reason": null,
+          "value": 1
+        },
+        "sequence_configuration_id": {
+          "reason": "Historical artificial measurement has no donor DNA linkage",
+          "value": null
+        },
+        "source_reported_outcome": {
+          "reason": null,
+          "value": "measured_fraction"
+        },
+        "subject": {
+          "donor_id": {
+            "reason": "No link to either prospective artificial donor",
+            "value": null
+          },
+          "level": "donor",
+          "reason": "Historical artificial subject was not linked to a prospective donor",
+          "resolution_status": "unresolved",
+          "source_subject_id": {
+            "reason": null,
+            "value": "historical-artificial-subject"
+          },
+          "specimen_id": {
+            "reason": "not reported",
+            "value": null
+          }
+        },
+        "uncertainty": {
+          "reason": "not reported in this synthetic fixture",
+          "value": null
+        },
+        "unresolved_source_design": {
+          "reason": "source design is resolved",
+          "value": null
+        }
+      },
+      "normalization_unavailable_reason": null,
+      "raw_unit": "percent",
+      "source_experiment": "experiment-1",
+      "source_replicate": "replicate-1",
+      "source_reported_label": {
+        "reason": null,
+        "value": "treated"
+      },
+      "source_study": "Artificial observation example"
+    }
+  ],
+  "schema_version": "1",
+  "source_artifact_id": "comparison_source_artifact:v1:9fb755396f722b87dec38eced948c0231374233afac2516f36c2e437642f6705"
+}

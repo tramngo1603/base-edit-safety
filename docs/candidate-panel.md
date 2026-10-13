@@ -1,6 +1,6 @@
 # Candidate-panel workflow
 
-I use this part of the tool to bring candidate lists and experiment results together before
+Use this part of the tool to bring candidate lists and experiment results together before
 choosing sites for follow-up. A candidate nomination proposes a site for testing; a measurement
 reports what an experiment found. The tool keeps those records separate from your panel choices.
 
@@ -94,6 +94,57 @@ bes-normalize-nominations cas-offinder \
 ```
 
 The parser follows the [official Cas-OFFinder output definition](https://github.com/snugel/cas-offinder/blob/develop/README.md#running-cas-offinder).
+
+### Cas-OFFinder 2.4.1
+
+Cas-OFFinder 2.4.1 (upstream commit `9816b94c20c4cba2e79b039e1e2a6dee684b7b66`, tag
+`2.4.1`, new BSD license) writes a different layout: tab-separated query, chromosome,
+zero-based start, matched DNA with mismatch bases in lowercase, strand, and mismatch
+count, optionally followed by a query ID. Declare it explicitly with `--format 2.4.1`
+(six columns) or `--format 2.4.1-ids` (seven columns); the default `nine-column` path
+is unchanged. Rows are never padded to imitate the nine-column producer.
+
+Every row is checked before normalization: exact field count and no empty fields,
+query symbols, query prefix against the bound guide's spacer, exact declared
+spacer-plus-PAM geometry for both the query and the matched DNA, strand, integer
+and non-negative coordinates and mismatch counts, matched-DNA bases, an
+observed PAM inside the search profile, no exact duplicate rows, and the search
+profile's own limits. Mismatch positions are recomputed from
+the literal target and the IUPAC query under the pinned writer's rules; the
+lowercase markers must equal those exact positions, and the declared count must
+equal the recomputed spacer count used downstream by `score = -mismatches`. A
+mismatch inside the query PAM mask is rejected rather than folded into that
+count; a matching `NNN` or compatible PAM mask remains allowed. Target bases
+outside A/C/G/T are unresolved ambiguity this bounded parser cannot validate
+and are rejected; that is a documented limit, not a count. Rows map to guides
+only through the seven-column query ID, `--guide-id` for a single declared
+guide, or `--query-map`, a declared JSON object from query string to one guide
+ID; duplicate serialized keys are rejected. A bare query never selects a guide
+on its own, so two guides that share a spacer require one of these declarations.
+The explicit 2.4.1 route also rejects a conflicting producer version:
+`--source-version` must be `Cas-OFFinder 2.4.1`, optionally followed by a
+parenthesized citation. The sidecar JSON records the declared format, the
+binding rule, the query-map file and its checksum when used, complete row
+accounting (lines read, blank or comment lines, rows normalized), and each
+row's native line number and full raw-row SHA-256 beside the input checksums.
+
+```bash
+bes-normalize-nominations cas-offinder \
+  --format 2.4.1-ids \
+  --input tests/fixtures/cas-offinder-2.4.1/valid-seven-field.tsv \
+  --profile examples/candidate-panel/search-profile.json \
+  --guides tests/fixtures/cas-offinder-2.4.1/guides.tsv \
+  --intended-loci tests/fixtures/cas-offinder-2.4.1/intended-loci.tsv \
+  --source-version "Cas-OFFinder 2.4.1 (9816b94c20c4cba2e79b039e1e2a6dee684b7b66)" \
+  --source-command "not-applicable: mock parser input" \
+  --reference-fasta tests/fixtures/cas-offinder-2.4.1/reference.fa \
+  --output cas-offinder.normalized.tsv \
+  --provenance-output cas-offinder.source.json
+```
+
+This example imports mock Cas-OFFinder rows. The adapter checks their format,
+coordinates and sequence against the supplied reference. Empty files are rejected
+because the importer requires result rows.
 
 ### CRISPRme+
 
@@ -201,8 +252,8 @@ scope, intended use, and retention rule. A score cutoff is represented structura
 `retention_score_name` and `minimum_score`; both are null when no cutoff is used. Computational rows
 outside those limits are rejected.
 
-A row fitting these settings does not prove that the source search found every candidate. The
-companion JSON records how the file was produced and how many rows were imported or skipped.
+The companion JSON records the source search settings and how many rows were
+imported or skipped.
 
 ### Nomination table
 
@@ -226,6 +277,13 @@ Measurements require an assay, citation/version, biological context, stable sour
 `edited`, `not_detected`, or `inconclusive`. Values use separate numeric and unit columns. Detection
 limits use `limit_of_detection_value` and `limit_of_detection_unit`; a `not_detected` row requires
 both.
+
+Usable editing non-detections require a limit in `percent`, `percentage`, `%`, `fraction` or
+`proportion`, ignoring unit case and surrounding spaces. Percentage values must be greater
+than zero and at most 100; fractions must be greater than zero and at most 1. Source values are
+preserved. Unknown units or out-of-range limits remain in the ledger but earn no usable editing
+coverage. Population studies can also declare a maximum acceptable limit in their assay policy;
+see the [population guide](population.md#match-evidence-and-declare-assays).
 
 Optional fields retain `replicate_id`, treated and control group labels, read depth, QC status,
 statistical test, raw p-value, and adjusted p-value. `not_detected` means no detected editing within the stated detection limit in
@@ -275,7 +333,7 @@ No allele is removed because it is rare or because a panel decision excludes it.
 
 Keep individual genotypes and donor identifiers outside Git. Regenerate older ledgers to obtain
 per-allele measurement fields; the report labels their old summaries as unassessed until then. See the
-[validation summary](validation.md#v2-bounded-hbg-pilot) for the bounded replay and checks.
+[validation summary](validation.md#bounded-hbg-pilot) for the bounded replay and checks.
 
 ### Panel decisions
 
@@ -292,7 +350,7 @@ The JSON ledger is the full record behind the report. It contains the retained s
 sequence checks, intended targets, source details, checksums, decisions and limits. It does
 not add absolute paths for its own input files. The exact external source command is preserved
 verbatim and may itself contain paths. Never put credentials, patient information, or donor/sample
-identifiers in that command, and review the provenance before sharing a resulting ledger.
+identifiers in that command, and review the source details before sharing a resulting ledger.
 
 The TSV is a shorter table for review. It keeps excluded and undecided sites, computational source
 buckets, reconciliation state, allele-specific editability, per-source scores, detection limits,
@@ -300,10 +358,7 @@ identity warnings, locus requirements, required assays, replicate IDs, read dept
 measurement QC.
 Review groups divide large panels into intended controls, measured/reconciliation sites,
 experimental nominations, annotation/bulge/variant flags, and broad mismatch bands. These groups
-organize inspection; they are not biological-risk categories.
-
-An experimentally nominated but unmeasured site is a candidate, not a true positive or an
-off-target finding. An excluded candidate is outside one proposed panel, not demonstrated safe.
+organize inspection. Measurement status and panel decisions remain separate fields.
 
 Use `--panel-notes` for notes about the whole panel, such as sequencing depth. Do not include
 sample identifiers. Use `--previous-ledger` to compare sites with an earlier JSON record. The

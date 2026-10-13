@@ -1,7 +1,7 @@
 [project]
 name = "base-edit-safety"
-version = "0.1.0"
-description = "Safety triage for base-editing guides at the HBG1/HBG2 fetal-hemoglobin promoters."
+version = "0.5.0"
+description = "Off-target candidate search and evidence review for base-editing guides."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "Apache-2.0"
@@ -26,7 +26,9 @@ classifiers = [
 dependencies = []   # the prediction tools are installed separately; see requirements-external.txt
 
 [project.optional-dependencies]
+lab = ["pysam==0.24.1", "psutil==7.1.0"]
 test = ["pytest>=8"]
+genomics = ["pysam>=0.24.1"]
 
 [project.urls]
 Repository = "https://github.com/tramngo1603/base-edit-safety"
@@ -34,9 +36,14 @@ Documentation = "https://github.com/tramngo1603/base-edit-safety/tree/main/docs"
 Issues = "https://github.com/tramngo1603/base-edit-safety/issues"
 
 [project.scripts]
+bes-start = "base_edit_safety.launcher:main"
+bes-search = "base_edit_safety.population.research:main"
 bes-candidate-panel = "base_edit_safety.pipeline.candidate_panel:main"
 bes-candidate-report = "base_edit_safety.pipeline.candidate_report:main"
 bes-normalize-nominations = "base_edit_safety.pipeline.normalize_nominations:main"
+bes-population = "base_edit_safety.pipeline.population:main"
+bes-donor-panel = "base_edit_safety.pipeline.donor_panel:main"
+bes-compare = "base_edit_safety.pipeline.comparison:main"
 
 [build-system]
 requires = ["setuptools>=77"]
@@ -47,6 +54,177 @@ include-package-data = false
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+"base_edit_safety.population" = ["schemas/*.json", "protocols/*.json"]
+
+[tool.setuptools.data-files]
+"share/base-edit-safety" = [
+    ".env.example",
+    "LICENSE",
+    "README.md",
+    "requirements-external.txt",
+]
+"share/base-edit-safety/docs" = [
+    "docs/architecture.md",
+    "docs/candidate-panel.md",
+    "docs/comparison-benchmark-command.md",
+    "docs/comparison-contracts.md",
+    "docs/comparison-evidence.md",
+    "docs/comparison-external.md",
+    "docs/comparison-planning.md",
+    "docs/comparison-provenance.md",
+    "docs/comparison-questions.md",
+    "docs/comparison-reports.md",
+    "docs/comparison-sequences.md",
+    "docs/comparison-source-imports.md",
+    "docs/comparison-workflow.md",
+    "docs/computational-audit.md",
+    "docs/coordinates.md",
+    "docs/crisprme-import.md",
+    "docs/data-policy.md",
+    "docs/example-run.md",
+    "docs/glossary.md",
+    "docs/population.md",
+    "docs/permissions.md",
+    "docs/research-quickstart.md",
+    "docs/donor-coverage.md",
+    "docs/research-advanced.md",
+    "docs/research-benchmark.md",
+    "docs/setup.md",
+    "docs/system-chart.png",
+    "docs/validation.md",
+]
+"share/base-edit-safety/examples/candidate-panel" = [
+    "examples/candidate-panel/guides.tsv",
+    "examples/candidate-panel/intended-loci.tsv",
+    "examples/candidate-panel/measurements.tsv",
+    "examples/candidate-panel/nominations.tsv",
+    "examples/candidate-panel/panel-decisions.tsv",
+    "examples/candidate-panel/search-profile.json",
+    "examples/candidate-panel/source-provenance.json",
+]
+"share/base-edit-safety/examples/comparison/computational" = [
+    "examples/comparison/computational/README.md",
+    "examples/comparison/computational/request.json",
+    "examples/comparison/computational/reference.json",
+    "examples/comparison/computational/variants.vcf",
+    "examples/comparison/computational/expected.json",
+]
+"share/base-edit-safety/examples/comparison/contracts" = [
+    "examples/comparison/contracts/reference.fa",
+    "examples/comparison/contracts/study.json",
+]
+"share/base-edit-safety/examples/comparison/observations" = [
+    "examples/comparison/observations/README.md",
+    "examples/comparison/observations/extraction-map.json",
+    "examples/comparison/observations/measurements.json",
+    "examples/comparison/observations/study.json",
+]
+"share/base-edit-safety/examples/comparison/questions" = [
+    "examples/comparison/questions/README.md",
+    "examples/comparison/questions/build_fixture.py",
+    "examples/comparison/questions/experiment-policy.json",
+    "examples/comparison/questions/labels.json",
+    "examples/comparison/questions/question-audit.json",
+    "examples/comparison/questions/records.json",
+    "examples/comparison/questions/reference.fa",
+    "examples/comparison/questions/study.json",
+    "examples/comparison/questions/synthetic-genomes.json",
+]
+"share/base-edit-safety/examples/comparison/synthetic" = [
+    "examples/comparison/synthetic/donors.tsv",
+    "examples/comparison/synthetic/expected.json",
+    "examples/comparison/synthetic/genome-source.json",
+    "examples/comparison/synthetic/legacy-guides.tsv",
+    "examples/comparison/synthetic/legacy-intended.tsv",
+    "examples/comparison/synthetic/reference.fa",
+    "examples/comparison/synthetic/study.json",
+    "examples/comparison/synthetic/variants.vcf",
+]
+"share/base-edit-safety/examples/comparison/workflow" = [
+    "examples/comparison/workflow/README.md",
+    "examples/comparison/workflow/donors.tsv",
+    "examples/comparison/workflow/example-report.md",
+    "examples/comparison/workflow/experiment-policy.json",
+    "examples/comparison/workflow/extraction-map.json",
+    "examples/comparison/workflow/genome-source.json",
+    "examples/comparison/workflow/expected.json",
+    "examples/comparison/workflow/legacy-guides.tsv",
+    "examples/comparison/workflow/legacy-intended.tsv",
+    "examples/comparison/workflow/measurements.json",
+    "examples/comparison/workflow/reference.fa",
+    "examples/comparison/workflow/study-budget17.json",
+    "examples/comparison/workflow/study.json",
+    "examples/comparison/workflow/validate_modes.py",
+    "examples/comparison/workflow/variants.vcf",
+]
+"share/base-edit-safety/examples/comparison/workflow/mode-declarations/public-empirical-credit-forbidden" = [
+    "examples/comparison/workflow/mode-declarations/public-empirical-credit-forbidden/expected.json",
+    "examples/comparison/workflow/mode-declarations/public-empirical-credit-forbidden/experiment-policy.json",
+    "examples/comparison/workflow/mode-declarations/public-empirical-credit-forbidden/reference.fa",
+    "examples/comparison/workflow/mode-declarations/public-empirical-credit-forbidden/study.json",
+    "examples/comparison/workflow/mode-declarations/public-empirical-credit-forbidden/synthetic-genomes.json",
+]
+"share/base-edit-safety/examples/comparison/workflow/mode-declarations/public-positive" = [
+    "examples/comparison/workflow/mode-declarations/public-positive/expected.json",
+    "examples/comparison/workflow/mode-declarations/public-positive/experiment-policy.json",
+    "examples/comparison/workflow/mode-declarations/public-positive/reference.fa",
+    "examples/comparison/workflow/mode-declarations/public-positive/study.json",
+    "examples/comparison/workflow/mode-declarations/public-positive/synthetic-genomes.json",
+]
+"share/base-edit-safety/examples/comparison/workflow/mode-declarations/research-positive-artificial-declarations" = [
+    "examples/comparison/workflow/mode-declarations/research-positive-artificial-declarations/expected.json",
+    "examples/comparison/workflow/mode-declarations/research-positive-artificial-declarations/experiment-policy.json",
+    "examples/comparison/workflow/mode-declarations/research-positive-artificial-declarations/reference.fa",
+    "examples/comparison/workflow/mode-declarations/research-positive-artificial-declarations/study.json",
+    "examples/comparison/workflow/mode-declarations/research-positive-artificial-declarations/synthetic-genomes.json",
+]
+"share/base-edit-safety/examples/comparison/workflow/mode-declarations/research-specimen-unresolved" = [
+    "examples/comparison/workflow/mode-declarations/research-specimen-unresolved/expected.json",
+    "examples/comparison/workflow/mode-declarations/research-specimen-unresolved/experiment-policy.json",
+    "examples/comparison/workflow/mode-declarations/research-specimen-unresolved/reference.fa",
+    "examples/comparison/workflow/mode-declarations/research-specimen-unresolved/study.json",
+    "examples/comparison/workflow/mode-declarations/research-specimen-unresolved/synthetic-genomes.json",
+]
+"share/base-edit-safety/examples/population" = [
+    "examples/population/public-protocol.json",
+]
+"share/base-edit-safety/examples/population/evidence" = [
+    "examples/population/evidence/README.md",
+    "examples/population/evidence/create_example.py",
+]
+"share/base-edit-safety/examples/population/planner" = [
+    "examples/population/planner/expected-exact_tiny.json",
+    "examples/population/planner/expected-greedy_cost.json",
+    "examples/population/planner/planning-manifest.json",
+    "examples/population/planner/request.json",
+    "examples/population/planner/synthetic-declaration.json",
+]
+"share/base-edit-safety/examples/population/synthetic" = [
+    "examples/population/synthetic/donors.tsv",
+    "examples/population/synthetic/guides.tsv",
+    "examples/population/synthetic/intended-loci.tsv",
+    "examples/population/synthetic/reference.fa",
+    "examples/population/synthetic/study-config.json",
+    "examples/population/synthetic/variants.vcf",
+]
+
+"share/base-edit-safety/tools" = [
+    "tools/prepare_public_example.py",
+    "tools/cas-offinder-2.4.1-compat.patch",
+    "tools/Cas-OFFinder-LICENSE.txt",
+]
+"share/base-edit-safety/tools/public_example" = [
+    "tools/public_example/make_primary.py",
+    "tools/public_example/prepare_vcf.py",
+]
+"share/base-edit-safety/examples/research" = [
+    "examples/research/guides.tsv",
+]
+
+"share/base-edit-safety/examples/small" = ["examples/small/reference.fa", "examples/small/guides.tsv", "examples/small/sample.vcf", "examples/small/expected.json"]
+"share/base-edit-safety/handoff" = ["handoff/expected-hg003.json", "handoff/QUICKSTART.html", "handoff/ADVANCED.md", "handoff/PUBLIC_INPUTS.md"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

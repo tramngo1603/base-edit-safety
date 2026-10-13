@@ -1,0 +1,10 @@
+##fileformat=VCFv4.3
+##reference=synthetic_v3_search_1
+##contig=<ID=toy_gain,length=23>
+##contig=<ID=toy_loss,length=23>
+##contig=<ID=toy_reverse,length=23>
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	SYN_REF	SYN_ALT	SYN_HET	SYN_MISSING
+toy_gain	23	toy_gain_v	C	G	.	PASS	.	GT	0|0	1|1	0/1	./.
+toy_loss	23	toy_loss_v	G	C	.	PASS	.	GT	0|0	1|1	0/1	./.
+toy_reverse	1	toy_reverse_v	G	C	.	PASS	.	GT	0|0	1|1	0/1	./.

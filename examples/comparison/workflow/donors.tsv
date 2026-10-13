@@ -1,0 +1,3 @@
+donor_id	genotype_sample_id	source_kind	family_id	specimen_id	specimen_context_id	availability	use_permitted	activation_cost	simulation_eligible	sampling_stratum
+synthetic-donor-C	synthetic-sample-C	synthetic	synthetic-family-C	artificial-C	synthetic_cells	verified_available	true	1	true	
+synthetic-donor-N	synthetic-sample-N	synthetic	synthetic-family-N	artificial-N	synthetic_cells	verified_available	true	1	true	

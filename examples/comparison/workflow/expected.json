@@ -1,0 +1,13 @@
+{
+  "budget17": {
+    "complete_questions": 0
+  },
+  "budget18": {
+    "complete_questions": 1,
+    "cost": 18,
+    "evidence_status": "no_measurements",
+    "satisfied_slots": 20,
+    "selected_actions": 10
+  },
+  "empirical_donor_credit": 0
+}

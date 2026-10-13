@@ -1,6 +1,7 @@
 """Convert supported candidate files to the common candidate TSV format.
 
-Read Cas-OFFinder, CRISPRme+, CHANGE-seq-BE identified tables or experimental BED6 lists.
+Read Cas-OFFinder (official nine-column output or pinned 2.4.1 six/seven-column output),
+CRISPRme+, CHANGE-seq-BE identified tables or experimental BED6 lists.
 Identify intended targets from their coordinate file and write companion source details with
 input and reference checksums. This step does not run the search tools.
 """
@@ -68,6 +69,20 @@ CHANGE_BE_REQUIRED = {
     "Strand",
     "Site_Sequence",
     "Site_Substitution_Number",
+}
+
+# Pinned upstream evidence for the 2.4.1 row layout: snugel/cas-offinder commit
+# 9816b94c20c4cba2e79b039e1e2a6dee684b7b66 (tag 2.4.1), cas-offinder.cpp lines 369-372.
+CAS_OFFINDER_241_QUERY_ALPHABET = set("ACGTRYSWKMBDHVN")
+CAS_OFFINDER_241_FORMAT = "cas-offinder-2.4.1"
+CAS_OFFINDER_241_IDS_FORMAT = "cas-offinder-2.4.1-ids"
+CAS_OFFINDER_241_VERSION_SYNTAX = r"Cas-OFFinder 2\.4\.1( \([^()]*\))?"
+# IUPAC matching used by the pinned writer's indicate_mismatches (cas-offinder.cpp
+# lines 291-307): each query symbol admits exactly these concrete bases.
+_IUPAC_BASES = {
+    "A": "A", "C": "C", "G": "G", "T": "T",
+    "R": "AG", "Y": "CT", "K": "GT", "M": "AC", "W": "AT", "S": "CG",
+    "B": "CGT", "D": "AGT", "H": "ACT", "V": "ACG", "N": "ACGT",
 }
 
 
@@ -265,6 +280,268 @@ def normalize_cas_offinder(
     if not rows:
         raise CandidatePanelError(f"{native_path}: no Cas-OFFinder rows found")
     return rows
+
+
+def load_query_map(path: Path, guides: list[dict]) -> dict[str, str]:
+    """Read a declared query-to-guide JSON mapping for six-column 2.4.1 output."""
+    def no_duplicate_keys(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise CandidatePanelError(f"{path}: query map contains duplicate key {key!r}")
+            result[key] = value
+        return result
+
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=no_duplicate_keys)
+    except (OSError, json.JSONDecodeError) as exc:
+        raise CandidatePanelError(f"cannot read query map {path}: {exc}") from exc
+    if not isinstance(raw, dict) or not raw:
+        raise CandidatePanelError(f"{path}: query map must be a non-empty JSON object")
+    guide_by_id = {guide["guide_id"] for guide in guides}
+    mapping = {}
+    for query, guide_id in raw.items():
+        if not isinstance(query, str) or query != query.upper() or not query:
+            raise CandidatePanelError(
+                f"{path}: query map key {query!r} must be an uppercase query string"
+            )
+        if set(query) - CAS_OFFINDER_241_QUERY_ALPHABET:
+            raise CandidatePanelError(
+                f"{path}: query map key {query!r} contains unsupported symbols"
+            )
+        if not isinstance(guide_id, str) or not guide_id:
+            raise CandidatePanelError(
+                f"{path}: query map entry for {query!r} must name exactly one guide"
+            )
+        if guide_id not in guide_by_id:
+            raise CandidatePanelError(
+                f"{path}: query map guide {guide_id!r} is absent from guides"
+            )
+        mapping[query] = guide_id
+    return mapping
+
+
+def normalize_cas_offinder_2_4_1(
+    native_path: Path,
+    guides: list[dict],
+    intended_loci: list[dict],
+    profile: SearchProfile,
+    source_version: str,
+    *,
+    with_ids: bool,
+    query_map: dict[str, str] | None = None,
+    guide_override: str | None = None,
+    check_limits=lambda: None,
+) -> tuple[list[dict], dict]:
+    """Parse pinned Cas-OFFinder 2.4.1 six/seven-column output with row accounting.
+
+    Fields per upstream commit 9816b94c20c4cba2e79b039e1e2a6dee684b7b66: query,
+    chromosome, zero-based start, matched DNA (mismatch bases lowercase), strand,
+    mismatch count, optionally followed by a query ID. The producer has no bulge
+    concept, so no bulge fields are derived or implied.
+    """
+    declared_format = CAS_OFFINDER_241_IDS_FORMAT if with_ids else CAS_OFFINDER_241_FORMAT
+    width = 7 if with_ids else 6
+    if not re.fullmatch(CAS_OFFINDER_241_VERSION_SYNTAX, source_version):
+        raise CandidatePanelError(
+            f"--source-version {source_version!r} conflicts with the explicit Cas-OFFinder "
+            "2.4.1 route; declare 'Cas-OFFinder 2.4.1' optionally followed by a "
+            "parenthesized citation"
+        )
+    if query_map is not None and guide_override is not None:
+        raise CandidatePanelError("--query-map and --guide-id are conflicting query bindings")
+    if query_map is not None and with_ids:
+        raise CandidatePanelError("--query-map applies only to six-column 2.4.1 output")
+    if not with_ids and query_map is None and guide_override is None:
+        raise CandidatePanelError(
+            f"{native_path}: six-column Cas-OFFinder 2.4.1 output requires a declared "
+            "--query-map or --guide-id binding; the query alone cannot identify a guide"
+        )
+    guide_by_id = {guide["guide_id"]: guide for guide in guides}
+    intended = _intended_keys(intended_loci)
+    rows = []
+    seen_native = set()
+    lines_read = 0
+    skipped_lines = 0
+    with native_path.open(encoding="utf-8", newline="") as handle:
+        for line_number, line in enumerate(handle, start=1):
+            check_limits()
+            lines_read += 1
+            native = line.rstrip("\r\n")
+            if not native or native.startswith("#"):
+                skipped_lines += 1
+                continue
+            fields = native.split("\t")
+            if len(fields) != width:
+                raise CandidatePanelError(
+                    f"{native_path}:{line_number}: declared {width}-column Cas-OFFinder 2.4.1 "
+                    f"output but this row has {len(fields)} fields"
+                )
+            if any(field == "" for field in fields):
+                raise CandidatePanelError(
+                    f"{native_path}:{line_number}: empty field in Cas-OFFinder 2.4.1 row"
+                )
+            query, chrom, start_text, dna, strand, mm_text = fields[:6]
+            native_id = fields[6] if with_ids else None
+            if with_ids:
+                guide_id = guide_override or native_id
+            elif guide_override is not None:
+                guide_id = guide_override
+            else:
+                guide_id = query_map.get(query)
+                if guide_id is None:
+                    raise CandidatePanelError(
+                        f"{native_path}:{line_number}: query is absent from the declared query map"
+                    )
+            guide = guide_by_id.get(guide_id)
+            if guide is None:
+                raise CandidatePanelError(
+                    f"{native_path}:{line_number}: Cas-OFFinder ID {guide_id!r} is absent from guides"
+                )
+            if set(query) - CAS_OFFINDER_241_QUERY_ALPHABET or query != query.upper():
+                raise CandidatePanelError(
+                    f"{native_path}:{line_number}: query contains unsupported symbols"
+                )
+            if query[: len(guide["spacer_sequence"])] != guide["spacer_sequence"]:
+                raise CandidatePanelError(
+                    f"{native_path}:{line_number}: Cas-OFFinder query does not match guide {guide_id!r}"
+                )
+            spacer_length = len(guide["spacer_sequence"])
+            pam_length = len(guide["pam_class"])
+            expected_width = spacer_length + pam_length
+            if len(query) != expected_width or len(dna) != expected_width:
+                raise CandidatePanelError(
+                    f"{native_path}:{line_number}: row width does not equal the declared "
+                    f"spacer-plus-PAM geometry ({spacer_length}+{pam_length} = {expected_width} bases)"
+                )
+            if strand not in {"+", "-"}:
+                raise CandidatePanelError(
+                    f"{native_path}:{line_number}: strand must be + or -"
+                )
+            try:
+                start = int(start_text)
+                mismatches = int(mm_text)
+            except ValueError as exc:
+                raise CandidatePanelError(
+                    f"{native_path}:{line_number}: location and mismatch count must be integers"
+                ) from exc
+            if min(start, mismatches) < 0:
+                raise CandidatePanelError(
+                    f"{native_path}:{line_number}: numeric fields must be non-negative"
+                )
+            dna_sequence = dna.upper()
+            ambiguous = sorted(set(dna_sequence) - set("ACGT"))
+            if ambiguous:
+                raise CandidatePanelError(
+                    f"{native_path}:{line_number}: unresolved target ambiguity "
+                    f"{'/'.join(ambiguous)} cannot be validated by this bounded parser"
+                )
+            computed = [
+                index
+                for index in range(expected_width)
+                if dna_sequence[index] not in _IUPAC_BASES[query[index]]
+            ]
+            marked = [index for index, base in enumerate(dna) if base.islower()]
+            if marked != computed:
+                raise CandidatePanelError(
+                    f"{native_path}:{line_number}: lowercase markers {marked} do not match "
+                    f"the recomputed mismatch positions {computed}"
+                )
+            if any(index >= spacer_length for index in computed):
+                raise CandidatePanelError(
+                    f"{native_path}:{line_number}: PAM-region mismatch cannot be normalized "
+                    "by this bounded route"
+                )
+            if mismatches != len(computed):
+                raise CandidatePanelError(
+                    f"{native_path}:{line_number}: declared mismatch count {mismatches} does not "
+                    f"match the {len(computed)} recomputed spacer mismatches"
+                )
+            interval_length = len(dna_sequence)
+            end = start + interval_length
+            if pam_length < 1 or interval_length <= pam_length:
+                raise CandidatePanelError(
+                    f"{native_path}:{line_number}: cannot derive an observed PAM"
+                )
+            pam = dna_sequence[-pam_length:]
+            if not any(_pam_matches(pam, pattern) for pattern in profile.pam_patterns):
+                raise CandidatePanelError(
+                    f"{native_path}:{line_number}: observed PAM {pam!r} is outside the search profile"
+                )
+            record_id = _stable_record_id("casoff241", guide_id, native)
+            if record_id in seen_native:
+                raise CandidatePanelError(
+                    f"{native_path}:{line_number}: exact duplicate Cas-OFFinder row"
+                )
+            seen_native.add(record_id)
+            metadata = {
+                "native_format": declared_format,
+                "native_query": query,
+                "native_line": line_number,
+                "native_row_sha256": hashlib.sha256(native.encode("utf-8")).hexdigest(),
+            }
+            if with_ids:
+                metadata["native_query_id"] = native_id
+            row = _blank_row()
+            row.update(
+                {
+                    "guide_id": guide_id,
+                    "nomination_kind": "computational",
+                    "source_method": "Cas-OFFinder",
+                    "source_version_or_citation": source_version,
+                    "genome_build": profile.reference_id,
+                    "chrom": chrom,
+                    "start_0based": start,
+                    "end_0based_exclusive": end,
+                    "strand": strand,
+                    "site_role": _role(
+                        guide_id, profile.reference_id, chrom, start, end, intended
+                    ),
+                    "site_sequence": dna_sequence,
+                    "pam": pam,
+                    "mismatch_count": mismatches,
+                    "dna_bulge": 0,
+                    "rna_bulge": 0,
+                    "editable_base_in_window": _editable(guide, dna_sequence),
+                    "source_record_id": record_id,
+                    "search_profile": profile.name,
+                    "source_metadata_json": json.dumps(
+                        metadata, sort_keys=True, separators=(",", ":")
+                    ),
+                }
+            )
+            profile.validate_computational_nomination(
+                {
+                    "search_profile": profile.name,
+                    "genome_build": profile.reference_id,
+                    "mismatch_count": mismatches,
+                    "dna_bulge": 0,
+                    "rna_bulge": 0,
+                    "pam": pam,
+                    "population_variant_id": None,
+                    "score_name": None,
+                    "score_value": None,
+                },
+                f"{native_path}:{line_number}",
+            )
+            rows.append(row)
+    check_limits()
+    if not rows:
+        raise CandidatePanelError(
+            f"{native_path}: empty Cas-OFFinder 2.4.1 output cannot establish search completeness"
+        )
+    accounting = {
+        "declared_format": declared_format,
+        "lines_read": lines_read,
+        "blank_or_comment_lines": skipped_lines,
+        "rows_normalized": len(rows),
+        "query_binding": (
+            "guide_override" if guide_override is not None
+            else "native_query_id" if with_ids
+            else "query_map"
+        ),
+    }
+    return rows, accounting
 
 
 def _read_change_be(path: Path) -> list[tuple[str, dict]]:
@@ -539,7 +816,7 @@ def normalize_crisprme(
                     imported_row["end_0based_exclusive"],
                     intended,
                 ),
-                # The canonical/ref alignment supports reference validation.  The selected
+                # The canonical/ref alignment supports reference validation. The selected
                 # ref/alt state and its score remain explicit in source metadata.
                 "site_sequence": (
                     imported_row["canonical_alignment"]
@@ -612,6 +889,8 @@ def write_provenance(
     sheets_ignored: dict | None = None,
     privacy_filtering_applied: bool | None = None,
     original_source_declaration: dict | None = None,
+    row_accounting: dict | None = None,
+    query_map_path: Path | None = None,
 ) -> None:
     index_path = Path(str(reference_path) + ".fai")
     reference_sha256 = _sha256(reference_path)
@@ -679,6 +958,13 @@ def write_provenance(
             payload["original_source_declaration"] = original_source_declaration
     elif crispor_declaration is not None:
         payload["source_declarations"] = {"crispor": crispor_declaration}
+    if row_accounting is not None:
+        payload["row_accounting"] = row_accounting
+    if query_map_path is not None:
+        payload["query_map"] = {
+            "file": query_map_path.name,
+            "sha256": _sha256(query_map_path),
+        }
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
@@ -711,12 +997,27 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="mode", required=True)
 
-    cas = subparsers.add_parser("cas-offinder", help="normalize official nine-column output")
+    cas = subparsers.add_parser(
+        "cas-offinder", help="normalize official nine-column or pinned 2.4.1 output"
+    )
     _common(cas)
     cas.add_argument("--profile", type=Path, required=True, help="search-profile JSON")
     cas.add_argument(
+        "--format",
+        choices=("nine-column", "2.4.1", "2.4.1-ids"),
+        default="nine-column",
+        help="declared native layout: official nine-column (default), pinned 2.4.1 "
+        "six-column, or pinned 2.4.1 seven-column with query IDs",
+    )
+    cas.add_argument(
         "--guide-id",
         help="single guide override when native output uses numeric IDs; otherwise native IDs are used",
+    )
+    cas.add_argument(
+        "--query-map",
+        type=Path,
+        help="declared query-to-guide JSON mapping required for six-column 2.4.1 output "
+        "when --guide-id is not given",
     )
 
     experimental = subparsers.add_parser(
@@ -761,22 +1062,39 @@ def main(argv: list[str] | None = None) -> int:
         loci = load_intended_loci(args.intended_loci)
         source_declarations = None
         import_summary = None
+        row_accounting = None
         if args.mode == "cas-offinder":
             profile = SearchProfile.load(args.profile)
-            rows = normalize_cas_offinder(
-                args.input,
-                guides,
-                loci,
-                profile,
-                args.source_version,
-                args.guide_id,
-            )
+            if args.format == "nine-column":
+                if args.query_map is not None:
+                    raise CandidatePanelError("--query-map applies only to six-column 2.4.1 output")
+                rows = normalize_cas_offinder(
+                    args.input,
+                    guides,
+                    loci,
+                    profile,
+                    args.source_version,
+                    args.guide_id,
+                )
+                adapter_mode = "cas-offinder"
+            else:
+                query_map = load_query_map(args.query_map, guides) if args.query_map else None
+                rows, row_accounting = normalize_cas_offinder_2_4_1(
+                    args.input,
+                    guides,
+                    loci,
+                    profile,
+                    args.source_version,
+                    with_ids=args.format == "2.4.1-ids",
+                    query_map=query_map,
+                    guide_override=args.guide_id,
+                )
+                adapter_mode = row_accounting["declared_format"]
             reference_id = profile.reference_id
             source_method = "Cas-OFFinder"
             profile_path = args.profile
             source_version = args.source_version
             source_command = args.source_command
-            adapter_mode = "cas-offinder"
         elif args.mode == "experimental":
             rows = normalize_experimental(
                 args.input,
@@ -829,6 +1147,8 @@ def main(argv: list[str] | None = None) -> int:
             privacy_filtering_applied=(
                 imported.privacy_filtering_applied if args.mode == "crisprme" else None
             ),
+            row_accounting=row_accounting,
+            query_map_path=(args.query_map if args.mode == "cas-offinder" else None),
         )
     except (CandidatePanelError, CrisprmeImportError, OSError) as exc:
         parser.error(str(exc))

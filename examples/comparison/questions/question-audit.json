@@ -1,0 +1,103 @@
+{
+  "policy_sha256": "bfb786c9fa9d6014d1d71b9931c1009075d84fcf35bab0a95516c3635a3ab574",
+  "suggestions": [
+    {
+      "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+      "trigger": "variant_candidate",
+      "rule_id": "complete-design-by-variant",
+      "configuration_ids": [
+        "comparison_design_configuration:v1:7707169e49c942f91f557715a735e84f7e8cfe606a9737bbe1f8662597193d06",
+        "comparison_design_configuration:v1:ae601a1e9e0d367604b25df53b1666dfba2e70d9d04618e78f0e374686971ec3"
+      ],
+      "observation_ids": [],
+      "prediction_ids": []
+    }
+  ],
+  "question_exclusions": [],
+  "donor_exclusions": [],
+  "assumptions": [
+    {
+      "donor_id": "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c",
+      "specimen_id": "comparison_specimen:v1:fa85df81c2c648b9b9b9643a0430ab9333f042cccd81a16ce3c719f8b406e603",
+      "reason": "Artificial specimens exist by fixture construction"
+    },
+    {
+      "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+      "specimen_id": "comparison_specimen:v1:8e01ead401738b59954e973ba110603c25040b35268aba51c9f09cd1d7281cb4",
+      "reason": "Artificial specimens exist by fixture construction"
+    }
+  ],
+  "sequence_preparation": {},
+  "action_eligibility": {
+    "comparison_action:v1:3020679240cbbe4828b8d5bd3ca936d97010e31ed3d29f0f0ddfa16ea3406b8a": {
+      "eligible": true,
+      "reason_codes": []
+    },
+    "comparison_action:v1:621f72f4a647addeff14d22378423efcec6525051599761340f0d3bac0193a9c": {
+      "eligible": true,
+      "reason_codes": []
+    },
+    "comparison_action:v1:77223e711a50d875a57c1bf780cd70ca2b8d540ddc708b704fa4e7e55b007295": {
+      "eligible": true,
+      "reason_codes": []
+    },
+    "comparison_action:v1:1cdaf97a943a35f0bb77abce13b7201a999d4b7fd4359d5d5f29446c061d72b3": {
+      "eligible": true,
+      "reason_codes": []
+    },
+    "comparison_action:v1:6de218c4ca6168f3fb950ca54c50a00722a756c89f74eee986e8f75d797b4ebb": {
+      "eligible": true,
+      "reason_codes": []
+    },
+    "comparison_action:v1:348e1e631f128b721be4f35e9bd91d4b351a211c49859c76d83ec5cbe282ba87": {
+      "eligible": true,
+      "reason_codes": []
+    },
+    "comparison_action:v1:2863887351a72868cd1930d481fb5b13ae2872710cd94243baf0378471750f02": {
+      "eligible": true,
+      "reason_codes": []
+    },
+    "comparison_action:v1:84e2c6b30f9d66525e0c1c549a6b8c8dc16dbddbee0c7b3f0cb2cc9525b8bbcd": {
+      "eligible": true,
+      "reason_codes": []
+    },
+    "comparison_action:v1:c10027069908d008f047e9546112354d13a9f8b3a3184716d870cf91e72825d0": {
+      "eligible": true,
+      "reason_codes": []
+    },
+    "comparison_action:v1:6b590bf2a9b335bc1193016572717b3302635dc2df2782a8671ea4631f79fa25": {
+      "eligible": true,
+      "reason_codes": []
+    }
+  },
+  "donor_eligibility": [
+    {
+      "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+      "donor_id": "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c",
+      "membership": "noncarrier",
+      "dosage": 0,
+      "independence_group_id": "synthetic-family-N",
+      "eligible": true,
+      "reason_codes": [],
+      "assumptions": [],
+      "covariates": {}
+    },
+    {
+      "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+      "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+      "membership": "carrier",
+      "dosage": 1,
+      "independence_group_id": "synthetic-family-C",
+      "eligible": true,
+      "reason_codes": [],
+      "assumptions": [],
+      "covariates": {}
+    }
+  ],
+  "input_snapshot_run_id": "comparison_snapshot_run:v1:be7c8476df4a0ca55cfea8a1f16ef541731fd7d6d55f9b0ddc3b12be9bed12af",
+  "code": {
+    "package_version": "0.3.0",
+    "source_sha256": "dd913b4929f516361251208b2f03ccf2592a4a0f4d69d8d1554108efbfa1c855",
+    "python": "3.12.3"
+  }
+}

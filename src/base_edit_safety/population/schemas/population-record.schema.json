@@ -1,0 +1,1827 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Population row contracts, schema 1",
+  "description": "Source measurement objects retain the existing ledger schema; scientific cross-field checks are also required.",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "record_type": {
+          "const": "candidate_configuration"
+        },
+        "schema_version": {
+          "const": "1"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "configuration_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reference_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "identity_payload": {
+          "type": "object",
+          "properties": {
+            "identity_schema": {
+              "const": "candidate_identity_1"
+            },
+            "reference_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "contig": {
+              "type": "string",
+              "minLength": 1
+            },
+            "strand": {
+              "enum": [
+                "+",
+                "-"
+              ]
+            },
+            "guide_definition_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "editor_definition_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "protospacer_guide_orientation": {
+              "type": "string",
+              "pattern": "^[ACGT]{20}$"
+            },
+            "pam_guide_orientation": {
+              "type": "string",
+              "pattern": "^[ACGT]{3}$"
+            },
+            "target_path": {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "const": "reference"
+                      },
+                      "pos0": {
+                        "type": "integer",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "pos0"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "const": "insertion"
+                      },
+                      "boundary0": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "offset0": {
+                        "type": "integer",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "boundary0",
+                      "offset0"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "minItems": 23,
+              "maxItems": 23
+            }
+          },
+          "required": [
+            "identity_schema",
+            "reference_sha256",
+            "contig",
+            "strand",
+            "guide_definition_sha256",
+            "editor_definition_sha256",
+            "protospacer_guide_orientation",
+            "pam_guide_orientation",
+            "target_path"
+          ],
+          "additionalProperties": false
+        },
+        "contig": {
+          "type": "string",
+          "minLength": 1
+        },
+        "strand": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_path": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "const": "reference"
+                  },
+                  "pos0": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "required": [
+                  "kind",
+                  "pos0"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "const": "insertion"
+                  },
+                  "boundary0": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "offset0": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "required": [
+                  "kind",
+                  "boundary0",
+                  "offset0"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "minItems": 23,
+          "maxItems": 23
+        },
+        "bounding_interval": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "evaluation_interval": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "sequence_genomic_forward": {
+          "type": "string",
+          "minLength": 1
+        },
+        "protospacer_guide_orientation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pam_guide_orientation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "guide_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "guide_definition_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "editor_definition_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "editability": {
+          "type": "object",
+          "properties": {
+            "window": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "substrate": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "positions": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "status": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "window",
+            "substrate",
+            "positions",
+            "status"
+          ],
+          "additionalProperties": false
+        },
+        "variant_links": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "legacy_site_links": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "source_sequence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "record_type",
+        "schema_version",
+        "run_id",
+        "provenance",
+        "configuration_id",
+        "reference_id",
+        "identity_payload",
+        "contig",
+        "strand",
+        "target_path",
+        "bounding_interval",
+        "evaluation_interval",
+        "sequence_genomic_forward",
+        "protospacer_guide_orientation",
+        "pam_guide_orientation",
+        "guide_id",
+        "guide_definition_id",
+        "editor_definition_id",
+        "role",
+        "editability",
+        "variant_links",
+        "legacy_site_links",
+        "source_sequence_ids"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "record_type": {
+          "const": "sequence_configuration"
+        },
+        "schema_version": {
+          "const": "1"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "sequence_configuration_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "donor_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "local_copy": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reference_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "contig": {
+          "type": "string",
+          "minLength": 1
+        },
+        "interval": {
+          "type": "object",
+          "properties": {
+            "contig": {
+              "type": "string",
+              "minLength": 1
+            },
+            "start": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "end": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "contig",
+            "start",
+            "end"
+          ],
+          "additionalProperties": false
+        },
+        "sequence_genomic_forward": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sequence_path": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "const": "reference"
+                  },
+                  "pos0": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "base": {
+                    "type": "string",
+                    "pattern": "^[ACGTN]$"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "pos0",
+                  "base"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "const": "insertion"
+                  },
+                  "boundary0": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "offset0": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "insertion_sequence_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "base": {
+                    "type": "string",
+                    "pattern": "^[ACGTN]$"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "boundary0",
+                  "offset0",
+                  "insertion_sequence_id",
+                  "base"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          }
+        },
+        "deletion_events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "start": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "end": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "variant_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "variant_id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "excluded_intervals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "start": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "end": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              },
+              "variant_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "reason",
+              "variant_id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "heterozygous_sites": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "start": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "end": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "phase_key": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "variant_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "phase_key",
+              "variant_id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "sequence_status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "phase_status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reference_evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "normalized_variant_keys": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "source_call_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "variant_intervals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "variant_id": {
+                "type": "string"
+              },
+              "start": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "end": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "insertion_boundaries": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "variant_id",
+              "start",
+              "end",
+              "insertion_boundaries"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "record_type",
+        "schema_version",
+        "run_id",
+        "provenance",
+        "sequence_configuration_id",
+        "donor_id",
+        "local_copy",
+        "reference_id",
+        "contig",
+        "interval",
+        "sequence_genomic_forward",
+        "sequence_path",
+        "deletion_events",
+        "excluded_intervals",
+        "heterozygous_sites",
+        "sequence_status",
+        "phase_status",
+        "reference_evidence",
+        "normalized_variant_keys",
+        "source_call_ids",
+        "variant_intervals"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "record_type": {
+          "const": "donor_carriage"
+        },
+        "schema_version": {
+          "const": "1"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "donor_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "configuration_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_supported_carriage": {
+          "enum": [
+            "confirmed",
+            "possible",
+            "absent",
+            "unknown"
+          ]
+        },
+        "model_carriage": {
+          "enum": [
+            "present",
+            "possible",
+            "absent",
+            "unknown"
+          ]
+        },
+        "supported_copy_count": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 2
+        },
+        "reference_evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "phase_status": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "source_call_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "sequence_configuration_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "model_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "evaluated_scope": {
+          "type": "object",
+          "properties": {
+            "contig": {
+              "type": "string",
+              "minLength": 1
+            },
+            "start": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "end": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "contig",
+            "start",
+            "end"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "record_type",
+        "schema_version",
+        "run_id",
+        "provenance",
+        "donor_id",
+        "configuration_id",
+        "evidence_supported_carriage",
+        "model_carriage",
+        "supported_copy_count",
+        "reference_evidence",
+        "phase_status",
+        "source_call_ids",
+        "sequence_configuration_ids",
+        "model_id",
+        "reasons",
+        "evaluated_scope"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "record_type": {
+          "const": "donor_inventory"
+        },
+        "schema_version": {
+          "const": "1"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "donor_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "genotype_sample_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "family_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "specimen_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "specimen_context_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "availability": {
+          "type": "string",
+          "minLength": 1
+        },
+        "use_permitted": {
+          "type": "boolean"
+        },
+        "activation_cost": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "simulation_eligible": {
+          "type": "boolean"
+        },
+        "sampling_stratum": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "record_type",
+        "schema_version",
+        "run_id",
+        "provenance",
+        "donor_id",
+        "genotype_sample_id",
+        "source_kind",
+        "family_id",
+        "specimen_id",
+        "specimen_context_id",
+        "availability",
+        "use_permitted",
+        "activation_cost",
+        "simulation_eligible",
+        "sampling_stratum"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "record_type": {
+          "const": "reference_callability"
+        },
+        "schema_version": {
+          "const": "1"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "donor_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "contig": {
+          "type": "string",
+          "minLength": 1
+        },
+        "start_0based": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end_0based_exclusive": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "evidence_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "record_type",
+        "schema_version",
+        "run_id",
+        "provenance",
+        "donor_id",
+        "contig",
+        "start_0based",
+        "end_0based_exclusive",
+        "evidence_type",
+        "source_id"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "record_type": {
+          "const": "coverage_unit"
+        },
+        "schema_version": {
+          "const": "1"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "configuration_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "guide_definition_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "editor_definition_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "biological_context_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "biological_context": {
+          "type": "object",
+          "properties": {
+            "cell_type": {
+              "type": "string",
+              "minLength": 1
+            },
+            "delivery": {
+              "type": "string",
+              "minLength": 1
+            },
+            "condition": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "cell_type",
+            "delivery",
+            "condition"
+          ],
+          "additionalProperties": false
+        },
+        "measurement_class": {
+          "type": "string",
+          "minLength": 1
+        },
+        "allele_resolution_required": {
+          "type": "boolean"
+        },
+        "locus_resolution_required": {
+          "type": "boolean"
+        },
+        "extra_context_bases": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "weight": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "required_donors": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_detection_limit_fraction": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "maximum": 1,
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "record_type",
+        "schema_version",
+        "run_id",
+        "provenance",
+        "id",
+        "configuration_id",
+        "guide_definition_id",
+        "editor_definition_id",
+        "biological_context_id",
+        "biological_context",
+        "measurement_class",
+        "allele_resolution_required",
+        "locus_resolution_required",
+        "extra_context_bases",
+        "weight",
+        "required_donors"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "record_type": {
+          "const": "evidence_link"
+        },
+        "schema_version": {
+          "const": "1"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "evidence_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "unit_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "donor_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_measurement": {
+          "type": "object"
+        },
+        "source_linkage": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "outcome": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "identity_match": {
+          "type": "string",
+          "minLength": 1
+        },
+        "context_match": {
+          "type": "string",
+          "minLength": 1
+        },
+        "usable": {
+          "type": "boolean"
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "source_guide": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "detection_limit_assessment": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "quantity": {
+              "const": "editing_fraction"
+            },
+            "normalized_fraction": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "maximum": 1,
+              "exclusiveMinimum": 0
+            },
+            "maximum_fraction": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "maximum": 1,
+              "exclusiveMinimum": 0
+            },
+            "status": {
+              "enum": [
+                "unresolved",
+                "invalid",
+                "insufficient",
+                "accepted"
+              ]
+            },
+            "reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "quantity",
+            "normalized_fraction",
+            "maximum_fraction",
+            "status",
+            "reason"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "record_type",
+        "schema_version",
+        "run_id",
+        "provenance",
+        "evidence_id",
+        "unit_id",
+        "donor_id",
+        "source_measurement",
+        "source_linkage",
+        "outcome",
+        "identity_match",
+        "context_match",
+        "usable",
+        "reasons",
+        "source_guide",
+        "detection_limit_assessment"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "record_type": {
+          "const": "assay_action"
+        },
+        "schema_version": {
+          "const": "1"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "donor_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "specimen_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "configuration_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "assay_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resolution_contract_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "biological_context_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "locus": {
+          "type": "object",
+          "properties": {
+            "contig": {
+              "type": "string",
+              "minLength": 1
+            },
+            "interval": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "strand": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "contig",
+            "interval",
+            "strand"
+          ],
+          "additionalProperties": false
+        },
+        "guide_definition_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "editor_definition_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "coverage_basis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "eligibility": {
+          "type": "string",
+          "minLength": 1
+        },
+        "eligibility_reasons": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "assay_cost": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "covered_units": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "possible_only_units": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "interpretation": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "record_type",
+        "schema_version",
+        "run_id",
+        "provenance",
+        "id",
+        "donor_id",
+        "specimen_id",
+        "configuration_id",
+        "assay_id",
+        "resolution_contract_id",
+        "biological_context_id",
+        "locus",
+        "guide_definition_id",
+        "editor_definition_id",
+        "coverage_basis",
+        "eligibility",
+        "eligibility_reasons",
+        "assay_cost",
+        "covered_units",
+        "possible_only_units",
+        "interpretation"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "record_type": {
+          "const": "search_hit"
+        },
+        "schema_version": {
+          "const": "1"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "configuration_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "profile_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "donor_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "local_copy": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sequence_configuration_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "partition": {
+          "type": "object",
+          "properties": {
+            "contig": {
+              "type": "string",
+              "minLength": 1
+            },
+            "start": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "end": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "contig",
+            "start",
+            "end"
+          ],
+          "additionalProperties": false
+        },
+        "mismatch_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "mismatch_positions_1based": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "guide_alignment": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_alignment": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pam_assessment": {
+          "type": "string",
+          "minLength": 1
+        },
+        "backend_score": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "score_scope": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "phase_status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "execution_status": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "record_type",
+        "schema_version",
+        "run_id",
+        "provenance",
+        "configuration_id",
+        "profile_id",
+        "donor_id",
+        "local_copy",
+        "sequence_configuration_id",
+        "partition",
+        "mismatch_count",
+        "mismatch_positions_1based",
+        "guide_alignment",
+        "target_alignment",
+        "pam_assessment",
+        "backend_score",
+        "score_scope",
+        "phase_status",
+        "execution_status"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "record_type": {
+          "const": "nomination_change"
+        },
+        "schema_version": {
+          "const": "1"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "donor_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "configuration_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "change": {
+          "type": "string",
+          "minLength": 1
+        },
+        "paired_evaluable": {
+          "type": "boolean"
+        },
+        "reference_counterpart": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "pam_gained": {
+          "type": "boolean"
+        },
+        "pam_lost": {
+          "type": "boolean"
+        },
+        "mismatch_change": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "substrate_count_change": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "comparison_scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pairing_reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "record_type",
+        "schema_version",
+        "run_id",
+        "provenance",
+        "donor_id",
+        "configuration_id",
+        "change",
+        "paired_evaluable",
+        "reference_counterpart",
+        "pam_gained",
+        "pam_lost",
+        "mismatch_change",
+        "substrate_count_change",
+        "comparison_scope",
+        "pairing_reason"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "record_type": {
+          "const": "representation_replay"
+        },
+        "schema_version": {
+          "const": "1"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "site_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "before": {
+          "type": "string",
+          "minLength": 1
+        },
+        "after": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reference_model": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "source_measurements_unchanged": {
+          "type": "boolean"
+        },
+        "new_donor_measurement_credits": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "interpretation": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "record_type",
+        "schema_version",
+        "run_id",
+        "provenance",
+        "site_id",
+        "before",
+        "after",
+        "reference_model",
+        "source_measurements_unchanged",
+        "new_donor_measurement_credits",
+        "interpretation"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "record_type": {
+          "const": "genotype_audit"
+        },
+        "schema_version": {
+          "const": "1"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "donor_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_record_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "variant_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "original_alleles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "gt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "selected_indexes": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "separator": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ps": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "quality": {
+          "type": "object"
+        },
+        "site_filter": {
+          "type": "string",
+          "minLength": 1
+        },
+        "call_status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "phase_status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "phase_key": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "call_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "record_type",
+        "schema_version",
+        "run_id",
+        "provenance",
+        "donor_id",
+        "source_id",
+        "source_record_index",
+        "variant_id",
+        "original_alleles",
+        "gt",
+        "selected_indexes",
+        "separator",
+        "ps",
+        "quality",
+        "site_filter",
+        "call_status",
+        "phase_status",
+        "phase_key",
+        "reasons",
+        "call_id"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "record_type": {
+          "const": "normalized_variant"
+        },
+        "schema_version": {
+          "const": "1"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "variant_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_record_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "original_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "contig": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pos0": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unbounded_footprint": {
+          "type": "boolean"
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "original_alts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "edits": {
+          "type": "array",
+          "items": {
+            "type": [
+              "object",
+              "null"
+            ]
+          }
+        },
+        "calls": {
+          "type": "object"
+        },
+        "normalization": {
+          "type": "string",
+          "minLength": 1
+        },
+        "frequency": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "record_type",
+        "schema_version",
+        "run_id",
+        "provenance",
+        "variant_id",
+        "source_id",
+        "source_record_index",
+        "original_id",
+        "contig",
+        "pos0",
+        "end",
+        "unbounded_footprint",
+        "ref",
+        "original_alts",
+        "edits",
+        "calls",
+        "normalization",
+        "frequency"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

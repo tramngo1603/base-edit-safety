@@ -1,0 +1,145 @@
+{
+  "contig": "chrSYNcontrol",
+  "deletion_events": [],
+  "donor_id": null,
+  "excluded_intervals": [],
+  "heterozygous_sites": [],
+  "interval": {
+    "contig": "chrSYNcontrol",
+    "end": 23,
+    "start": 0
+  },
+  "local_copy": 0,
+  "normalized_variant_keys": [],
+  "phase_status": "reference",
+  "provenance": [
+    "run:1466385f3b307d1d7f044b63e01a7b5ff4dd214e7d59929b58c55ee5bbac115e"
+  ],
+  "record_type": "sequence_configuration",
+  "reference_evidence": "pinned_reference",
+  "reference_id": "5d2af5e341d6f560c45b51b8c93be0f3d320624e213ecb487acde9ba76f51e8f",
+  "run_id": "run:1466385f3b307d1d7f044b63e01a7b5ff4dd214e7d59929b58c55ee5bbac115e",
+  "schema_version": "1",
+  "sequence_configuration_id": "seq:83368a8625a8bcb01f3aea13d60d981e614f7b4aed89aed393dee95c6f085990",
+  "sequence_genomic_forward": "ACGTTGCAATGCTAGCTAACTGG",
+  "sequence_path": [
+    {
+      "base": "A",
+      "kind": "reference",
+      "pos0": 0
+    },
+    {
+      "base": "C",
+      "kind": "reference",
+      "pos0": 1
+    },
+    {
+      "base": "G",
+      "kind": "reference",
+      "pos0": 2
+    },
+    {
+      "base": "T",
+      "kind": "reference",
+      "pos0": 3
+    },
+    {
+      "base": "T",
+      "kind": "reference",
+      "pos0": 4
+    },
+    {
+      "base": "G",
+      "kind": "reference",
+      "pos0": 5
+    },
+    {
+      "base": "C",
+      "kind": "reference",
+      "pos0": 6
+    },
+    {
+      "base": "A",
+      "kind": "reference",
+      "pos0": 7
+    },
+    {
+      "base": "A",
+      "kind": "reference",
+      "pos0": 8
+    },
+    {
+      "base": "T",
+      "kind": "reference",
+      "pos0": 9
+    },
+    {
+      "base": "G",
+      "kind": "reference",
+      "pos0": 10
+    },
+    {
+      "base": "C",
+      "kind": "reference",
+      "pos0": 11
+    },
+    {
+      "base": "T",
+      "kind": "reference",
+      "pos0": 12
+    },
+    {
+      "base": "A",
+      "kind": "reference",
+      "pos0": 13
+    },
+    {
+      "base": "G",
+      "kind": "reference",
+      "pos0": 14
+    },
+    {
+      "base": "C",
+      "kind": "reference",
+      "pos0": 15
+    },
+    {
+      "base": "T",
+      "kind": "reference",
+      "pos0": 16
+    },
+    {
+      "base": "A",
+      "kind": "reference",
+      "pos0": 17
+    },
+    {
+      "base": "A",
+      "kind": "reference",
+      "pos0": 18
+    },
+    {
+      "base": "C",
+      "kind": "reference",
+      "pos0": 19
+    },
+    {
+      "base": "T",
+      "kind": "reference",
+      "pos0": 20
+    },
+    {
+      "base": "G",
+      "kind": "reference",
+      "pos0": 21
+    },
+    {
+      "base": "G",
+      "kind": "reference",
+      "pos0": 22
+    }
+  ],
+  "sequence_status": "resolved",
+  "source_call_ids": [],
+  "variant_intervals": []
+}

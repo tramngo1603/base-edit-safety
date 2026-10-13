@@ -1,0 +1,58 @@
+{
+  "fixture_type": "synthetic_phase_truth",
+  "schema_version": "1",
+  "guide": "ACGTTGCAATGCTAGCTAAC",
+  "pam": "TGG",
+  "max_mismatches": 0,
+  "reference_sequence": "AAGTTGGAATGCTAGCTAACTGG",
+  "variants": [
+    {
+      "pos1": 2,
+      "ref": "A",
+      "alt": "C"
+    },
+    {
+      "pos1": 7,
+      "ref": "G",
+      "alt": "C"
+    }
+  ],
+  "donors": [
+    {
+      "id": "SYN_CIS",
+      "genotypes": [
+        "0|1",
+        "0|1"
+      ],
+      "phase_set": "synthetic_one_block",
+      "truth_haplotypes": [
+        "AAGTTGGAATGCTAGCTAACTGG",
+        "ACGTTGCAATGCTAGCTAACTGG"
+      ],
+      "exact_match_copies": 1
+    },
+    {
+      "id": "SYN_TRANS",
+      "genotypes": [
+        "0|1",
+        "1|0"
+      ],
+      "phase_set": "synthetic_one_block",
+      "truth_haplotypes": [
+        "AAGTTGCAATGCTAGCTAACTGG",
+        "ACGTTGGAATGCTAGCTAACTGG"
+      ],
+      "exact_match_copies": 0
+    },
+    {
+      "id": "SYN_UNPHASED",
+      "genotypes": [
+        "0/1",
+        "0/1"
+      ],
+      "phase_set": null,
+      "truth_haplotypes": null,
+      "exact_match_copies": null
+    }
+  ]
+}

@@ -1,0 +1,2793 @@
+[
+  {
+    "record_type": "comparison_action",
+    "schema_version": "1",
+    "operation_type": "treatment",
+    "donor_id": "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c",
+    "specimen_id": "comparison_specimen:v1:fa85df81c2c648b9b9b9643a0430ab9333f042cccd81a16ce3c719f8b406e603",
+    "design_id": {
+      "value": "comparison_design:v1:fcf6124cf42b8807e941001e5d4c78b0a61f0d71f387575b7dbf62ecb07b2390",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+    "endpoint_ids": [
+      "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+      "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0"
+    ],
+    "locus_ids": [
+      "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+    ],
+    "endpoint_locus_pairs": [
+      {
+        "endpoint_id": "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0",
+        "locus_id": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+      },
+      {
+        "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+        "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+      }
+    ],
+    "target_sequence_id": {
+      "value": null,
+      "reason": "exact per-locus diploid sequences are listed"
+    },
+    "target_sequences": [
+      {
+        "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+        "sequence_configuration_ids": [
+          "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7"
+        ]
+      },
+      {
+        "locus_id": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197",
+        "sequence_configuration_ids": [
+          "comparison_sequence_configuration:v1:7f4e708438eba9c8162a3df39058e58b21eefde79267936e0948683f63bbc9fd"
+        ]
+      }
+    ],
+    "replicate_position": 1,
+    "batch_id": "section9-new-batch",
+    "experiment_id": "section9-new-experiment",
+    "dependency_action_ids": [],
+    "control_requirements": [],
+    "resource_demands": [
+      {
+        "resource_id": "comparison_resource:v1:b468da45a9f85df2f5f7c13b115d9525fa390866227d8741265ef35a98b881ef",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:62b423b36bbcd2a8b183546975d8c2a043a731516d2e7afcdf69e0ac0eeb4775",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:6a1d99cdfa78904033e71da3bd95d08adaaba81cd081b153871272890226d3bc",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:a2f91433f080126a765aeaba554767e7e902485a31822f07e76ddbe7a0225bfa",
+        "dimension": "uses",
+        "quantity": 1
+      }
+    ],
+    "eligibility_status": "eligible",
+    "reason_codes": [],
+    "memberships": [],
+    "performed_control_roles": [],
+    "performed_qc": [],
+    "record_id": "comparison_action:v1:1cdaf97a943a35f0bb77abce13b7201a999d4b7fd4359d5d5f29446c061d72b3",
+    "action_id": "comparison_action:v1:1cdaf97a943a35f0bb77abce13b7201a999d4b7fd4359d5d5f29446c061d72b3"
+  },
+  {
+    "record_type": "comparison_action",
+    "schema_version": "1",
+    "operation_type": "treatment",
+    "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "specimen_id": "comparison_specimen:v1:8e01ead401738b59954e973ba110603c25040b35268aba51c9f09cd1d7281cb4",
+    "design_id": {
+      "value": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+    "endpoint_ids": [
+      "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+      "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0"
+    ],
+    "locus_ids": [
+      "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+    ],
+    "endpoint_locus_pairs": [
+      {
+        "endpoint_id": "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0",
+        "locus_id": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+      },
+      {
+        "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+        "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+      }
+    ],
+    "target_sequence_id": {
+      "value": null,
+      "reason": "exact per-locus diploid sequences are listed"
+    },
+    "target_sequences": [
+      {
+        "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+        "sequence_configuration_ids": [
+          "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7"
+        ]
+      },
+      {
+        "locus_id": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197",
+        "sequence_configuration_ids": [
+          "comparison_sequence_configuration:v1:7f4e708438eba9c8162a3df39058e58b21eefde79267936e0948683f63bbc9fd",
+          "comparison_sequence_configuration:v1:b05c2edf9fdc189bacd05ce49287e64fdab597f0c13de01f2dcaaa05335c4ef5"
+        ]
+      }
+    ],
+    "replicate_position": 1,
+    "batch_id": "section9-new-batch",
+    "experiment_id": "section9-new-experiment",
+    "dependency_action_ids": [],
+    "control_requirements": [],
+    "resource_demands": [
+      {
+        "resource_id": "comparison_resource:v1:b468da45a9f85df2f5f7c13b115d9525fa390866227d8741265ef35a98b881ef",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:44848d3928dbfdb72fa74e66186e8732f30d01279efb0364a59694fee9170d1a",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:73436b5128bb9a156b2c233da9eeadfcb0e131990096c3c5cbc286f89f8a52d3",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:a9164df9b83f35c0587c0c266cbc0afe254f5bb18e090229f166a357d6767d59",
+        "dimension": "uses",
+        "quantity": 1
+      }
+    ],
+    "eligibility_status": "eligible",
+    "reason_codes": [],
+    "memberships": [],
+    "performed_control_roles": [],
+    "performed_qc": [],
+    "record_id": "comparison_action:v1:2863887351a72868cd1930d481fb5b13ae2872710cd94243baf0378471750f02",
+    "action_id": "comparison_action:v1:2863887351a72868cd1930d481fb5b13ae2872710cd94243baf0378471750f02"
+  },
+  {
+    "record_type": "comparison_action",
+    "schema_version": "1",
+    "operation_type": "mock_control",
+    "donor_id": "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c",
+    "specimen_id": "comparison_specimen:v1:fa85df81c2c648b9b9b9643a0430ab9333f042cccd81a16ce3c719f8b406e603",
+    "design_id": {
+      "value": null,
+      "reason": "shared mock is design neutral"
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+    "endpoint_ids": [
+      "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+      "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0"
+    ],
+    "locus_ids": [
+      "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+    ],
+    "endpoint_locus_pairs": [
+      {
+        "endpoint_id": "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0",
+        "locus_id": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+      },
+      {
+        "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+        "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+      }
+    ],
+    "target_sequence_id": {
+      "value": null,
+      "reason": "exact per-locus diploid sequences are listed"
+    },
+    "target_sequences": [
+      {
+        "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+        "sequence_configuration_ids": [
+          "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7"
+        ]
+      },
+      {
+        "locus_id": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197",
+        "sequence_configuration_ids": [
+          "comparison_sequence_configuration:v1:7f4e708438eba9c8162a3df39058e58b21eefde79267936e0948683f63bbc9fd"
+        ]
+      }
+    ],
+    "replicate_position": 1,
+    "batch_id": "section9-new-batch",
+    "experiment_id": "section9-new-experiment",
+    "dependency_action_ids": [],
+    "control_requirements": [],
+    "resource_demands": [
+      {
+        "resource_id": "comparison_resource:v1:b468da45a9f85df2f5f7c13b115d9525fa390866227d8741265ef35a98b881ef",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:62b423b36bbcd2a8b183546975d8c2a043a731516d2e7afcdf69e0ac0eeb4775",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:6a1d99cdfa78904033e71da3bd95d08adaaba81cd081b153871272890226d3bc",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:8fc52aa09c33bf994725d49c06e391fd7113f8d24ee7e334626e21c5c4b1a4e1",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:828b710336b5384ef76748240e4e372c8fd991cf569df300e76c2585972be303",
+        "dimension": "uses",
+        "quantity": 1
+      }
+    ],
+    "eligibility_status": "eligible",
+    "reason_codes": [],
+    "memberships": [
+      {
+        "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+        "slot_id": "comparison_requirement_slot:v1:558140b211c8a92205250692a6c66ba394485b0e5d82ead4f4f5f5c6dee47ece"
+      },
+      {
+        "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+        "slot_id": "comparison_requirement_slot:v1:e82ebbf72ca5fdb9df04e57b38f03fde0580dab26678027f92488562ed6ac0d8"
+      }
+    ],
+    "performed_control_roles": [
+      "mock",
+      "assay_qc"
+    ],
+    "performed_qc": [
+      "assay_qc"
+    ],
+    "record_id": "comparison_action:v1:3020679240cbbe4828b8d5bd3ca936d97010e31ed3d29f0f0ddfa16ea3406b8a",
+    "action_id": "comparison_action:v1:3020679240cbbe4828b8d5bd3ca936d97010e31ed3d29f0f0ddfa16ea3406b8a"
+  },
+  {
+    "record_type": "comparison_action",
+    "schema_version": "1",
+    "operation_type": "mock_control",
+    "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "specimen_id": "comparison_specimen:v1:8e01ead401738b59954e973ba110603c25040b35268aba51c9f09cd1d7281cb4",
+    "design_id": {
+      "value": null,
+      "reason": "shared mock is design neutral"
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+    "endpoint_ids": [
+      "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+      "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0"
+    ],
+    "locus_ids": [
+      "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+    ],
+    "endpoint_locus_pairs": [
+      {
+        "endpoint_id": "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0",
+        "locus_id": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+      },
+      {
+        "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+        "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+      }
+    ],
+    "target_sequence_id": {
+      "value": null,
+      "reason": "exact per-locus diploid sequences are listed"
+    },
+    "target_sequences": [
+      {
+        "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+        "sequence_configuration_ids": [
+          "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7"
+        ]
+      },
+      {
+        "locus_id": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197",
+        "sequence_configuration_ids": [
+          "comparison_sequence_configuration:v1:7f4e708438eba9c8162a3df39058e58b21eefde79267936e0948683f63bbc9fd",
+          "comparison_sequence_configuration:v1:b05c2edf9fdc189bacd05ce49287e64fdab597f0c13de01f2dcaaa05335c4ef5"
+        ]
+      }
+    ],
+    "replicate_position": 1,
+    "batch_id": "section9-new-batch",
+    "experiment_id": "section9-new-experiment",
+    "dependency_action_ids": [],
+    "control_requirements": [],
+    "resource_demands": [
+      {
+        "resource_id": "comparison_resource:v1:b468da45a9f85df2f5f7c13b115d9525fa390866227d8741265ef35a98b881ef",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:44848d3928dbfdb72fa74e66186e8732f30d01279efb0364a59694fee9170d1a",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:73436b5128bb9a156b2c233da9eeadfcb0e131990096c3c5cbc286f89f8a52d3",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:75e64113cdac3fe833c51fa7fc8ba5dabe74b04973c6637b5fdf431f5eb20e36",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:828b710336b5384ef76748240e4e372c8fd991cf569df300e76c2585972be303",
+        "dimension": "uses",
+        "quantity": 1
+      }
+    ],
+    "eligibility_status": "eligible",
+    "reason_codes": [],
+    "memberships": [
+      {
+        "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+        "slot_id": "comparison_requirement_slot:v1:5757b665cc97de766986808825acdf4b6ecd752b6f0b85064d5774a952bf118b"
+      },
+      {
+        "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+        "slot_id": "comparison_requirement_slot:v1:3ded9860eac5d493df65f76204a9ad21f5e4e0e4ae54da7f130512f816799bb7"
+      }
+    ],
+    "performed_control_roles": [
+      "mock",
+      "assay_qc"
+    ],
+    "performed_qc": [
+      "assay_qc"
+    ],
+    "record_id": "comparison_action:v1:348e1e631f128b721be4f35e9bd91d4b351a211c49859c76d83ec5cbe282ba87",
+    "action_id": "comparison_action:v1:348e1e631f128b721be4f35e9bd91d4b351a211c49859c76d83ec5cbe282ba87"
+  },
+  {
+    "record_type": "comparison_action",
+    "schema_version": "1",
+    "operation_type": "treatment",
+    "donor_id": "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c",
+    "specimen_id": "comparison_specimen:v1:fa85df81c2c648b9b9b9643a0430ab9333f042cccd81a16ce3c719f8b406e603",
+    "design_id": {
+      "value": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+    "endpoint_ids": [
+      "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+      "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0"
+    ],
+    "locus_ids": [
+      "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+    ],
+    "endpoint_locus_pairs": [
+      {
+        "endpoint_id": "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0",
+        "locus_id": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+      },
+      {
+        "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+        "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+      }
+    ],
+    "target_sequence_id": {
+      "value": null,
+      "reason": "exact per-locus diploid sequences are listed"
+    },
+    "target_sequences": [
+      {
+        "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+        "sequence_configuration_ids": [
+          "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7"
+        ]
+      },
+      {
+        "locus_id": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197",
+        "sequence_configuration_ids": [
+          "comparison_sequence_configuration:v1:7f4e708438eba9c8162a3df39058e58b21eefde79267936e0948683f63bbc9fd"
+        ]
+      }
+    ],
+    "replicate_position": 1,
+    "batch_id": "section9-new-batch",
+    "experiment_id": "section9-new-experiment",
+    "dependency_action_ids": [],
+    "control_requirements": [],
+    "resource_demands": [
+      {
+        "resource_id": "comparison_resource:v1:b468da45a9f85df2f5f7c13b115d9525fa390866227d8741265ef35a98b881ef",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:62b423b36bbcd2a8b183546975d8c2a043a731516d2e7afcdf69e0ac0eeb4775",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:6a1d99cdfa78904033e71da3bd95d08adaaba81cd081b153871272890226d3bc",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:2c21c7c46411b1e1c1a2a133d9533294981e5d81e4b877d8dd96f0c6c66f8d71",
+        "dimension": "uses",
+        "quantity": 1
+      }
+    ],
+    "eligibility_status": "eligible",
+    "reason_codes": [],
+    "memberships": [],
+    "performed_control_roles": [],
+    "performed_qc": [],
+    "record_id": "comparison_action:v1:621f72f4a647addeff14d22378423efcec6525051599761340f0d3bac0193a9c",
+    "action_id": "comparison_action:v1:621f72f4a647addeff14d22378423efcec6525051599761340f0d3bac0193a9c"
+  },
+  {
+    "record_type": "comparison_action",
+    "schema_version": "1",
+    "operation_type": "measurement_panel",
+    "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "specimen_id": "comparison_specimen:v1:8e01ead401738b59954e973ba110603c25040b35268aba51c9f09cd1d7281cb4",
+    "design_id": {
+      "value": "comparison_design:v1:fcf6124cf42b8807e941001e5d4c78b0a61f0d71f387575b7dbf62ecb07b2390",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+    "endpoint_ids": [
+      "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+      "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0"
+    ],
+    "locus_ids": [
+      "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+    ],
+    "endpoint_locus_pairs": [
+      {
+        "endpoint_id": "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0",
+        "locus_id": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+      },
+      {
+        "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+        "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+      }
+    ],
+    "target_sequence_id": {
+      "value": null,
+      "reason": "exact per-locus diploid sequences are listed"
+    },
+    "target_sequences": [
+      {
+        "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+        "sequence_configuration_ids": [
+          "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7"
+        ]
+      },
+      {
+        "locus_id": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197",
+        "sequence_configuration_ids": [
+          "comparison_sequence_configuration:v1:7f4e708438eba9c8162a3df39058e58b21eefde79267936e0948683f63bbc9fd",
+          "comparison_sequence_configuration:v1:b05c2edf9fdc189bacd05ce49287e64fdab597f0c13de01f2dcaaa05335c4ef5"
+        ]
+      }
+    ],
+    "replicate_position": 1,
+    "batch_id": "section9-new-batch",
+    "experiment_id": "section9-new-experiment",
+    "dependency_action_ids": [
+      "comparison_action:v1:348e1e631f128b721be4f35e9bd91d4b351a211c49859c76d83ec5cbe282ba87",
+      "comparison_action:v1:c10027069908d008f047e9546112354d13a9f8b3a3184716d870cf91e72825d0"
+    ],
+    "control_requirements": [
+      {
+        "role": "mock",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0"
+        ],
+        "locus_ids": [
+          "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+        "required_qc": [
+          "assay_qc"
+        ]
+      },
+      {
+        "role": "assay_qc",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0"
+        ],
+        "locus_ids": [
+          "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+        "required_qc": [
+          "assay_qc"
+        ]
+      },
+      {
+        "role": "intended_activity",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45"
+        ],
+        "locus_ids": [
+          "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+        "required_qc": [
+          "assay_qc"
+        ]
+      },
+      {
+        "role": "mock",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45"
+        ],
+        "locus_ids": [
+          "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+        "required_qc": [
+          "assay_qc"
+        ]
+      },
+      {
+        "role": "assay_qc",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45"
+        ],
+        "locus_ids": [
+          "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+        "required_qc": [
+          "assay_qc"
+        ]
+      }
+    ],
+    "resource_demands": [
+      {
+        "resource_id": "comparison_resource:v1:b468da45a9f85df2f5f7c13b115d9525fa390866227d8741265ef35a98b881ef",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:44848d3928dbfdb72fa74e66186e8732f30d01279efb0364a59694fee9170d1a",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:73436b5128bb9a156b2c233da9eeadfcb0e131990096c3c5cbc286f89f8a52d3",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:848d3f9ced28a40f467f75486ee231ba4345a34fcbed3273db451144f0f99f67",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:828b710336b5384ef76748240e4e372c8fd991cf569df300e76c2585972be303",
+        "dimension": "uses",
+        "quantity": 1
+      }
+    ],
+    "eligibility_status": "eligible",
+    "reason_codes": [],
+    "memberships": [
+      {
+        "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+        "slot_id": "comparison_requirement_slot:v1:dec2ca3c5a56fd0bc48f114f14770fa23b53e927b246396e6edfad23fba15cec"
+      },
+      {
+        "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+        "slot_id": "comparison_requirement_slot:v1:fb3015044d6c951befe82d64f1dbde6a6a2da808a6dd6aa7665491feb63ae945"
+      },
+      {
+        "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+        "slot_id": "comparison_requirement_slot:v1:801d99e3e71cf5b56c0e585714590d366649a2bacc3d39e416626ee34a0176d3"
+      },
+      {
+        "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+        "slot_id": "comparison_requirement_slot:v1:6207f58623985ca89d38ddf43d0d18b1c68db7a1a33c0f58068d7d76e23be152"
+      }
+    ],
+    "performed_control_roles": [
+      "intended_activity",
+      "assay_qc"
+    ],
+    "performed_qc": [
+      "assay_qc"
+    ],
+    "record_id": "comparison_action:v1:6b590bf2a9b335bc1193016572717b3302635dc2df2782a8671ea4631f79fa25",
+    "action_id": "comparison_action:v1:6b590bf2a9b335bc1193016572717b3302635dc2df2782a8671ea4631f79fa25"
+  },
+  {
+    "record_type": "comparison_action",
+    "schema_version": "1",
+    "operation_type": "measurement_panel",
+    "donor_id": "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c",
+    "specimen_id": "comparison_specimen:v1:fa85df81c2c648b9b9b9643a0430ab9333f042cccd81a16ce3c719f8b406e603",
+    "design_id": {
+      "value": "comparison_design:v1:fcf6124cf42b8807e941001e5d4c78b0a61f0d71f387575b7dbf62ecb07b2390",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+    "endpoint_ids": [
+      "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+      "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0"
+    ],
+    "locus_ids": [
+      "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+    ],
+    "endpoint_locus_pairs": [
+      {
+        "endpoint_id": "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0",
+        "locus_id": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+      },
+      {
+        "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+        "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+      }
+    ],
+    "target_sequence_id": {
+      "value": null,
+      "reason": "exact per-locus diploid sequences are listed"
+    },
+    "target_sequences": [
+      {
+        "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+        "sequence_configuration_ids": [
+          "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7"
+        ]
+      },
+      {
+        "locus_id": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197",
+        "sequence_configuration_ids": [
+          "comparison_sequence_configuration:v1:7f4e708438eba9c8162a3df39058e58b21eefde79267936e0948683f63bbc9fd"
+        ]
+      }
+    ],
+    "replicate_position": 1,
+    "batch_id": "section9-new-batch",
+    "experiment_id": "section9-new-experiment",
+    "dependency_action_ids": [
+      "comparison_action:v1:1cdaf97a943a35f0bb77abce13b7201a999d4b7fd4359d5d5f29446c061d72b3",
+      "comparison_action:v1:3020679240cbbe4828b8d5bd3ca936d97010e31ed3d29f0f0ddfa16ea3406b8a"
+    ],
+    "control_requirements": [
+      {
+        "role": "mock",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0"
+        ],
+        "locus_ids": [
+          "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+        "required_qc": [
+          "assay_qc"
+        ]
+      },
+      {
+        "role": "assay_qc",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0"
+        ],
+        "locus_ids": [
+          "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+        "required_qc": [
+          "assay_qc"
+        ]
+      },
+      {
+        "role": "intended_activity",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45"
+        ],
+        "locus_ids": [
+          "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+        "required_qc": [
+          "assay_qc"
+        ]
+      },
+      {
+        "role": "mock",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45"
+        ],
+        "locus_ids": [
+          "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+        "required_qc": [
+          "assay_qc"
+        ]
+      },
+      {
+        "role": "assay_qc",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45"
+        ],
+        "locus_ids": [
+          "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+        "required_qc": [
+          "assay_qc"
+        ]
+      }
+    ],
+    "resource_demands": [
+      {
+        "resource_id": "comparison_resource:v1:b468da45a9f85df2f5f7c13b115d9525fa390866227d8741265ef35a98b881ef",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:62b423b36bbcd2a8b183546975d8c2a043a731516d2e7afcdf69e0ac0eeb4775",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:6a1d99cdfa78904033e71da3bd95d08adaaba81cd081b153871272890226d3bc",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:8453da2227f0ed095d46ee7884b414375ca43e045fc7e5e870a7dff2b309da92",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:828b710336b5384ef76748240e4e372c8fd991cf569df300e76c2585972be303",
+        "dimension": "uses",
+        "quantity": 1
+      }
+    ],
+    "eligibility_status": "eligible",
+    "reason_codes": [],
+    "memberships": [
+      {
+        "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+        "slot_id": "comparison_requirement_slot:v1:25ef9ed9456d5879e367407a2363d4720543bbf0c1791dcf254314c10ad563c9"
+      },
+      {
+        "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+        "slot_id": "comparison_requirement_slot:v1:859fc464fa9e389c18a57376e8347010b6db9b2472dad4c0c9c47bd716747287"
+      },
+      {
+        "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+        "slot_id": "comparison_requirement_slot:v1:71df0f9c44630ce36d86cc6deede2915f94e5edebfb93b7828a87bd2c363f3da"
+      },
+      {
+        "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+        "slot_id": "comparison_requirement_slot:v1:75da38bc9db3b67bf035311f1fe39436b5bd687d189e2902c3dd02eea1566339"
+      }
+    ],
+    "performed_control_roles": [
+      "intended_activity",
+      "assay_qc"
+    ],
+    "performed_qc": [
+      "assay_qc"
+    ],
+    "record_id": "comparison_action:v1:6de218c4ca6168f3fb950ca54c50a00722a756c89f74eee986e8f75d797b4ebb",
+    "action_id": "comparison_action:v1:6de218c4ca6168f3fb950ca54c50a00722a756c89f74eee986e8f75d797b4ebb"
+  },
+  {
+    "record_type": "comparison_action",
+    "schema_version": "1",
+    "operation_type": "measurement_panel",
+    "donor_id": "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c",
+    "specimen_id": "comparison_specimen:v1:fa85df81c2c648b9b9b9643a0430ab9333f042cccd81a16ce3c719f8b406e603",
+    "design_id": {
+      "value": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+    "endpoint_ids": [
+      "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+      "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0"
+    ],
+    "locus_ids": [
+      "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+    ],
+    "endpoint_locus_pairs": [
+      {
+        "endpoint_id": "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0",
+        "locus_id": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+      },
+      {
+        "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+        "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+      }
+    ],
+    "target_sequence_id": {
+      "value": null,
+      "reason": "exact per-locus diploid sequences are listed"
+    },
+    "target_sequences": [
+      {
+        "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+        "sequence_configuration_ids": [
+          "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7"
+        ]
+      },
+      {
+        "locus_id": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197",
+        "sequence_configuration_ids": [
+          "comparison_sequence_configuration:v1:7f4e708438eba9c8162a3df39058e58b21eefde79267936e0948683f63bbc9fd"
+        ]
+      }
+    ],
+    "replicate_position": 1,
+    "batch_id": "section9-new-batch",
+    "experiment_id": "section9-new-experiment",
+    "dependency_action_ids": [
+      "comparison_action:v1:3020679240cbbe4828b8d5bd3ca936d97010e31ed3d29f0f0ddfa16ea3406b8a",
+      "comparison_action:v1:621f72f4a647addeff14d22378423efcec6525051599761340f0d3bac0193a9c"
+    ],
+    "control_requirements": [
+      {
+        "role": "mock",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0"
+        ],
+        "locus_ids": [
+          "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+        "required_qc": [
+          "assay_qc"
+        ]
+      },
+      {
+        "role": "assay_qc",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0"
+        ],
+        "locus_ids": [
+          "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+        "required_qc": [
+          "assay_qc"
+        ]
+      },
+      {
+        "role": "intended_activity",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45"
+        ],
+        "locus_ids": [
+          "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+        "required_qc": [
+          "assay_qc"
+        ]
+      },
+      {
+        "role": "mock",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45"
+        ],
+        "locus_ids": [
+          "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+        "required_qc": [
+          "assay_qc"
+        ]
+      },
+      {
+        "role": "assay_qc",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45"
+        ],
+        "locus_ids": [
+          "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+        "required_qc": [
+          "assay_qc"
+        ]
+      }
+    ],
+    "resource_demands": [
+      {
+        "resource_id": "comparison_resource:v1:b468da45a9f85df2f5f7c13b115d9525fa390866227d8741265ef35a98b881ef",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:62b423b36bbcd2a8b183546975d8c2a043a731516d2e7afcdf69e0ac0eeb4775",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:6a1d99cdfa78904033e71da3bd95d08adaaba81cd081b153871272890226d3bc",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:5bac4ad8443d23411a968bb185d03fa034f130077102a6987efe96e81e36e2d9",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:828b710336b5384ef76748240e4e372c8fd991cf569df300e76c2585972be303",
+        "dimension": "uses",
+        "quantity": 1
+      }
+    ],
+    "eligibility_status": "eligible",
+    "reason_codes": [],
+    "memberships": [
+      {
+        "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+        "slot_id": "comparison_requirement_slot:v1:4ea3099ddd4f074334eacabcae72b571ecc5703047b21a47632671d145b35a17"
+      },
+      {
+        "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+        "slot_id": "comparison_requirement_slot:v1:7512d47fdfed1a65cf86de6ec257aa83e93631fd27fb9631d3ca17c013dabeee"
+      },
+      {
+        "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+        "slot_id": "comparison_requirement_slot:v1:aa95c6b43c4576a5771a5011f292c7d27d9f0426e22b7bb78b746867bb38f29e"
+      },
+      {
+        "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+        "slot_id": "comparison_requirement_slot:v1:f9ec10936eb6617763fd481ca78304b5b4dab0ce167c18dbc572ced970ad1628"
+      }
+    ],
+    "performed_control_roles": [
+      "intended_activity",
+      "assay_qc"
+    ],
+    "performed_qc": [
+      "assay_qc"
+    ],
+    "record_id": "comparison_action:v1:77223e711a50d875a57c1bf780cd70ca2b8d540ddc708b704fa4e7e55b007295",
+    "action_id": "comparison_action:v1:77223e711a50d875a57c1bf780cd70ca2b8d540ddc708b704fa4e7e55b007295"
+  },
+  {
+    "record_type": "comparison_action",
+    "schema_version": "1",
+    "operation_type": "measurement_panel",
+    "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "specimen_id": "comparison_specimen:v1:8e01ead401738b59954e973ba110603c25040b35268aba51c9f09cd1d7281cb4",
+    "design_id": {
+      "value": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+    "endpoint_ids": [
+      "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+      "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0"
+    ],
+    "locus_ids": [
+      "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+    ],
+    "endpoint_locus_pairs": [
+      {
+        "endpoint_id": "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0",
+        "locus_id": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+      },
+      {
+        "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+        "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+      }
+    ],
+    "target_sequence_id": {
+      "value": null,
+      "reason": "exact per-locus diploid sequences are listed"
+    },
+    "target_sequences": [
+      {
+        "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+        "sequence_configuration_ids": [
+          "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7"
+        ]
+      },
+      {
+        "locus_id": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197",
+        "sequence_configuration_ids": [
+          "comparison_sequence_configuration:v1:7f4e708438eba9c8162a3df39058e58b21eefde79267936e0948683f63bbc9fd",
+          "comparison_sequence_configuration:v1:b05c2edf9fdc189bacd05ce49287e64fdab597f0c13de01f2dcaaa05335c4ef5"
+        ]
+      }
+    ],
+    "replicate_position": 1,
+    "batch_id": "section9-new-batch",
+    "experiment_id": "section9-new-experiment",
+    "dependency_action_ids": [
+      "comparison_action:v1:2863887351a72868cd1930d481fb5b13ae2872710cd94243baf0378471750f02",
+      "comparison_action:v1:348e1e631f128b721be4f35e9bd91d4b351a211c49859c76d83ec5cbe282ba87"
+    ],
+    "control_requirements": [
+      {
+        "role": "mock",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0"
+        ],
+        "locus_ids": [
+          "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+        "required_qc": [
+          "assay_qc"
+        ]
+      },
+      {
+        "role": "assay_qc",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0"
+        ],
+        "locus_ids": [
+          "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+        "required_qc": [
+          "assay_qc"
+        ]
+      },
+      {
+        "role": "intended_activity",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45"
+        ],
+        "locus_ids": [
+          "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+        "required_qc": [
+          "assay_qc"
+        ]
+      },
+      {
+        "role": "mock",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45"
+        ],
+        "locus_ids": [
+          "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+        "required_qc": [
+          "assay_qc"
+        ]
+      },
+      {
+        "role": "assay_qc",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45"
+        ],
+        "locus_ids": [
+          "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+        "required_qc": [
+          "assay_qc"
+        ]
+      }
+    ],
+    "resource_demands": [
+      {
+        "resource_id": "comparison_resource:v1:b468da45a9f85df2f5f7c13b115d9525fa390866227d8741265ef35a98b881ef",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:44848d3928dbfdb72fa74e66186e8732f30d01279efb0364a59694fee9170d1a",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:73436b5128bb9a156b2c233da9eeadfcb0e131990096c3c5cbc286f89f8a52d3",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:3e080a5863b693fb177f760ee531ff3116e878ae84ae85e4ba7893111dd762b2",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:828b710336b5384ef76748240e4e372c8fd991cf569df300e76c2585972be303",
+        "dimension": "uses",
+        "quantity": 1
+      }
+    ],
+    "eligibility_status": "eligible",
+    "reason_codes": [],
+    "memberships": [
+      {
+        "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+        "slot_id": "comparison_requirement_slot:v1:3d68ff3b61055c77aa27576021df7b43749061688e81389b68c3d1223bc7b17e"
+      },
+      {
+        "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+        "slot_id": "comparison_requirement_slot:v1:2874a863d544edb8d501944b29b87f388ddcd2f3c0546e1dde6c9f4c5063008c"
+      },
+      {
+        "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+        "slot_id": "comparison_requirement_slot:v1:7233737abcd0d84f9c35455f9f2443c1e63f25fd7673b36c3cff365fab06db0a"
+      },
+      {
+        "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+        "slot_id": "comparison_requirement_slot:v1:4b88b22d13872c81f27e43cac2a5a99679b0f2aeb9250791352f44c6d39cb46d"
+      }
+    ],
+    "performed_control_roles": [
+      "intended_activity",
+      "assay_qc"
+    ],
+    "performed_qc": [
+      "assay_qc"
+    ],
+    "record_id": "comparison_action:v1:84e2c6b30f9d66525e0c1c549a6b8c8dc16dbddbee0c7b3f0cb2cc9525b8bbcd",
+    "action_id": "comparison_action:v1:84e2c6b30f9d66525e0c1c549a6b8c8dc16dbddbee0c7b3f0cb2cc9525b8bbcd"
+  },
+  {
+    "record_type": "comparison_action",
+    "schema_version": "1",
+    "operation_type": "treatment",
+    "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "specimen_id": "comparison_specimen:v1:8e01ead401738b59954e973ba110603c25040b35268aba51c9f09cd1d7281cb4",
+    "design_id": {
+      "value": "comparison_design:v1:fcf6124cf42b8807e941001e5d4c78b0a61f0d71f387575b7dbf62ecb07b2390",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+    "endpoint_ids": [
+      "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+      "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0"
+    ],
+    "locus_ids": [
+      "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+    ],
+    "endpoint_locus_pairs": [
+      {
+        "endpoint_id": "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0",
+        "locus_id": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+      },
+      {
+        "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+        "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+      }
+    ],
+    "target_sequence_id": {
+      "value": null,
+      "reason": "exact per-locus diploid sequences are listed"
+    },
+    "target_sequences": [
+      {
+        "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+        "sequence_configuration_ids": [
+          "comparison_sequence_configuration:v1:adf3042ee95722d6d402a3548d57513c1dbc45a79efa91b2f5cbf07529235bd7"
+        ]
+      },
+      {
+        "locus_id": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197",
+        "sequence_configuration_ids": [
+          "comparison_sequence_configuration:v1:7f4e708438eba9c8162a3df39058e58b21eefde79267936e0948683f63bbc9fd",
+          "comparison_sequence_configuration:v1:b05c2edf9fdc189bacd05ce49287e64fdab597f0c13de01f2dcaaa05335c4ef5"
+        ]
+      }
+    ],
+    "replicate_position": 1,
+    "batch_id": "section9-new-batch",
+    "experiment_id": "section9-new-experiment",
+    "dependency_action_ids": [],
+    "control_requirements": [],
+    "resource_demands": [
+      {
+        "resource_id": "comparison_resource:v1:b468da45a9f85df2f5f7c13b115d9525fa390866227d8741265ef35a98b881ef",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:44848d3928dbfdb72fa74e66186e8732f30d01279efb0364a59694fee9170d1a",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:73436b5128bb9a156b2c233da9eeadfcb0e131990096c3c5cbc286f89f8a52d3",
+        "dimension": "uses",
+        "quantity": 1
+      },
+      {
+        "resource_id": "comparison_resource:v1:6147e118117061ae50037dd979d38fbb2251edd44df08a46c66639b1fc555f12",
+        "dimension": "uses",
+        "quantity": 1
+      }
+    ],
+    "eligibility_status": "eligible",
+    "reason_codes": [],
+    "memberships": [],
+    "performed_control_roles": [],
+    "performed_qc": [],
+    "record_id": "comparison_action:v1:c10027069908d008f047e9546112354d13a9f8b3a3184716d870cf91e72825d0",
+    "action_id": "comparison_action:v1:c10027069908d008f047e9546112354d13a9f8b3a3184716d870cf91e72825d0"
+  },
+  {
+    "record_type": "comparison_assay_capability",
+    "schema_version": "1",
+    "name": "section9-declared-v1 declared panel 58078b647ffc426f",
+    "endpoint_ids": [
+      "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+      "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0"
+    ],
+    "locus_ids": [
+      "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+    ],
+    "endpoint_locus_pairs": [
+      {
+        "endpoint_id": "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0",
+        "locus_id": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+      },
+      {
+        "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+        "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+      }
+    ],
+    "context_ids": [
+      "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+    ],
+    "resolution": "copy_specific",
+    "allele_resolved": true,
+    "feasibility": "simulation_assumption",
+    "required_control_roles": [
+      "intended_activity",
+      "mock",
+      "assay_qc"
+    ],
+    "qc_requirements": [
+      "assay_qc"
+    ],
+    "max_targets": 2,
+    "source_refs": [
+      {
+        "source_artifact_id": "comparison_source_artifact:v1:33079ca704ad10425f65a04fe00ca2cbaf0f57f15c7e0714b6d6ee03b94a0489",
+        "locator": {
+          "kind": "file",
+          "member": "experiment-policy.json"
+        },
+        "note": "Declared prospective capability, cost and specimen assumptions; no observed outcome"
+      }
+    ],
+    "record_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+    "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734"
+  },
+  {
+    "record_type": "comparison_question",
+    "schema_version": "1",
+    "template": "design_by_variant",
+    "hypothesis": "Evaluate design_by_variant at comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197 under declared rule complete-design-by-variant",
+    "decision": "Measure the declared endpoint; genotype contrasts establish association, not variant causality",
+    "design_ids": [
+      "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+      "comparison_design:v1:fcf6124cf42b8807e941001e5d4c78b0a61f0d71f387575b7dbf62ecb07b2390"
+    ],
+    "locus_ids": [
+      "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+    ],
+    "endpoint_ids": [
+      "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+      "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0"
+    ],
+    "endpoint_locus_pairs": [
+      {
+        "endpoint_id": "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0",
+        "locus_id": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+      },
+      {
+        "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+        "locus_id": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+      }
+    ],
+    "context_ids": [
+      "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+    ],
+    "genotype_predicate": {
+      "kind": "allele",
+      "locus_id": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197",
+      "sequence_configuration_id": {
+        "value": null,
+        "reason": "literal allele predicate"
+      },
+      "variants": [
+        {
+          "contig": "synthetic_chr11",
+          "pos0": 204,
+          "reference": "A",
+          "alternates": [
+            "G"
+          ],
+          "selected_alt_index": 1,
+          "source_artifact_id": "comparison_source_artifact:v1:483707b2726a6bed93e0e4b90b88d32ecf8c9344623a198b06a70dff2af5c48c",
+          "source_row": 1
+        }
+      ],
+      "dosage": {
+        "value": null,
+        "reason": "one or two matching copies establish carriage"
+      },
+      "phase_requirement": "not_required",
+      "coverage_basis": "synthetic_truth"
+    },
+    "comparability": {
+      "require_same_context": true,
+      "require_same_endpoint": true,
+      "require_same_timepoint": true
+    },
+    "arms": [
+      {
+        "arm_id": "carrier",
+        "membership": "carrier",
+        "required_independent_donors": 1
+      },
+      {
+        "arm_id": "noncarrier",
+        "membership": "noncarrier",
+        "required_independent_donors": 1
+      }
+    ],
+    "pairing": "within_donor",
+    "relatedness_policy": "strict",
+    "technical_replicates": 1,
+    "control_requirements": [
+      {
+        "role": "mock",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0"
+        ],
+        "locus_ids": [
+          "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+        "required_qc": [
+          "assay_qc"
+        ]
+      },
+      {
+        "role": "assay_qc",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0"
+        ],
+        "locus_ids": [
+          "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+        "required_qc": [
+          "assay_qc"
+        ]
+      },
+      {
+        "role": "intended_activity",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45"
+        ],
+        "locus_ids": [
+          "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+        "required_qc": [
+          "assay_qc"
+        ]
+      },
+      {
+        "role": "mock",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45"
+        ],
+        "locus_ids": [
+          "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+        "required_qc": [
+          "assay_qc"
+        ]
+      },
+      {
+        "role": "assay_qc",
+        "endpoint_ids": [
+          "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45"
+        ],
+        "locus_ids": [
+          "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4"
+        ],
+        "assay_capability_id": "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734",
+        "required_qc": [
+          "assay_qc"
+        ]
+      }
+    ],
+    "requirement_slot_ids": [
+      "comparison_requirement_slot:v1:25ef9ed9456d5879e367407a2363d4720543bbf0c1791dcf254314c10ad563c9",
+      "comparison_requirement_slot:v1:2874a863d544edb8d501944b29b87f388ddcd2f3c0546e1dde6c9f4c5063008c",
+      "comparison_requirement_slot:v1:3d68ff3b61055c77aa27576021df7b43749061688e81389b68c3d1223bc7b17e",
+      "comparison_requirement_slot:v1:3ded9860eac5d493df65f76204a9ad21f5e4e0e4ae54da7f130512f816799bb7",
+      "comparison_requirement_slot:v1:4b88b22d13872c81f27e43cac2a5a99679b0f2aeb9250791352f44c6d39cb46d",
+      "comparison_requirement_slot:v1:4ea3099ddd4f074334eacabcae72b571ecc5703047b21a47632671d145b35a17",
+      "comparison_requirement_slot:v1:558140b211c8a92205250692a6c66ba394485b0e5d82ead4f4f5f5c6dee47ece",
+      "comparison_requirement_slot:v1:5757b665cc97de766986808825acdf4b6ecd752b6f0b85064d5774a952bf118b",
+      "comparison_requirement_slot:v1:6207f58623985ca89d38ddf43d0d18b1c68db7a1a33c0f58068d7d76e23be152",
+      "comparison_requirement_slot:v1:71df0f9c44630ce36d86cc6deede2915f94e5edebfb93b7828a87bd2c363f3da",
+      "comparison_requirement_slot:v1:7233737abcd0d84f9c35455f9f2443c1e63f25fd7673b36c3cff365fab06db0a",
+      "comparison_requirement_slot:v1:7512d47fdfed1a65cf86de6ec257aa83e93631fd27fb9631d3ca17c013dabeee",
+      "comparison_requirement_slot:v1:75da38bc9db3b67bf035311f1fe39436b5bd687d189e2902c3dd02eea1566339",
+      "comparison_requirement_slot:v1:801d99e3e71cf5b56c0e585714590d366649a2bacc3d39e416626ee34a0176d3",
+      "comparison_requirement_slot:v1:859fc464fa9e389c18a57376e8347010b6db9b2472dad4c0c9c47bd716747287",
+      "comparison_requirement_slot:v1:aa95c6b43c4576a5771a5011f292c7d27d9f0426e22b7bb78b746867bb38f29e",
+      "comparison_requirement_slot:v1:dec2ca3c5a56fd0bc48f114f14770fa23b53e927b246396e6edfad23fba15cec",
+      "comparison_requirement_slot:v1:e82ebbf72ca5fdb9df04e57b38f03fde0580dab26678027f92488562ed6ac0d8",
+      "comparison_requirement_slot:v1:f9ec10936eb6617763fd481ca78304b5b4dab0ce167c18dbc572ced970ad1628",
+      "comparison_requirement_slot:v1:fb3015044d6c951befe82d64f1dbde6a6a2da808a6dd6aa7665491feb63ae945"
+    ],
+    "evidence_reuse": {
+      "allow_existing": false,
+      "allow_across_questions": true,
+      "excluded_observation_ids": [],
+      "excluded_experiment_ids": [],
+      "require_new": []
+    },
+    "matching_covariates": [],
+    "priority_weight": 1,
+    "hard_required": true,
+    "rationale": "Source-bound suggestion from variant_candidate; Each 2-unit treated panel measures T and L with its assay controls/QC; each 1-unit donor mock measures T and L with its assay controls/QC",
+    "policy_version": "section9-declared-v1:complete-design-by-variant",
+    "motivating_observation_ids": [],
+    "motivating_configuration_ids": [
+      "comparison_design_configuration:v1:7707169e49c942f91f557715a735e84f7e8cfe606a9737bbe1f8662597193d06",
+      "comparison_design_configuration:v1:ae601a1e9e0d367604b25df53b1666dfba2e70d9d04618e78f0e374686971ec3"
+    ],
+    "motivating_prediction_ids": [],
+    "planning_status": "unplanned",
+    "evidence_status": "no_measurements",
+    "remaining_gaps": [
+      "prospective_measurements_required"
+    ],
+    "record_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+    "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+    "construction_status": "complete"
+  },
+  {
+    "record_type": "comparison_requirement_slot",
+    "schema_version": "1",
+    "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+    "donor_id": "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c",
+    "arm_id": "noncarrier",
+    "design_id": {
+      "value": "comparison_design:v1:fcf6124cf42b8807e941001e5d4c78b0a61f0d71f387575b7dbf62ecb07b2390",
+      "reason": null
+    },
+    "endpoint_id": "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0",
+    "locus_id": {
+      "value": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "control_role": "measurement",
+    "replicate_position": 1,
+    "allowed_observation_ids": [],
+    "allowed_action_ids": [
+      "comparison_action:v1:6de218c4ca6168f3fb950ca54c50a00722a756c89f74eee986e8f75d797b4ebb"
+    ],
+    "record_id": "comparison_requirement_slot:v1:25ef9ed9456d5879e367407a2363d4720543bbf0c1791dcf254314c10ad563c9",
+    "slot_id": "comparison_requirement_slot:v1:25ef9ed9456d5879e367407a2363d4720543bbf0c1791dcf254314c10ad563c9"
+  },
+  {
+    "record_type": "comparison_requirement_slot",
+    "schema_version": "1",
+    "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+    "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "arm_id": "carrier",
+    "design_id": {
+      "value": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+      "reason": null
+    },
+    "endpoint_id": "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0",
+    "locus_id": {
+      "value": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "control_role": "assay_qc",
+    "replicate_position": 1,
+    "allowed_observation_ids": [],
+    "allowed_action_ids": [
+      "comparison_action:v1:84e2c6b30f9d66525e0c1c549a6b8c8dc16dbddbee0c7b3f0cb2cc9525b8bbcd"
+    ],
+    "record_id": "comparison_requirement_slot:v1:2874a863d544edb8d501944b29b87f388ddcd2f3c0546e1dde6c9f4c5063008c",
+    "slot_id": "comparison_requirement_slot:v1:2874a863d544edb8d501944b29b87f388ddcd2f3c0546e1dde6c9f4c5063008c"
+  },
+  {
+    "record_type": "comparison_requirement_slot",
+    "schema_version": "1",
+    "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+    "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "arm_id": "carrier",
+    "design_id": {
+      "value": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+      "reason": null
+    },
+    "endpoint_id": "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0",
+    "locus_id": {
+      "value": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "control_role": "measurement",
+    "replicate_position": 1,
+    "allowed_observation_ids": [],
+    "allowed_action_ids": [
+      "comparison_action:v1:84e2c6b30f9d66525e0c1c549a6b8c8dc16dbddbee0c7b3f0cb2cc9525b8bbcd"
+    ],
+    "record_id": "comparison_requirement_slot:v1:3d68ff3b61055c77aa27576021df7b43749061688e81389b68c3d1223bc7b17e",
+    "slot_id": "comparison_requirement_slot:v1:3d68ff3b61055c77aa27576021df7b43749061688e81389b68c3d1223bc7b17e"
+  },
+  {
+    "record_type": "comparison_requirement_slot",
+    "schema_version": "1",
+    "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+    "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "arm_id": "carrier",
+    "design_id": {
+      "value": null,
+      "reason": "shared design-neutral mock"
+    },
+    "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+    "locus_id": {
+      "value": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "control_role": "mock",
+    "replicate_position": 1,
+    "allowed_observation_ids": [],
+    "allowed_action_ids": [
+      "comparison_action:v1:348e1e631f128b721be4f35e9bd91d4b351a211c49859c76d83ec5cbe282ba87"
+    ],
+    "record_id": "comparison_requirement_slot:v1:3ded9860eac5d493df65f76204a9ad21f5e4e0e4ae54da7f130512f816799bb7",
+    "slot_id": "comparison_requirement_slot:v1:3ded9860eac5d493df65f76204a9ad21f5e4e0e4ae54da7f130512f816799bb7"
+  },
+  {
+    "record_type": "comparison_requirement_slot",
+    "schema_version": "1",
+    "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+    "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "arm_id": "carrier",
+    "design_id": {
+      "value": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+      "reason": null
+    },
+    "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+    "locus_id": {
+      "value": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "control_role": "assay_qc",
+    "replicate_position": 1,
+    "allowed_observation_ids": [],
+    "allowed_action_ids": [
+      "comparison_action:v1:84e2c6b30f9d66525e0c1c549a6b8c8dc16dbddbee0c7b3f0cb2cc9525b8bbcd"
+    ],
+    "record_id": "comparison_requirement_slot:v1:4b88b22d13872c81f27e43cac2a5a99679b0f2aeb9250791352f44c6d39cb46d",
+    "slot_id": "comparison_requirement_slot:v1:4b88b22d13872c81f27e43cac2a5a99679b0f2aeb9250791352f44c6d39cb46d"
+  },
+  {
+    "record_type": "comparison_requirement_slot",
+    "schema_version": "1",
+    "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+    "donor_id": "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c",
+    "arm_id": "noncarrier",
+    "design_id": {
+      "value": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+      "reason": null
+    },
+    "endpoint_id": "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0",
+    "locus_id": {
+      "value": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "control_role": "measurement",
+    "replicate_position": 1,
+    "allowed_observation_ids": [],
+    "allowed_action_ids": [
+      "comparison_action:v1:77223e711a50d875a57c1bf780cd70ca2b8d540ddc708b704fa4e7e55b007295"
+    ],
+    "record_id": "comparison_requirement_slot:v1:4ea3099ddd4f074334eacabcae72b571ecc5703047b21a47632671d145b35a17",
+    "slot_id": "comparison_requirement_slot:v1:4ea3099ddd4f074334eacabcae72b571ecc5703047b21a47632671d145b35a17"
+  },
+  {
+    "record_type": "comparison_requirement_slot",
+    "schema_version": "1",
+    "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+    "donor_id": "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c",
+    "arm_id": "noncarrier",
+    "design_id": {
+      "value": null,
+      "reason": "shared design-neutral mock"
+    },
+    "endpoint_id": "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0",
+    "locus_id": {
+      "value": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "control_role": "mock",
+    "replicate_position": 1,
+    "allowed_observation_ids": [],
+    "allowed_action_ids": [
+      "comparison_action:v1:3020679240cbbe4828b8d5bd3ca936d97010e31ed3d29f0f0ddfa16ea3406b8a"
+    ],
+    "record_id": "comparison_requirement_slot:v1:558140b211c8a92205250692a6c66ba394485b0e5d82ead4f4f5f5c6dee47ece",
+    "slot_id": "comparison_requirement_slot:v1:558140b211c8a92205250692a6c66ba394485b0e5d82ead4f4f5f5c6dee47ece"
+  },
+  {
+    "record_type": "comparison_requirement_slot",
+    "schema_version": "1",
+    "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+    "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "arm_id": "carrier",
+    "design_id": {
+      "value": null,
+      "reason": "shared design-neutral mock"
+    },
+    "endpoint_id": "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0",
+    "locus_id": {
+      "value": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "control_role": "mock",
+    "replicate_position": 1,
+    "allowed_observation_ids": [],
+    "allowed_action_ids": [
+      "comparison_action:v1:348e1e631f128b721be4f35e9bd91d4b351a211c49859c76d83ec5cbe282ba87"
+    ],
+    "record_id": "comparison_requirement_slot:v1:5757b665cc97de766986808825acdf4b6ecd752b6f0b85064d5774a952bf118b",
+    "slot_id": "comparison_requirement_slot:v1:5757b665cc97de766986808825acdf4b6ecd752b6f0b85064d5774a952bf118b"
+  },
+  {
+    "record_type": "comparison_requirement_slot",
+    "schema_version": "1",
+    "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+    "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "arm_id": "carrier",
+    "design_id": {
+      "value": "comparison_design:v1:fcf6124cf42b8807e941001e5d4c78b0a61f0d71f387575b7dbf62ecb07b2390",
+      "reason": null
+    },
+    "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+    "locus_id": {
+      "value": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "control_role": "assay_qc",
+    "replicate_position": 1,
+    "allowed_observation_ids": [],
+    "allowed_action_ids": [
+      "comparison_action:v1:6b590bf2a9b335bc1193016572717b3302635dc2df2782a8671ea4631f79fa25"
+    ],
+    "record_id": "comparison_requirement_slot:v1:6207f58623985ca89d38ddf43d0d18b1c68db7a1a33c0f58068d7d76e23be152",
+    "slot_id": "comparison_requirement_slot:v1:6207f58623985ca89d38ddf43d0d18b1c68db7a1a33c0f58068d7d76e23be152"
+  },
+  {
+    "record_type": "comparison_requirement_slot",
+    "schema_version": "1",
+    "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+    "donor_id": "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c",
+    "arm_id": "noncarrier",
+    "design_id": {
+      "value": "comparison_design:v1:fcf6124cf42b8807e941001e5d4c78b0a61f0d71f387575b7dbf62ecb07b2390",
+      "reason": null
+    },
+    "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+    "locus_id": {
+      "value": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "control_role": "intended_activity",
+    "replicate_position": 1,
+    "allowed_observation_ids": [],
+    "allowed_action_ids": [
+      "comparison_action:v1:6de218c4ca6168f3fb950ca54c50a00722a756c89f74eee986e8f75d797b4ebb"
+    ],
+    "record_id": "comparison_requirement_slot:v1:71df0f9c44630ce36d86cc6deede2915f94e5edebfb93b7828a87bd2c363f3da",
+    "slot_id": "comparison_requirement_slot:v1:71df0f9c44630ce36d86cc6deede2915f94e5edebfb93b7828a87bd2c363f3da"
+  },
+  {
+    "record_type": "comparison_requirement_slot",
+    "schema_version": "1",
+    "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+    "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "arm_id": "carrier",
+    "design_id": {
+      "value": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+      "reason": null
+    },
+    "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+    "locus_id": {
+      "value": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "control_role": "intended_activity",
+    "replicate_position": 1,
+    "allowed_observation_ids": [],
+    "allowed_action_ids": [
+      "comparison_action:v1:84e2c6b30f9d66525e0c1c549a6b8c8dc16dbddbee0c7b3f0cb2cc9525b8bbcd"
+    ],
+    "record_id": "comparison_requirement_slot:v1:7233737abcd0d84f9c35455f9f2443c1e63f25fd7673b36c3cff365fab06db0a",
+    "slot_id": "comparison_requirement_slot:v1:7233737abcd0d84f9c35455f9f2443c1e63f25fd7673b36c3cff365fab06db0a"
+  },
+  {
+    "record_type": "comparison_requirement_slot",
+    "schema_version": "1",
+    "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+    "donor_id": "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c",
+    "arm_id": "noncarrier",
+    "design_id": {
+      "value": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+      "reason": null
+    },
+    "endpoint_id": "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0",
+    "locus_id": {
+      "value": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "control_role": "assay_qc",
+    "replicate_position": 1,
+    "allowed_observation_ids": [],
+    "allowed_action_ids": [
+      "comparison_action:v1:77223e711a50d875a57c1bf780cd70ca2b8d540ddc708b704fa4e7e55b007295"
+    ],
+    "record_id": "comparison_requirement_slot:v1:7512d47fdfed1a65cf86de6ec257aa83e93631fd27fb9631d3ca17c013dabeee",
+    "slot_id": "comparison_requirement_slot:v1:7512d47fdfed1a65cf86de6ec257aa83e93631fd27fb9631d3ca17c013dabeee"
+  },
+  {
+    "record_type": "comparison_requirement_slot",
+    "schema_version": "1",
+    "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+    "donor_id": "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c",
+    "arm_id": "noncarrier",
+    "design_id": {
+      "value": "comparison_design:v1:fcf6124cf42b8807e941001e5d4c78b0a61f0d71f387575b7dbf62ecb07b2390",
+      "reason": null
+    },
+    "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+    "locus_id": {
+      "value": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "control_role": "assay_qc",
+    "replicate_position": 1,
+    "allowed_observation_ids": [],
+    "allowed_action_ids": [
+      "comparison_action:v1:6de218c4ca6168f3fb950ca54c50a00722a756c89f74eee986e8f75d797b4ebb"
+    ],
+    "record_id": "comparison_requirement_slot:v1:75da38bc9db3b67bf035311f1fe39436b5bd687d189e2902c3dd02eea1566339",
+    "slot_id": "comparison_requirement_slot:v1:75da38bc9db3b67bf035311f1fe39436b5bd687d189e2902c3dd02eea1566339"
+  },
+  {
+    "record_type": "comparison_requirement_slot",
+    "schema_version": "1",
+    "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+    "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "arm_id": "carrier",
+    "design_id": {
+      "value": "comparison_design:v1:fcf6124cf42b8807e941001e5d4c78b0a61f0d71f387575b7dbf62ecb07b2390",
+      "reason": null
+    },
+    "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+    "locus_id": {
+      "value": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "control_role": "intended_activity",
+    "replicate_position": 1,
+    "allowed_observation_ids": [],
+    "allowed_action_ids": [
+      "comparison_action:v1:6b590bf2a9b335bc1193016572717b3302635dc2df2782a8671ea4631f79fa25"
+    ],
+    "record_id": "comparison_requirement_slot:v1:801d99e3e71cf5b56c0e585714590d366649a2bacc3d39e416626ee34a0176d3",
+    "slot_id": "comparison_requirement_slot:v1:801d99e3e71cf5b56c0e585714590d366649a2bacc3d39e416626ee34a0176d3"
+  },
+  {
+    "record_type": "comparison_requirement_slot",
+    "schema_version": "1",
+    "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+    "donor_id": "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c",
+    "arm_id": "noncarrier",
+    "design_id": {
+      "value": "comparison_design:v1:fcf6124cf42b8807e941001e5d4c78b0a61f0d71f387575b7dbf62ecb07b2390",
+      "reason": null
+    },
+    "endpoint_id": "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0",
+    "locus_id": {
+      "value": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "control_role": "assay_qc",
+    "replicate_position": 1,
+    "allowed_observation_ids": [],
+    "allowed_action_ids": [
+      "comparison_action:v1:6de218c4ca6168f3fb950ca54c50a00722a756c89f74eee986e8f75d797b4ebb"
+    ],
+    "record_id": "comparison_requirement_slot:v1:859fc464fa9e389c18a57376e8347010b6db9b2472dad4c0c9c47bd716747287",
+    "slot_id": "comparison_requirement_slot:v1:859fc464fa9e389c18a57376e8347010b6db9b2472dad4c0c9c47bd716747287"
+  },
+  {
+    "record_type": "comparison_requirement_slot",
+    "schema_version": "1",
+    "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+    "donor_id": "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c",
+    "arm_id": "noncarrier",
+    "design_id": {
+      "value": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+      "reason": null
+    },
+    "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+    "locus_id": {
+      "value": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "control_role": "intended_activity",
+    "replicate_position": 1,
+    "allowed_observation_ids": [],
+    "allowed_action_ids": [
+      "comparison_action:v1:77223e711a50d875a57c1bf780cd70ca2b8d540ddc708b704fa4e7e55b007295"
+    ],
+    "record_id": "comparison_requirement_slot:v1:aa95c6b43c4576a5771a5011f292c7d27d9f0426e22b7bb78b746867bb38f29e",
+    "slot_id": "comparison_requirement_slot:v1:aa95c6b43c4576a5771a5011f292c7d27d9f0426e22b7bb78b746867bb38f29e"
+  },
+  {
+    "record_type": "comparison_requirement_slot",
+    "schema_version": "1",
+    "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+    "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "arm_id": "carrier",
+    "design_id": {
+      "value": "comparison_design:v1:fcf6124cf42b8807e941001e5d4c78b0a61f0d71f387575b7dbf62ecb07b2390",
+      "reason": null
+    },
+    "endpoint_id": "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0",
+    "locus_id": {
+      "value": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "control_role": "measurement",
+    "replicate_position": 1,
+    "allowed_observation_ids": [],
+    "allowed_action_ids": [
+      "comparison_action:v1:6b590bf2a9b335bc1193016572717b3302635dc2df2782a8671ea4631f79fa25"
+    ],
+    "record_id": "comparison_requirement_slot:v1:dec2ca3c5a56fd0bc48f114f14770fa23b53e927b246396e6edfad23fba15cec",
+    "slot_id": "comparison_requirement_slot:v1:dec2ca3c5a56fd0bc48f114f14770fa23b53e927b246396e6edfad23fba15cec"
+  },
+  {
+    "record_type": "comparison_requirement_slot",
+    "schema_version": "1",
+    "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+    "donor_id": "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c",
+    "arm_id": "noncarrier",
+    "design_id": {
+      "value": null,
+      "reason": "shared design-neutral mock"
+    },
+    "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+    "locus_id": {
+      "value": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "control_role": "mock",
+    "replicate_position": 1,
+    "allowed_observation_ids": [],
+    "allowed_action_ids": [
+      "comparison_action:v1:3020679240cbbe4828b8d5bd3ca936d97010e31ed3d29f0f0ddfa16ea3406b8a"
+    ],
+    "record_id": "comparison_requirement_slot:v1:e82ebbf72ca5fdb9df04e57b38f03fde0580dab26678027f92488562ed6ac0d8",
+    "slot_id": "comparison_requirement_slot:v1:e82ebbf72ca5fdb9df04e57b38f03fde0580dab26678027f92488562ed6ac0d8"
+  },
+  {
+    "record_type": "comparison_requirement_slot",
+    "schema_version": "1",
+    "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+    "donor_id": "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c",
+    "arm_id": "noncarrier",
+    "design_id": {
+      "value": "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136",
+      "reason": null
+    },
+    "endpoint_id": "comparison_endpoint_definition:v1:4c16fc6dc7fd9d03c904470af848344ccd65628714b17c4475583699ca514a45",
+    "locus_id": {
+      "value": "comparison_intended_locus:v1:1aea40e335757bfcf94ef24c54bcad4f46e36e205080cba545e54502fc2227b4",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "control_role": "assay_qc",
+    "replicate_position": 1,
+    "allowed_observation_ids": [],
+    "allowed_action_ids": [
+      "comparison_action:v1:77223e711a50d875a57c1bf780cd70ca2b8d540ddc708b704fa4e7e55b007295"
+    ],
+    "record_id": "comparison_requirement_slot:v1:f9ec10936eb6617763fd481ca78304b5b4dab0ce167c18dbc572ced970ad1628",
+    "slot_id": "comparison_requirement_slot:v1:f9ec10936eb6617763fd481ca78304b5b4dab0ce167c18dbc572ced970ad1628"
+  },
+  {
+    "record_type": "comparison_requirement_slot",
+    "schema_version": "1",
+    "question_id": "comparison_question:v1:1bb2415e8a83f27f22820248d62ec66bba12e01b08c37e8f817043bf67ed0769",
+    "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "arm_id": "carrier",
+    "design_id": {
+      "value": "comparison_design:v1:fcf6124cf42b8807e941001e5d4c78b0a61f0d71f387575b7dbf62ecb07b2390",
+      "reason": null
+    },
+    "endpoint_id": "comparison_endpoint_definition:v1:be6162ea6ab10fd9737c618f074d8f95021a3b84c73d3107e41b80a0b41a58a0",
+    "locus_id": {
+      "value": "comparison_locus:v1:e2072aacc2734451d399ee9ef7c6c74f13392a46e422a637de94ba3dad499197",
+      "reason": null
+    },
+    "context_id": "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54",
+    "control_role": "assay_qc",
+    "replicate_position": 1,
+    "allowed_observation_ids": [],
+    "allowed_action_ids": [
+      "comparison_action:v1:6b590bf2a9b335bc1193016572717b3302635dc2df2782a8671ea4631f79fa25"
+    ],
+    "record_id": "comparison_requirement_slot:v1:fb3015044d6c951befe82d64f1dbde6a6a2da808a6dd6aa7665491feb63ae945",
+    "slot_id": "comparison_requirement_slot:v1:fb3015044d6c951befe82d64f1dbde6a6a2da808a6dd6aa7665491feb63ae945"
+  },
+  {
+    "record_type": "comparison_resource",
+    "schema_version": "1",
+    "resource_type": "treatment",
+    "cost": 1,
+    "cost_unit": "simulation_units",
+    "cost_scale": 1,
+    "sharing_key": "section9-declared-v1:treatment:comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c:comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136:comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734:1",
+    "capacities": [
+      {
+        "dimension": "uses",
+        "capacity": {
+          "kind": "finite",
+          "quantity": 1
+        }
+      }
+    ],
+    "activation_rule": "on_use",
+    "compatibility": {
+      "donor_ids": [
+        "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c"
+      ],
+      "design_ids": [
+        "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136"
+      ],
+      "context_ids": [
+        "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+      ],
+      "batch_ids": [
+        "section9-new-batch"
+      ],
+      "assay_capability_ids": [],
+      "timepoints": [],
+      "endpoint_ids": [],
+      "locus_ids": []
+    },
+    "pool_id": {
+      "value": null,
+      "reason": "one named instance"
+    },
+    "instance_index": 0,
+    "max_pool_instances": 1,
+    "record_id": "comparison_resource:v1:2c21c7c46411b1e1c1a2a133d9533294981e5d81e4b877d8dd96f0c6c66f8d71",
+    "resource_id": "comparison_resource:v1:2c21c7c46411b1e1c1a2a133d9533294981e5d81e4b877d8dd96f0c6c66f8d71"
+  },
+  {
+    "record_type": "comparison_resource",
+    "schema_version": "1",
+    "resource_type": "assay_library",
+    "cost": 2,
+    "cost_unit": "simulation_units",
+    "cost_scale": 1,
+    "sharing_key": "section9-declared-v1:assay_library:comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d:comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136:comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734:1",
+    "capacities": [
+      {
+        "dimension": "uses",
+        "capacity": {
+          "kind": "finite",
+          "quantity": 1
+        }
+      }
+    ],
+    "activation_rule": "on_use",
+    "compatibility": {
+      "donor_ids": [
+        "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d"
+      ],
+      "design_ids": [
+        "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136"
+      ],
+      "context_ids": [
+        "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+      ],
+      "batch_ids": [
+        "section9-new-batch"
+      ],
+      "assay_capability_ids": [
+        "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734"
+      ],
+      "timepoints": [],
+      "endpoint_ids": [],
+      "locus_ids": []
+    },
+    "pool_id": {
+      "value": null,
+      "reason": "one named instance"
+    },
+    "instance_index": 0,
+    "max_pool_instances": 1,
+    "record_id": "comparison_resource:v1:3e080a5863b693fb177f760ee531ff3116e878ae84ae85e4ba7893111dd762b2",
+    "resource_id": "comparison_resource:v1:3e080a5863b693fb177f760ee531ff3116e878ae84ae85e4ba7893111dd762b2"
+  },
+  {
+    "record_type": "comparison_resource",
+    "schema_version": "1",
+    "resource_type": "donor_activation",
+    "cost": 1,
+    "cost_unit": "simulation_units",
+    "cost_scale": 1,
+    "sharing_key": "section9-declared-v1:donor_activation:comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "capacities": [
+      {
+        "dimension": "uses",
+        "capacity": {
+          "kind": "unbounded",
+          "justification": "Explicit nonconsumable activation package; no extra assay capacity"
+        }
+      }
+    ],
+    "activation_rule": "on_use",
+    "compatibility": {
+      "donor_ids": [
+        "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d"
+      ],
+      "design_ids": [],
+      "context_ids": [
+        "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+      ],
+      "batch_ids": [
+        "section9-new-batch"
+      ],
+      "assay_capability_ids": [],
+      "timepoints": [],
+      "endpoint_ids": [],
+      "locus_ids": []
+    },
+    "pool_id": {
+      "value": null,
+      "reason": "one named instance"
+    },
+    "instance_index": 0,
+    "max_pool_instances": 1,
+    "record_id": "comparison_resource:v1:44848d3928dbfdb72fa74e66186e8732f30d01279efb0364a59694fee9170d1a",
+    "resource_id": "comparison_resource:v1:44848d3928dbfdb72fa74e66186e8732f30d01279efb0364a59694fee9170d1a"
+  },
+  {
+    "record_type": "comparison_resource",
+    "schema_version": "1",
+    "resource_type": "assay_library",
+    "cost": 2,
+    "cost_unit": "simulation_units",
+    "cost_scale": 1,
+    "sharing_key": "section9-declared-v1:assay_library:comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c:comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136:comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734:1",
+    "capacities": [
+      {
+        "dimension": "uses",
+        "capacity": {
+          "kind": "finite",
+          "quantity": 1
+        }
+      }
+    ],
+    "activation_rule": "on_use",
+    "compatibility": {
+      "donor_ids": [
+        "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c"
+      ],
+      "design_ids": [
+        "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136"
+      ],
+      "context_ids": [
+        "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+      ],
+      "batch_ids": [
+        "section9-new-batch"
+      ],
+      "assay_capability_ids": [
+        "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734"
+      ],
+      "timepoints": [],
+      "endpoint_ids": [],
+      "locus_ids": []
+    },
+    "pool_id": {
+      "value": null,
+      "reason": "one named instance"
+    },
+    "instance_index": 0,
+    "max_pool_instances": 1,
+    "record_id": "comparison_resource:v1:5bac4ad8443d23411a968bb185d03fa034f130077102a6987efe96e81e36e2d9",
+    "resource_id": "comparison_resource:v1:5bac4ad8443d23411a968bb185d03fa034f130077102a6987efe96e81e36e2d9"
+  },
+  {
+    "record_type": "comparison_resource",
+    "schema_version": "1",
+    "resource_type": "treatment",
+    "cost": 1,
+    "cost_unit": "simulation_units",
+    "cost_scale": 1,
+    "sharing_key": "section9-declared-v1:treatment:comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d:comparison_design:v1:fcf6124cf42b8807e941001e5d4c78b0a61f0d71f387575b7dbf62ecb07b2390:comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734:1",
+    "capacities": [
+      {
+        "dimension": "uses",
+        "capacity": {
+          "kind": "finite",
+          "quantity": 1
+        }
+      }
+    ],
+    "activation_rule": "on_use",
+    "compatibility": {
+      "donor_ids": [
+        "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d"
+      ],
+      "design_ids": [
+        "comparison_design:v1:fcf6124cf42b8807e941001e5d4c78b0a61f0d71f387575b7dbf62ecb07b2390"
+      ],
+      "context_ids": [
+        "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+      ],
+      "batch_ids": [
+        "section9-new-batch"
+      ],
+      "assay_capability_ids": [],
+      "timepoints": [],
+      "endpoint_ids": [],
+      "locus_ids": []
+    },
+    "pool_id": {
+      "value": null,
+      "reason": "one named instance"
+    },
+    "instance_index": 0,
+    "max_pool_instances": 1,
+    "record_id": "comparison_resource:v1:6147e118117061ae50037dd979d38fbb2251edd44df08a46c66639b1fc555f12",
+    "resource_id": "comparison_resource:v1:6147e118117061ae50037dd979d38fbb2251edd44df08a46c66639b1fc555f12"
+  },
+  {
+    "record_type": "comparison_resource",
+    "schema_version": "1",
+    "resource_type": "donor_activation",
+    "cost": 1,
+    "cost_unit": "simulation_units",
+    "cost_scale": 1,
+    "sharing_key": "section9-declared-v1:donor_activation:comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c",
+    "capacities": [
+      {
+        "dimension": "uses",
+        "capacity": {
+          "kind": "unbounded",
+          "justification": "Explicit nonconsumable activation package; no extra assay capacity"
+        }
+      }
+    ],
+    "activation_rule": "on_use",
+    "compatibility": {
+      "donor_ids": [
+        "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c"
+      ],
+      "design_ids": [],
+      "context_ids": [
+        "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+      ],
+      "batch_ids": [
+        "section9-new-batch"
+      ],
+      "assay_capability_ids": [],
+      "timepoints": [],
+      "endpoint_ids": [],
+      "locus_ids": []
+    },
+    "pool_id": {
+      "value": null,
+      "reason": "one named instance"
+    },
+    "instance_index": 0,
+    "max_pool_instances": 1,
+    "record_id": "comparison_resource:v1:62b423b36bbcd2a8b183546975d8c2a043a731516d2e7afcdf69e0ac0eeb4775",
+    "resource_id": "comparison_resource:v1:62b423b36bbcd2a8b183546975d8c2a043a731516d2e7afcdf69e0ac0eeb4775"
+  },
+  {
+    "record_type": "comparison_resource",
+    "schema_version": "1",
+    "resource_type": "specimen_preparation",
+    "cost": 0,
+    "cost_unit": "simulation_units",
+    "cost_scale": 1,
+    "sharing_key": "section9-declared-v1:specimen_preparation:comparison_specimen:v1:fa85df81c2c648b9b9b9643a0430ab9333f042cccd81a16ce3c719f8b406e603",
+    "capacities": [
+      {
+        "dimension": "uses",
+        "capacity": {
+          "kind": "finite",
+          "quantity": 100
+        }
+      }
+    ],
+    "activation_rule": "on_use",
+    "compatibility": {
+      "donor_ids": [
+        "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c"
+      ],
+      "design_ids": [],
+      "context_ids": [
+        "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+      ],
+      "batch_ids": [
+        "section9-new-batch"
+      ],
+      "assay_capability_ids": [],
+      "timepoints": [],
+      "endpoint_ids": [],
+      "locus_ids": []
+    },
+    "pool_id": {
+      "value": null,
+      "reason": "one named instance"
+    },
+    "instance_index": 0,
+    "max_pool_instances": 1,
+    "record_id": "comparison_resource:v1:6a1d99cdfa78904033e71da3bd95d08adaaba81cd081b153871272890226d3bc",
+    "resource_id": "comparison_resource:v1:6a1d99cdfa78904033e71da3bd95d08adaaba81cd081b153871272890226d3bc"
+  },
+  {
+    "record_type": "comparison_resource",
+    "schema_version": "1",
+    "resource_type": "specimen_preparation",
+    "cost": 0,
+    "cost_unit": "simulation_units",
+    "cost_scale": 1,
+    "sharing_key": "section9-declared-v1:specimen_preparation:comparison_specimen:v1:8e01ead401738b59954e973ba110603c25040b35268aba51c9f09cd1d7281cb4",
+    "capacities": [
+      {
+        "dimension": "uses",
+        "capacity": {
+          "kind": "finite",
+          "quantity": 100
+        }
+      }
+    ],
+    "activation_rule": "on_use",
+    "compatibility": {
+      "donor_ids": [
+        "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d"
+      ],
+      "design_ids": [],
+      "context_ids": [
+        "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+      ],
+      "batch_ids": [
+        "section9-new-batch"
+      ],
+      "assay_capability_ids": [],
+      "timepoints": [],
+      "endpoint_ids": [],
+      "locus_ids": []
+    },
+    "pool_id": {
+      "value": null,
+      "reason": "one named instance"
+    },
+    "instance_index": 0,
+    "max_pool_instances": 1,
+    "record_id": "comparison_resource:v1:73436b5128bb9a156b2c233da9eeadfcb0e131990096c3c5cbc286f89f8a52d3",
+    "resource_id": "comparison_resource:v1:73436b5128bb9a156b2c233da9eeadfcb0e131990096c3c5cbc286f89f8a52d3"
+  },
+  {
+    "record_type": "comparison_resource",
+    "schema_version": "1",
+    "resource_type": "mock_control",
+    "cost": 1,
+    "cost_unit": "simulation_units",
+    "cost_scale": 1,
+    "sharing_key": "section9-declared-v1:mock_control:comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d:None:comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734:1",
+    "capacities": [
+      {
+        "dimension": "uses",
+        "capacity": {
+          "kind": "finite",
+          "quantity": 1
+        }
+      }
+    ],
+    "activation_rule": "on_use",
+    "compatibility": {
+      "donor_ids": [
+        "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d"
+      ],
+      "design_ids": [],
+      "context_ids": [
+        "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+      ],
+      "batch_ids": [
+        "section9-new-batch"
+      ],
+      "assay_capability_ids": [
+        "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734"
+      ],
+      "timepoints": [],
+      "endpoint_ids": [],
+      "locus_ids": []
+    },
+    "pool_id": {
+      "value": null,
+      "reason": "one named instance"
+    },
+    "instance_index": 0,
+    "max_pool_instances": 1,
+    "record_id": "comparison_resource:v1:75e64113cdac3fe833c51fa7fc8ba5dabe74b04973c6637b5fdf431f5eb20e36",
+    "resource_id": "comparison_resource:v1:75e64113cdac3fe833c51fa7fc8ba5dabe74b04973c6637b5fdf431f5eb20e36"
+  },
+  {
+    "record_type": "comparison_resource",
+    "schema_version": "1",
+    "resource_type": "sequencing_batch",
+    "cost": 0,
+    "cost_unit": "simulation_units",
+    "cost_scale": 1,
+    "sharing_key": "section9-declared-v1:sequencing_batch:sequencing",
+    "capacities": [
+      {
+        "dimension": "uses",
+        "capacity": {
+          "kind": "finite",
+          "quantity": 6
+        }
+      }
+    ],
+    "activation_rule": "on_use",
+    "compatibility": {
+      "donor_ids": [],
+      "design_ids": [],
+      "context_ids": [
+        "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+      ],
+      "batch_ids": [
+        "section9-new-batch"
+      ],
+      "assay_capability_ids": [],
+      "timepoints": [],
+      "endpoint_ids": [],
+      "locus_ids": []
+    },
+    "pool_id": {
+      "value": "declared-sequencing:section9-declared-v1",
+      "reason": null
+    },
+    "instance_index": 0,
+    "max_pool_instances": 1,
+    "record_id": "comparison_resource:v1:828b710336b5384ef76748240e4e372c8fd991cf569df300e76c2585972be303",
+    "resource_id": "comparison_resource:v1:828b710336b5384ef76748240e4e372c8fd991cf569df300e76c2585972be303"
+  },
+  {
+    "record_type": "comparison_resource",
+    "schema_version": "1",
+    "resource_type": "assay_library",
+    "cost": 2,
+    "cost_unit": "simulation_units",
+    "cost_scale": 1,
+    "sharing_key": "section9-declared-v1:assay_library:comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c:comparison_design:v1:fcf6124cf42b8807e941001e5d4c78b0a61f0d71f387575b7dbf62ecb07b2390:comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734:1",
+    "capacities": [
+      {
+        "dimension": "uses",
+        "capacity": {
+          "kind": "finite",
+          "quantity": 1
+        }
+      }
+    ],
+    "activation_rule": "on_use",
+    "compatibility": {
+      "donor_ids": [
+        "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c"
+      ],
+      "design_ids": [
+        "comparison_design:v1:fcf6124cf42b8807e941001e5d4c78b0a61f0d71f387575b7dbf62ecb07b2390"
+      ],
+      "context_ids": [
+        "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+      ],
+      "batch_ids": [
+        "section9-new-batch"
+      ],
+      "assay_capability_ids": [
+        "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734"
+      ],
+      "timepoints": [],
+      "endpoint_ids": [],
+      "locus_ids": []
+    },
+    "pool_id": {
+      "value": null,
+      "reason": "one named instance"
+    },
+    "instance_index": 0,
+    "max_pool_instances": 1,
+    "record_id": "comparison_resource:v1:8453da2227f0ed095d46ee7884b414375ca43e045fc7e5e870a7dff2b309da92",
+    "resource_id": "comparison_resource:v1:8453da2227f0ed095d46ee7884b414375ca43e045fc7e5e870a7dff2b309da92"
+  },
+  {
+    "record_type": "comparison_resource",
+    "schema_version": "1",
+    "resource_type": "assay_library",
+    "cost": 2,
+    "cost_unit": "simulation_units",
+    "cost_scale": 1,
+    "sharing_key": "section9-declared-v1:assay_library:comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d:comparison_design:v1:fcf6124cf42b8807e941001e5d4c78b0a61f0d71f387575b7dbf62ecb07b2390:comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734:1",
+    "capacities": [
+      {
+        "dimension": "uses",
+        "capacity": {
+          "kind": "finite",
+          "quantity": 1
+        }
+      }
+    ],
+    "activation_rule": "on_use",
+    "compatibility": {
+      "donor_ids": [
+        "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d"
+      ],
+      "design_ids": [
+        "comparison_design:v1:fcf6124cf42b8807e941001e5d4c78b0a61f0d71f387575b7dbf62ecb07b2390"
+      ],
+      "context_ids": [
+        "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+      ],
+      "batch_ids": [
+        "section9-new-batch"
+      ],
+      "assay_capability_ids": [
+        "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734"
+      ],
+      "timepoints": [],
+      "endpoint_ids": [],
+      "locus_ids": []
+    },
+    "pool_id": {
+      "value": null,
+      "reason": "one named instance"
+    },
+    "instance_index": 0,
+    "max_pool_instances": 1,
+    "record_id": "comparison_resource:v1:848d3f9ced28a40f467f75486ee231ba4345a34fcbed3273db451144f0f99f67",
+    "resource_id": "comparison_resource:v1:848d3f9ced28a40f467f75486ee231ba4345a34fcbed3273db451144f0f99f67"
+  },
+  {
+    "record_type": "comparison_resource",
+    "schema_version": "1",
+    "resource_type": "mock_control",
+    "cost": 1,
+    "cost_unit": "simulation_units",
+    "cost_scale": 1,
+    "sharing_key": "section9-declared-v1:mock_control:comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c:None:comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734:1",
+    "capacities": [
+      {
+        "dimension": "uses",
+        "capacity": {
+          "kind": "finite",
+          "quantity": 1
+        }
+      }
+    ],
+    "activation_rule": "on_use",
+    "compatibility": {
+      "donor_ids": [
+        "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c"
+      ],
+      "design_ids": [],
+      "context_ids": [
+        "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+      ],
+      "batch_ids": [
+        "section9-new-batch"
+      ],
+      "assay_capability_ids": [
+        "comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734"
+      ],
+      "timepoints": [],
+      "endpoint_ids": [],
+      "locus_ids": []
+    },
+    "pool_id": {
+      "value": null,
+      "reason": "one named instance"
+    },
+    "instance_index": 0,
+    "max_pool_instances": 1,
+    "record_id": "comparison_resource:v1:8fc52aa09c33bf994725d49c06e391fd7113f8d24ee7e334626e21c5c4b1a4e1",
+    "resource_id": "comparison_resource:v1:8fc52aa09c33bf994725d49c06e391fd7113f8d24ee7e334626e21c5c4b1a4e1"
+  },
+  {
+    "record_type": "comparison_resource",
+    "schema_version": "1",
+    "resource_type": "treatment",
+    "cost": 1,
+    "cost_unit": "simulation_units",
+    "cost_scale": 1,
+    "sharing_key": "section9-declared-v1:treatment:comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c:comparison_design:v1:fcf6124cf42b8807e941001e5d4c78b0a61f0d71f387575b7dbf62ecb07b2390:comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734:1",
+    "capacities": [
+      {
+        "dimension": "uses",
+        "capacity": {
+          "kind": "finite",
+          "quantity": 1
+        }
+      }
+    ],
+    "activation_rule": "on_use",
+    "compatibility": {
+      "donor_ids": [
+        "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c"
+      ],
+      "design_ids": [
+        "comparison_design:v1:fcf6124cf42b8807e941001e5d4c78b0a61f0d71f387575b7dbf62ecb07b2390"
+      ],
+      "context_ids": [
+        "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+      ],
+      "batch_ids": [
+        "section9-new-batch"
+      ],
+      "assay_capability_ids": [],
+      "timepoints": [],
+      "endpoint_ids": [],
+      "locus_ids": []
+    },
+    "pool_id": {
+      "value": null,
+      "reason": "one named instance"
+    },
+    "instance_index": 0,
+    "max_pool_instances": 1,
+    "record_id": "comparison_resource:v1:a2f91433f080126a765aeaba554767e7e902485a31822f07e76ddbe7a0225bfa",
+    "resource_id": "comparison_resource:v1:a2f91433f080126a765aeaba554767e7e902485a31822f07e76ddbe7a0225bfa"
+  },
+  {
+    "record_type": "comparison_resource",
+    "schema_version": "1",
+    "resource_type": "treatment",
+    "cost": 1,
+    "cost_unit": "simulation_units",
+    "cost_scale": 1,
+    "sharing_key": "section9-declared-v1:treatment:comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d:comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136:comparison_assay_capability:v1:2d5276779c8971352c43f900793f1d6cd7798b415d19bd924b2a543b98370734:1",
+    "capacities": [
+      {
+        "dimension": "uses",
+        "capacity": {
+          "kind": "finite",
+          "quantity": 1
+        }
+      }
+    ],
+    "activation_rule": "on_use",
+    "compatibility": {
+      "donor_ids": [
+        "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d"
+      ],
+      "design_ids": [
+        "comparison_design:v1:9b109265a1e78f6fd86c86e2c8b732f548c9e5f95d6cee87688f63944778b136"
+      ],
+      "context_ids": [
+        "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+      ],
+      "batch_ids": [
+        "section9-new-batch"
+      ],
+      "assay_capability_ids": [],
+      "timepoints": [],
+      "endpoint_ids": [],
+      "locus_ids": []
+    },
+    "pool_id": {
+      "value": null,
+      "reason": "one named instance"
+    },
+    "instance_index": 0,
+    "max_pool_instances": 1,
+    "record_id": "comparison_resource:v1:a9164df9b83f35c0587c0c266cbc0afe254f5bb18e090229f166a357d6767d59",
+    "resource_id": "comparison_resource:v1:a9164df9b83f35c0587c0c266cbc0afe254f5bb18e090229f166a357d6767d59"
+  },
+  {
+    "record_type": "comparison_resource",
+    "schema_version": "1",
+    "resource_type": "study_setup",
+    "cost": 2,
+    "cost_unit": "simulation_units",
+    "cost_scale": 1,
+    "sharing_key": "section9-declared-v1:study_setup:study",
+    "capacities": [
+      {
+        "dimension": "uses",
+        "capacity": {
+          "kind": "unbounded",
+          "justification": "Explicit nonconsumable activation package; no extra assay capacity"
+        }
+      }
+    ],
+    "activation_rule": "nonempty_plan",
+    "compatibility": {
+      "donor_ids": [],
+      "design_ids": [],
+      "context_ids": [
+        "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+      ],
+      "batch_ids": [
+        "section9-new-batch"
+      ],
+      "assay_capability_ids": [],
+      "timepoints": [],
+      "endpoint_ids": [],
+      "locus_ids": []
+    },
+    "pool_id": {
+      "value": null,
+      "reason": "one named instance"
+    },
+    "instance_index": 0,
+    "max_pool_instances": 1,
+    "record_id": "comparison_resource:v1:b468da45a9f85df2f5f7c13b115d9525fa390866227d8741265ef35a98b881ef",
+    "resource_id": "comparison_resource:v1:b468da45a9f85df2f5f7c13b115d9525fa390866227d8741265ef35a98b881ef"
+  },
+  {
+    "record_type": "comparison_source_artifact",
+    "schema_version": "1",
+    "sha256": "bfb786c9fa9d6014d1d71b9931c1009075d84fcf35bab0a95516c3635a3ab574",
+    "source_id": "prospective-experiment-policy",
+    "release": "section9-declared-v1",
+    "uri": "urn:bes:experiment-policy:bfb786c9fa9d6014d1d71b9931c1009075d84fcf35bab0a95516c3635a3ab574",
+    "media_type": "application/json",
+    "scope": "complete_file",
+    "parent_artifact_id": {
+      "value": null,
+      "reason": "original declared policy"
+    },
+    "locator": {
+      "kind": "file",
+      "member": "experiment-policy.json"
+    },
+    "access": "synthetic",
+    "use_terms": "Declared prospective software planning assumptions",
+    "record_id": "comparison_source_artifact:v1:33079ca704ad10425f65a04fe00ca2cbaf0f57f15c7e0714b6d6ee03b94a0489",
+    "source_artifact_id": "comparison_source_artifact:v1:33079ca704ad10425f65a04fe00ca2cbaf0f57f15c7e0714b6d6ee03b94a0489"
+  },
+  {
+    "record_type": "comparison_specimen",
+    "schema_version": "1",
+    "donor_id": "comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "source_specimen_id": "declared-simulation:section9-declared-v1:comparison_donor:v1:d66116a802a8f2dcf6588bdd6bb1b3ae7bb5b86361faa7b90933e3d7754c578d",
+    "context_ids": [
+      "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+    ],
+    "availability": "simulation_assumption",
+    "permitted_use": {
+      "value": "Artificial software fixture only",
+      "reason": null
+    },
+    "use_authorized": true,
+    "capacity": 100,
+    "source_refs": [
+      {
+        "source_artifact_id": "comparison_source_artifact:v1:33079ca704ad10425f65a04fe00ca2cbaf0f57f15c7e0714b6d6ee03b94a0489",
+        "locator": {
+          "kind": "file",
+          "member": "experiment-policy.json"
+        },
+        "note": "Declared prospective capability, cost and specimen assumptions; no observed outcome"
+      }
+    ],
+    "record_id": "comparison_specimen:v1:8e01ead401738b59954e973ba110603c25040b35268aba51c9f09cd1d7281cb4",
+    "specimen_id": "comparison_specimen:v1:8e01ead401738b59954e973ba110603c25040b35268aba51c9f09cd1d7281cb4"
+  },
+  {
+    "record_type": "comparison_specimen",
+    "schema_version": "1",
+    "donor_id": "comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c",
+    "source_specimen_id": "declared-simulation:section9-declared-v1:comparison_donor:v1:b6400d5f4ce4b70217dcb20c9fe2a53c577c25a4b0167b73199b91c35807365c",
+    "context_ids": [
+      "comparison_experimental_context:v1:641fd75d450bbd8f78fa39970d127b7c9c8c8596de3fb13388a58eae2cec0f54"
+    ],
+    "availability": "simulation_assumption",
+    "permitted_use": {
+      "value": "Artificial software fixture only",
+      "reason": null
+    },
+    "use_authorized": true,
+    "capacity": 100,
+    "source_refs": [
+      {
+        "source_artifact_id": "comparison_source_artifact:v1:33079ca704ad10425f65a04fe00ca2cbaf0f57f15c7e0714b6d6ee03b94a0489",
+        "locator": {
+          "kind": "file",
+          "member": "experiment-policy.json"
+        },
+        "note": "Declared prospective capability, cost and specimen assumptions; no observed outcome"
+      }
+    ],
+    "record_id": "comparison_specimen:v1:fa85df81c2c648b9b9b9643a0430ab9333f042cccd81a16ce3c719f8b406e603",
+    "specimen_id": "comparison_specimen:v1:fa85df81c2c648b9b9b9643a0430ab9333f042cccd81a16ce3c719f8b406e603"
+  }
+]

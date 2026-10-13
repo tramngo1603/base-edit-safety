@@ -1,0 +1,66 @@
+{
+  "cas_offinder": {
+    "commit": "9816b94c20c4cba2e79b039e1e2a6dee684b7b66",
+    "patch_sha256": "69821dce797a3d57bf580d44f70e17929839861efd41aabbd2d591471c20cbfa",
+    "sha256": "3505e2a6f37f4ca366cce0293c1ad1396ce2208ed44bfd2dde435df77dcc869b",
+    "url": "https://codeload.github.com/snugel/cas-offinder/tar.gz/9816b94c20c4cba2e79b039e1e2a6dee684b7b66"
+  },
+  "python": {
+    "build": "20260203",
+    "sha256": "f9634ecb928a2c8f802968f6621d2c9bd277ecaf9759f533639ed71e53e86486",
+    "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20260203/cpython-3.12.12%2B20260203-aarch64-apple-darwin-install_only.tar.gz",
+    "version": "3.12.12"
+  },
+  "wheels": {
+    "cmake": {
+      "filename": "cmake-4.0.3-py3-none-macosx_10_10_universal2.whl",
+      "sha256": "f2adfb459747025f40f9d3bdd1f3a485d43e866c0c4eb66373d1fcd666b13e4a",
+      "version": "4.0.3"
+    },
+    "iniconfig": {
+      "filename": "iniconfig-2.3.0-py3-none-any.whl",
+      "sha256": "f631c04d2c48c52b84d0d0549c99ff3859c98df65b3101406327ecc7d53fbf12",
+      "version": "2.3.0"
+    },
+    "packaging": {
+      "filename": "packaging-26.3-py3-none-any.whl",
+      "sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c",
+      "version": "26.3"
+    },
+    "pluggy": {
+      "filename": "pluggy-1.6.0-py3-none-any.whl",
+      "sha256": "e920276dd6813095e9377c0bc5566d94c932c33b27a3e3945d8389c374dd4746",
+      "version": "1.6.0"
+    },
+    "psutil": {
+      "filename": "psutil-7.1.0-cp36-abi3-macosx_11_0_arm64.whl",
+      "sha256": "5d007560c8c372efdff9e4579c2846d71de737e4605f611437255e81efcca2c5",
+      "version": "7.1.0"
+    },
+    "pygments": {
+      "filename": "pygments-2.21.0-py3-none-any.whl",
+      "sha256": "2363c69b61c4a97c838da3b130dcd6468f4848992b21a82f2a63ec34377137d9",
+      "version": "2.21.0"
+    },
+    "pysam": {
+      "filename": "pysam-0.24.1-cp312-cp312-macosx_11_0_arm64.whl",
+      "sha256": "ceb448961fd35b5b90795d7c7c80b1b35592be7ae0127e28187e3f41c27e035b",
+      "version": "0.24.1"
+    },
+    "pytest": {
+      "filename": "pytest-8.4.2-py3-none-any.whl",
+      "sha256": "872f880de3fc3a5bdc88a11b39c9710c3497a547cfa9320bc3c5e62fbf272e79",
+      "version": "8.4.2"
+    },
+    "setuptools": {
+      "filename": "setuptools-80.9.0-py3-none-any.whl",
+      "sha256": "062d34222ad13e0cc312a4c02d73f059e86a4acbfbdea8f8f76b28c99f306922",
+      "version": "80.9.0"
+    },
+    "wheel": {
+      "filename": "wheel-0.47.0-py3-none-any.whl",
+      "sha256": "212281cab4dff978f6cedd499cd893e1f620791ca6ff7107cf270781e587eced",
+      "version": "0.47.0"
+    }
+  }
+}

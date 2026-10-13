@@ -1,0 +1,50 @@
+[
+  {
+    "candidate_id": "c1",
+    "adjudicated_outcome": "observed_positive",
+    "evidence_reference": "artificial:fixture:c1",
+    "adjudication_reason": "Declared artificial software expectation; no source measurement"
+  },
+  {
+    "candidate_id": "c2",
+    "adjudicated_outcome": "tested_no_signal",
+    "evidence_reference": "artificial:fixture:c2",
+    "adjudication_reason": "Declared artificial software expectation; no source measurement"
+  },
+  {
+    "candidate_id": "c3",
+    "adjudicated_outcome": "inconclusive",
+    "evidence_reference": "artificial:fixture:c3",
+    "adjudication_reason": "Declared artificial software expectation; no source measurement"
+  },
+  {
+    "candidate_id": "c4",
+    "adjudicated_outcome": "observed_positive",
+    "evidence_reference": "artificial:fixture:c4",
+    "adjudication_reason": "Declared artificial software expectation; no source measurement"
+  },
+  {
+    "candidate_id": "c5",
+    "adjudicated_outcome": "untested",
+    "evidence_reference": "artificial:fixture:c5",
+    "adjudication_reason": "Declared artificial software expectation; no source measurement"
+  },
+  {
+    "candidate_id": "c6",
+    "adjudicated_outcome": "observed_positive",
+    "evidence_reference": "artificial:fixture:c6",
+    "adjudication_reason": "Declared artificial software expectation; no source measurement"
+  },
+  {
+    "candidate_id": "c7",
+    "adjudicated_outcome": "tested_no_signal",
+    "evidence_reference": "artificial:fixture:c7",
+    "adjudication_reason": "Declared artificial software expectation; no source measurement"
+  },
+  {
+    "candidate_id": "c8",
+    "adjudicated_outcome": "observed_positive",
+    "evidence_reference": "artificial:fixture:c8",
+    "adjudication_reason": "Declared artificial software expectation; no source measurement"
+  }
+]

@@ -1,0 +1,464 @@
+{
+ "meta": {
+  "scope": "invented independent fixture checks only; not biological validation; no real donor data",
+  "vcf_source": "https://samtools.github.io/hts-specs/VCFv4.3.pdf",
+  "semantics": [
+   "* is an allele absent due to an overlapping deletion; original ALT indexes/GT/PS retained",
+   "missing (./.) is not reference",
+   "flanking bases called present on all copies conservatively bound an unknown deletion; exact deletion unsupported",
+   "star justified only by overlapping deletion on same phase (or homozygous/haploid); conflicting/orphan stars unsupported",
+   "insertion/deletion coordinate paths remain UNPAIRED: never gained/lost by path alone; hit paths crossing no indel stay paired",
+   "gained/lost comparable reference locus requires a contiguous reference path and every copy evaluated",
+   "a formerly nominated exact reference path is LOST when it fails on every known copy; sequence change is reported at retained nominated loci only",
+   "ploidy from hand-declared ploidy_intervals (ploidy_source), never derived from GT alone, sample name or sex",
+   "excluded_window_starts: forward start ranges skipped before orientation; excluded windows are never counted as losses"
+  ],
+  "window": "23-base oriented windows = 20nt spacer + NGG, both strands, ungapped <=6 spacer mismatches vs guide",
+  "blocks": {
+   "P": "ACGTGACTGACTGACGTACGTGG forward-strand guide hit spacer=guide mm=0",
+   "P2": "AAGTTACTGACTGACGTACGTGG forward hit with mm=2 vs guide",
+   "Q": "CCACGTACGTCAGTCAGTCACGT reverse-strand hit (revcomp(Q)=P, mm=0)"
+  }
+ },
+ "guide": "ACGTGACTGACTGACGTACG",
+ "cases": [
+  {
+   "id": "case1_del_star_same_ps",
+   "description": "deletion + star allele with same PS and same phase: star justified, absorbed by deletion on copy1",
+   "reference_sequences": {
+    "chrF1": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACGTGACTGACTGACGTACGTGGAAAAAAACGTGACTGACTGACGTACGTGGAAAAA"
+   },
+   "ploidy_intervals": [
+    {
+     "contig": "chrF1",
+     "start": 0,
+     "end": 90,
+     "copies": 2
+    }
+   ],
+   "ploidy_source": "hand-declared invented copy configuration",
+   "vcf": "##fileformat=VCFv4.3\n##reference=artificial\n#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tS1\nchrF1\t33\t.\tAACGTGACTGACTGACGTACGTGG\tA\t.\t.\t.\tGT:PS\t1|0:100\nchrF1\t40\t.\tC\tT,*\t.\t.\t.\tGT:PS\t2|0:100",
+   "haplotypes": [
+    {
+     "name": "c1",
+     "contig": "chrF1",
+     "local_copy": 1,
+     "ref_interval": [
+      0,
+      90
+     ],
+     "seq": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACGTGACTGACTGACGTACGTGGAAAAA"
+    },
+    {
+     "name": "c2",
+     "contig": "chrF1",
+     "local_copy": 2,
+     "ref_interval": [
+      0,
+      90
+     ],
+     "seq": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACGTGACTGACTGACGTACGTGGAAAAAAACGTGACTGACTGACGTACGTGGAAAAA"
+    }
+   ],
+   "expected_candidates": 3,
+   "expected_hits": 3,
+   "expected_facts": [
+    "ALT indexes retained T=1 *=2",
+    "star on copy1 (index39) lies inside the same-PS deleted span 33-55: justified, absorbed by the deletion; c1 carries one P block, c2 carries two",
+    "VCF REF strings verified against reference chrF1 numerically"
+   ]
+  },
+  {
+   "id": "case2_star_phase_conflict",
+   "description": "star on phase 2 but deletion on phase 1 same PS: dosage/phase conflict, star unsupported; no flanking called-present boundaries, whole contig conservatively excluded",
+   "reference_sequences": {
+    "chrF1": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACGTGACTGACTGACGTACGTGGAAAAAAACGTGACTGACTGACGTACGTGGAAAAA"
+   },
+   "ploidy_intervals": [
+    {
+     "contig": "chrF1",
+     "start": 0,
+     "end": 90,
+     "copies": 2
+    }
+   ],
+   "ploidy_source": "hand-declared invented copy configuration",
+   "vcf": "##fileformat=VCFv4.3\n##reference=artificial\n#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tS1\nchrF1\t33\t.\tAACGTGACTGACTGACGTACGTGG\tA\t.\t.\t.\tGT:PS\t1|0:100\nchrF1\t40\t.\tC\tT,*\t.\t.\t.\tGT:PS\t0|2:100",
+   "haplotypes": [
+    {
+     "name": "c1",
+     "contig": "chrF1",
+     "local_copy": 1,
+     "ref_interval": [
+      0,
+      90
+     ],
+     "seq": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACGTGACTGACTGACGTACGTGGAAAAAAACGTGACTGACTGACGTACGTGGAAAAA",
+     "exclude": [
+      [
+       0,
+       90
+      ]
+     ],
+     "note": "reference-shaped placeholder; zero evaluated windows"
+    },
+    {
+     "name": "c2",
+     "contig": "chrF1",
+     "local_copy": 2,
+     "ref_interval": [
+      0,
+      90
+     ],
+     "seq": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACGTGACTGACTGACGTACGTGGAAAAAAACGTGACTGACTGACGTACGTGGAAAAA",
+     "exclude": [
+      [
+       0,
+       90
+      ]
+     ],
+     "note": "reference-shaped placeholder; zero evaluated windows"
+    }
+   ],
+   "expected_candidates": 0,
+   "expected_hits": 0,
+   "expected_facts": [
+    "conflicting star record retained verbatim (ALT indexes T=1 *=2, GT 0|2:100); the unsupported call is not discarded",
+    "no flanking called-present boundaries: whole contig conservatively excluded, 0 evaluated windows, 0 candidates",
+    "declared strings are reference-shaped placeholders, not evaluated sequence"
+   ],
+   "unsupported": [
+    {
+     "kind": "star_phase_conflict",
+     "pos": 40,
+     "reason": "star on copy2 with no overlapping deletion on copy2"
+    }
+   ]
+  },
+  {
+   "id": "case3_orphan_star_bounded",
+   "description": "orphan star (no deletion record) bounded by flanking complete literal calls at 3 and 62 on all copies",
+   "reference_sequences": {
+    "chrF3": "AAAAATTTTACGTGACTGACTGACGTACGTGGAAAAAAACGTGACTGACTGACGTACGTGGAAAAA"
+   },
+   "ploidy_intervals": [
+    {
+     "contig": "chrF3",
+     "start": 0,
+     "end": 66,
+     "copies": 2
+    }
+   ],
+   "ploidy_source": "hand-declared invented copy configuration",
+   "vcf": "##fileformat=VCFv4.3\n##reference=artificial\n#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tS1\nchrF3\t3\t.\tA\tT\t.\t.\t.\tGT\t1|1\nchrF3\t35\t.\tA\tG,*\t.\t.\t.\tGT\t1|2\nchrF3\t62\t.\tA\tT\t.\t.\t.\tGT\t1|1",
+   "haplotypes": [
+    {
+     "name": "c1",
+     "contig": "chrF3",
+     "local_copy": 1,
+     "ref_interval": [
+      0,
+      66
+     ],
+     "seq": "AATAATTTTACGTGACTGACTGACGTACGTGGAAGAAAACGTGACTGACTGACGTACGTGGTAAAA"
+    },
+    {
+     "name": "c2",
+     "contig": "chrF3",
+     "local_copy": 2,
+     "ref_interval": [
+      0,
+      66
+     ],
+     "seq": "AATAATTTTACGTGACTGACTGACGTACGTGGAAAAAAACGTGACTGACTGACGTACGTGGTAAAA",
+     "exclude": [
+      [
+       3,
+       61
+      ]
+     ]
+    }
+   ],
+   "expected_candidates": 2,
+   "expected_hits": 2,
+   "expected_facts": [
+    "copy1 literal ALT G kept (index1, * index2 retained)",
+    "bounded unknown deletion on copy2: flanking bases called present at index2 and index61 on all copies; every window start overlaps the uncertain span [3,61), so 0 windows on copy2; exact deletion unsupported"
+   ]
+  },
+  {
+   "id": "case4_multiallelic_shared_anchor",
+   "description": "multiallelic SNP GT 2|1 breaks the shared PAM anchor on opposite copies (nominated path LOST); separate opposite-copy shared-anchor SNP pair at the retained Q locus",
+   "reference_sequences": {
+    "chrF4": "AAAAAACGTGACTGACTGACGTACGTGGAAAACCACGTACGTCAGTCAGTCACGTAAAA"
+   },
+   "ploidy_intervals": [
+    {
+     "contig": "chrF4",
+     "start": 0,
+     "end": 59,
+     "copies": 2
+    }
+   ],
+   "ploidy_source": "hand-declared invented copy configuration",
+   "vcf": "##fileformat=VCFv4.3\n##reference=artificial\n#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tS1\nchrF4\t27\t.\tG\tA,C\t.\t.\t.\tGT\t2|1\nchrF4\t37\t.\tG\tA\t.\t.\t.\tGT\t1|0\nchrF4\t37\t.\tG\tT\t.\t.\t.\tGT\t0|1",
+   "haplotypes": [
+    {
+     "name": "c1",
+     "contig": "chrF4",
+     "local_copy": 1,
+     "ref_interval": [
+      0,
+      59
+     ],
+     "seq": "AAAAAACGTGACTGACTGACGTACGTCGAAAACCACATACGTCAGTCAGTCACGTAAAA"
+    },
+    {
+     "name": "c2",
+     "contig": "chrF4",
+     "local_copy": 2,
+     "ref_interval": [
+      0,
+      59
+     ],
+     "seq": "AAAAAACGTGACTGACTGACGTACGTAGAAAACCACTTACGTCAGTCAGTCACGTAAAA"
+    }
+   ],
+   "expected_candidates": 2,
+   "expected_hits": 2,
+   "expected_facts": [
+    "A=1 C=2 indexes retained; copy1 gets C, copy2 gets A at the PAM anchor (pos27) on opposite copies: compatible, not a conflict",
+    "CORRECTED: the formerly nominated exact reference P path is LOST because both known sample PAMs fail; it is not a retained sequence change",
+    "sequence change is reported at retained nominated loci only: the Q locus is retained on both copies with spacer mm=1 each",
+    "separate opposite-copy shared-anchor pair at pos37 (record 2 G>A on copy1, record 3 G>T on copy2) covers the two-overlapping-records subcase"
+   ]
+  },
+  {
+   "id": "case5_missing_unphased_close",
+   "description": "missing ./. (not reference) plus two unphased 0/1 SNPs 6nt apart, no PS; exact union of excluded forward window starts [0,14)",
+   "reference_sequences": {
+    "chrF5": "AAAAAAAATTTTTTTTTTTTTTTTTTTTTTAAAAAACGTGACTGACTGACGTACGTGGAAA"
+   },
+   "ploidy_intervals": [
+    {
+     "contig": "chrF5",
+     "start": 0,
+     "end": 61,
+     "copies": 2
+    }
+   ],
+   "ploidy_source": "hand-declared invented copy configuration",
+   "vcf": "##fileformat=VCFv4.3\n##reference=artificial\n#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tS1\nchrF5\t10\t.\tT\tA\t.\t.\t.\tGT\t./.\nchrF5\t14\t.\tT\tA\t.\t.\t.\tGT\t0/1\nchrF5\t20\t.\tT\tA\t.\t.\t.\tGT\t0/1",
+   "haplotypes": [
+    {
+     "name": "c1",
+     "contig": "chrF5",
+     "local_copy": 1,
+     "ref_interval": [
+      0,
+      61
+     ],
+     "seq": "AAAAAAAATNTTTATTTTTTTTTTTTTTTTAAAAAACGTGACTGACTGACGTACGTGGAAA",
+     "excluded_window_starts": [
+      [
+       0,
+       14
+      ]
+     ]
+    },
+    {
+     "name": "c2",
+     "contig": "chrF5",
+     "local_copy": 2,
+     "ref_interval": [
+      0,
+      61
+     ],
+     "seq": "AAAAAAAATNTTTTTTTTTATTTTTTTTTTAAAAAACGTGACTGACTGACGTACGTGGAAA",
+     "excluded_window_starts": [
+      [
+       0,
+       14
+      ]
+     ]
+    }
+   ],
+   "expected_candidates": 2,
+   "expected_hits": 2,
+   "expected_facts": [
+    "missing base index9 declared N on both copies (./. is not reference)",
+    "unphased SNPs index13 and index19 exclude exactly the forward window starts spanning both: union [0,14), not [0,30); skipped before orientation on both strands",
+    "manual per-copy alternative bases retained: c1 A at 13, c2 A at 19",
+    "excluded windows are never counted as losses; P block at 35-57 fully outside the ambiguous starts survives on both copies"
+   ]
+  },
+  {
+   "id": "case6_haploid_XY_style",
+   "description": "haploid chrX-style GT 1 (edit applied, single copy) and haploid chrY-style GT 0 (reference copy); ploidy from declared intervals only",
+   "reference_sequences": {
+    "chrXf": "AAAAAAGTTACTGACTGACGTACGTGGAAAA",
+    "chrYf": "TTTTCCACGTACGTCAGTCAGTCACGTTTTT"
+   },
+   "ploidy_intervals": [
+    {
+     "contig": "chrXf",
+     "start": 0,
+     "end": 31,
+     "copies": 1
+    },
+    {
+     "contig": "chrYf",
+     "start": 0,
+     "end": 31,
+     "copies": 1
+    }
+   ],
+   "ploidy_source": "hand-declared invented copy configuration",
+   "vcf": "##fileformat=VCFv4.3\n##reference=artificial\n#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tS1\nchrXf\t2\t.\tA\tT\t.\t.\t.\tGT\t1\nchrYf\t2\t.\tT\tA\t.\t.\t.\tGT\t0",
+   "haplotypes": [
+    {
+     "name": "Xf_c1",
+     "contig": "chrXf",
+     "local_copy": 1,
+     "ref_interval": [
+      0,
+      31
+     ],
+     "seq": "ATAAAAGTTACTGACTGACGTACGTGGAAAA"
+    },
+    {
+     "name": "Yf_c1",
+     "contig": "chrYf",
+     "local_copy": 1,
+     "ref_interval": [
+      0,
+      31
+     ],
+     "seq": "TTTTCCACGTACGTCAGTCAGTCACGTTTTT"
+    }
+   ],
+   "expected_candidates": 2,
+   "expected_hits": 2,
+   "expected_facts": [
+    "one copy per chromosome declared in ploidy_intervals; no copies inferred from GT, sample name or sex",
+    "Xf hit mm=2 (P2 block), Yf hit mm=0 on reverse strand"
+   ]
+  },
+  {
+   "id": "case7_par_nonpar_zerocopy",
+   "description": "diploid PAR GT 1|0 + haploid non-PAR GT 1; zero-copy counterpart contributes nothing; haps split at region boundary so no window crosses it",
+   "reference_sequences": {
+    "chrP": "AAAACGTGACTGACTGACGTACGTGGAAAAAAAAAAAAAATTTTTCCACGTACGTCAGTCAGTCACGTAAAAAAAAAAAA",
+    "chrPd": "AAAAAAAAACGTGACTGACTGACGTACGTGGAAAAAAAAA"
+   },
+   "ploidy_intervals": [
+    {
+     "contig": "chrP",
+     "start": 0,
+     "end": 40,
+     "copies": 2
+    },
+    {
+     "contig": "chrP",
+     "start": 40,
+     "end": 80,
+     "copies": 1
+    },
+    {
+     "contig": "chrPd",
+     "start": 0,
+     "end": 40,
+     "copies": 0
+    }
+   ],
+   "ploidy_source": "hand-declared invented copy configuration",
+   "vcf": "##fileformat=VCFv4.3\n##reference=artificial\n#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tS1\nchrP\t2\t.\tA\tT\t.\t.\t.\tGT\t1|0\nchrP\t45\t.\tT\tA\t.\t.\t.\tGT\t1",
+   "haplotypes": [
+    {
+     "name": "cA_par",
+     "contig": "chrP",
+     "local_copy": 1,
+     "ref_interval": [
+      0,
+      40
+     ],
+     "seq": "ATAACGTGACTGACTGACGTACGTGGAAAAAAAAAAAAAA"
+    },
+    {
+     "name": "cB_par",
+     "contig": "chrP",
+     "local_copy": 2,
+     "ref_interval": [
+      0,
+      40
+     ],
+     "seq": "AAAACGTGACTGACTGACGTACGTGGAAAAAAAAAAAAAA"
+    },
+    {
+     "name": "cA_nonpar",
+     "contig": "chrP",
+     "local_copy": 1,
+     "ref_interval": [
+      40,
+      80
+     ],
+     "seq": "TTTTACCACGTACGTCAGTCAGTCACGTAAAAAAAAAAAA"
+    }
+   ],
+   "expected_candidates": 3,
+   "expected_hits": 3,
+   "expected_facts": [
+    "PAR and nonPAR literal regions exactly 40bp each; whole chrP reference 80bp; 45th reference base (index44) is T, verified",
+    "ploidy_intervals: chrP [0,40) 2 copies then [40,80) 1 copy; chrPd explicit zero-copy counterpart reference: 0 windows, 0 hits, not a loss",
+    "windows wholly inside one region retained; crossing windows excluded by construction (region-split haps)"
+   ]
+  },
+  {
+   "id": "case8_nearby_hits_both_strands_indels",
+   "description": "distinct nearby P (forward) and Q (reverse) hits plus insertion and deletion paths on copy1 with a shared PS; indel paths stay UNPAIRED",
+   "reference_sequences": {
+    "chrF8": "AAAAAACGTGACTGACTGACGTACGTGGTTCCACGTACGTCAGTCAGTCACGTTAAAAA"
+   },
+   "ploidy_intervals": [
+    {
+     "contig": "chrF8",
+     "start": 0,
+     "end": 59,
+     "copies": 2
+    }
+   ],
+   "ploidy_source": "hand-declared invented copy configuration",
+   "vcf": "##fileformat=VCFv4.3\n##reference=artificial\n#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tS1\nchrF8\t28\t.\tG\tGATAT\t.\t.\t.\tGT:PS\t1|0:800\nchrF8\t54\t.\tTAAAA\tT\t.\t.\t.\tGT:PS\t1|0:800",
+   "haplotypes": [
+    {
+     "name": "c1",
+     "contig": "chrF8",
+     "local_copy": 1,
+     "ref_interval": [
+      0,
+      59
+     ],
+     "seq": "AAAAAACGTGACTGACTGACGTACGTGGATATTTCCACGTACGTCAGTCAGTCACGTTA"
+    },
+    {
+     "name": "c2",
+     "contig": "chrF8",
+     "local_copy": 2,
+     "ref_interval": [
+      0,
+      59
+     ],
+     "seq": "AAAAAACGTGACTGACTGACGTACGTGGTTCCACGTACGTCAGTCAGTCACGTTAAAAA"
+    }
+   ],
+   "expected_candidates": 4,
+   "expected_hits": 4,
+   "expected_facts": [
+    "both records share PS 800 asserting the joint phased copy (1|0)",
+    "surviving P (forward) and Q (reverse) hit paths cross neither indel: those paired hits stay comparable across copies",
+    "windows overlapping the insertion (after index27) or deletion (indices 54-57) paths remain UNPAIRED; not all chromosome hits are unpaired merely because the chromosome contains an indel",
+    "no locus gained/lost by path alone"
+   ]
+  }
+ ]
+}

@@ -1,7 +1,7 @@
 """Build a review record for each candidate guide.
 
 Keep predictions, candidate sites, HBG copy checks, gene overlaps, evidence sources and required
-assays together. These fields remain separate; no combined safety score is calculated.
+assays together in separate fields.
 """
 from __future__ import annotations
 
@@ -227,7 +227,7 @@ def build_design_records(records: list[dict], empirical: dict | None = None) -> 
 
     records contains intended and bystander EditRecords as dictionaries with source details.
     empirical optionally maps guide IDs to measurements. Only attached measurements can set
-    empirically_measured. This design label does not establish per-site or per-allele coverage.
+    empirically_measured. Coverage is recorded separately for each site and allele.
     """
     empirical = empirical or {}
 

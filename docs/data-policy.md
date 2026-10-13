@@ -1,7 +1,7 @@
-# What I share
+# What this project shares
 
-I share this tool's code, constructed examples and the results of my checks, with citations to
-the original studies. I do not include the papers' individual experimental data points, copied
+This project shares its code, constructed examples and the results of its checks, with citations to
+the original studies. It does not include the papers' individual experimental data points, copied
 tables or detailed extracts in the public repository. A paper being available online is not
 permission to redistribute its files.
 
@@ -10,9 +10,9 @@ permission to redistribute its files.
 - Source code and the reference coordinate definitions needed to run it.
 - Small constructed examples and tests, clearly labelled as software checks rather than experiments.
 - Instructions, limitations and source citations.
-- Aggregate results of my checks in `docs/validation.md`, the public validation document.
+- Aggregate results of the project's checks in `docs/validation.md`, the public validation document.
 
-An aggregate result must still say what was counted and what the check does not establish.
+Aggregate results must state what was counted and which inputs and regions were checked.
 It must not present the authors' measurements as new experiments performed for this tool.
 
 ## Files that stay out of the public repository

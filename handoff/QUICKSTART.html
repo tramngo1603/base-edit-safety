@@ -1,0 +1,95 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Base Edit Safety — Quickstart</title>
+<style>body{font:17px/1.6 system-ui;max-width:880px;margin:40px auto;padding:0 24px;color:#172c35}h1,h2{line-height:1.2}code{background:#edf1f3;padding:2px 4px}td,th{text-align:left;vertical-align:top;padding:8px;border-bottom:1px solid #ccd7db}a{color:#006580}</style>
+<h1>Base Edit Safety</h1><p>Install, run and read a local guide-sequence search.</p>
+<h2>1. Install and start</h2>
+<p>The steps below install a complete offline handoff. A source ZIP or wheel requires Python and the native backend separately; follow the project README for that installation.</p>
+<p>The supported, tested environment is <strong>macOS Sonoma 14.4.1, Apple silicon (arm64)</strong>,
+Apple M3 Pro GPU, 18 GiB RAM. Other Macs and operating systems have not been tested.
+Full-reference work requires at least 16 GiB RAM, 4 GiB available RAM and 25 GiB free disk space.
+Keep one large genomic job running at a time.</p>
+<ol><li>Extract the entire handoff ZIP into a writable folder on this Mac. Keep its files together.</li>
+<li>Double-click <strong>Start.command</strong>. Setup uses the included Python and dependency wheels,
+checks file hashes, and tests the real Cas-OFFinder/OpenCL backend. Installation is offline and needs 2 GiB free.</li>
+<li>The Base Edit Safety window opens. Keep its terminal window open while using the app.</li></ol>
+<p>No existing Python, Homebrew, Docker, account or cloud service is needed. If macOS blocks opening
+the unsigned launcher, use Finder’s Open action or the normal Privacy &amp; Security “Open Anyway”
+flow after verifying the handoff’s source. Do not disable system security settings.</p>
+<h2>2. Try an example</h2>
+<p>Open <strong>Try an example</strong> and pick one of three bundled runs:</p>
+<ul><li><strong>Reference only</strong> — mock DNA, a few seconds, no sample. Use it to inspect
+candidates and exports.</li>
+<li><strong>Reference + sample</strong> — mock DNA with a small variant file; checks the local
+backend end to end. It must finish with one retained locus, one gained locus, one changed sequence
+at the retained locus, and three sequence configurations.</li>
+<li><strong>Public HG003</strong> — 23 published guides across all 24 primary GRCh38 chromosomes.
+Choose a cache folder and an output folder, then continue to <strong>Review &amp; run</strong> and press
+<strong>Start analysis</strong>. Missing public inputs are downloaded and prepared automatically;
+downloaded files are checksum-verified before reuse. Download: <strong>1,130,871,852 bytes (1.13 GB)</strong>;
+reserve <strong>25 GiB</strong> on both selected filesystems.</li></ul>
+<p>To prepare the public reference without starting an analysis, use <strong>My analysis</strong> →
+<strong>Prepare reference…</strong> → <strong>Prepare &amp; use reference</strong>. Preparation runs once;
+later analyses reuse the verified cache.</p>
+<p>The HG003 sample reconstruction processes all 22 autosomes, with local exclusions for unresolved
+sequence and phase. X/Y calls and sample ploidy are not supplied. Preparation retains all 4,000,097 VCF rows.
+Allow 10–30 minutes for a search, plus download and preparation time. Setup checks available resources first.</p>
+<p>The reference search has <strong>706,588 loci</strong>. Donor coverage, locus changes and sequence changes
+are checked against the versioned expected-results file. Processing a chromosome does not mean every region
+was resolved. Timestamps and resource measurements are checked separately.
+The expected-results file is <a href="expected-hg003.json">expected-hg003.json</a>.</p>
+<h2>3. Use your own guides and VCF</h2>
+<ol><li>Open <strong>My analysis</strong>. Paste one 20-base spacer per line, without PAM, or use
+<strong>Open guide file…</strong> to select a text file. A TSV may instead contain exactly
+<code>guide_id</code> and <code>spacer_sequence</code> columns. Use 1–32 unique guides.</li>
+<li>Select a full, uncompressed GRCh38 FASTA with chr1–22/X/Y names under <strong>Reference genome</strong>.
+If public preparation is complete, <strong>Use prepared public reference</strong> fills this in.
+An adjacent FASTA index is created when needed.</li>
+<li><strong>Add sample variants — optional</strong>: select a VCF and choose its sample. The VCF must declare
+<code>##reference=GRCh38</code> and use matching chromosome names. Confirm two copies of each autosome only
+if that describes the sample. X/Y are left unresolved. For other ploidy, use the advanced workflow with an analyst.</li>
+<li><strong>Additional details — optional</strong>: editor, cell-source and variant-source labels are saved
+with your export; they do not change the search.</li>
+<li>Choose an output folder, continue to <strong>Review &amp; run</strong>, check the summary, then press
+<strong>Start analysis</strong>. The request is created automatically. VCF normalization and REF checks
+happen locally, preserving ALT indexes and supplied phase.</li></ol>
+<p>The search uses NGG, both strands, up to six mismatches and no gaps. The default sample policy uses explicit PS
+phase sets, accepts PASS and “.” filters, and applies no GQ/DP cutoff. Missing calls remain unresolved.
+Input requirements are also shown beside each control. Original genomic files stay local and are not uploaded.</p>
+<h2>4. Read the results</h2>
+<p>When a run finishes, the results screen opens. Use <strong>Overview</strong>, <strong>Candidates</strong> and
+<strong>Sample differences</strong> to inspect each guide. <strong>Search &amp; filters</strong> narrows the
+candidate table; the table shows up to 5,000 rows at a time. Under <strong>Learn more</strong>:
+<strong>Coverage</strong> and <strong>Run details</strong> summarize scope and settings, <strong>Full report</strong>
+opens <code>results/report.html</code> in a browser without a server or internet connection, and
+<strong>Open folder</strong> shows the complete result files. Every run has a new dated folder;
+<strong>Open results…</strong> in the app header reopens a completed analysis without a rerun.</p>
+<p><strong>Export…</strong> creates a separate dated export folder and never changes the saved analysis.
+Candidate tables can be exported as all candidates, all rows matching the current search and filters, or the
+selected rows; all and matching exports read the complete files beyond the table display limit. Each export
+records its selection criteria, the available scientific fields, the source files and hashes, and a short
+field dictionary. The HTML report and a full analysis copy can be exported the same way.</p>
+<table><tr><th>File</th><th>Read it for</th></tr>
+<tr><td>candidates.tsv</td><td>Exact sequences, strand, coordinates and sample copies.</td></tr>
+<tr><td>locus-changes.tsv</td><td>Gained, lost, retained, unresolved and unpaired paths.</td></tr>
+<tr><td>sequence-changes.tsv</td><td>Changed target sequences at retained loci; distinct from locus gains/losses.</td></tr>
+<tr><td>coverage.tsv / coverage.json</td><td>Per-chromosome bases, windows, full denominators and variant accounting.</td></tr>
+<tr><td>coverage-regions.tsv / coverage-windows.tsv / exclusions.tsv</td><td>Evaluated and excluded intervals, with reasons.</td></tr>
+<tr><td>run-manifest.json / request.json</td><td>Completion, input checksums, settings and measured resources. Created automatically.</td></tr></table>
+<p>Open TSVs in Excel, Numbers or LibreOffice as tab-separated text; keep IDs as text. Coordinates start at zero
+and exclude the end. A “sample incomplete” message means only the reference completed. Unresolved sites do not
+count as losses. Optional experimental evidence is not included in these examples.</p>
+<h2>5. Fix common setup problems</h2>
+<table><tr><th>Message</th><th>Next step</th></tr>
+<tr><td>OpenCL/backend check failed</td><td>Read the named setup-check log. Use the tested Apple silicon Mac environment.
+Restart after OS/driver repairs. A Python wheel or Docker installation does not supply a working OpenCL runtime.</td></tr>
+<tr><td>Not enough memory or disk</td><td>Close other large applications or choose a filesystem with 25 GiB free.
+Keep existing evidence and choose a new output folder.</td></tr>
+<tr><td>Download interrupted / checksum mismatch</td><td>Retain the failed cache for inspection. Choose a new cache folder;
+verified complete raw files may be copied into its matching data/ subfolders. Partial .part files are never treated as complete.</td></tr>
+<tr><td>VCF/reference mismatch</td><td>Check assembly, chr names and REF alleles with the file provider. Do not relabel another assembly.</td></tr>
+<tr><td>Example verification failed</td><td>The search outputs remain available through Full report and Open folder.
+Keep the full run folder and setup logs. Check RELEASE.json and input hashes before using the example results.</td></tr>
+<tr><td>Folder moved / setup incomplete</td><td>Run Start.command again. It reinstalls the local environment after a move.
+Existing result folders are preserved.</td></tr></table>
+<p><a href="ADVANCED.md">Advanced commands, reproducible builds and scientific scope</a> ·
+<a href="RELEASE.json">Exact release and test record</a> · <a href="LICENSE">Project license</a></p>
+</html>

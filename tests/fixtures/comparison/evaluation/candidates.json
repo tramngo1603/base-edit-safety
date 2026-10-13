@@ -1,0 +1,74 @@
+[
+  {
+    "candidate_id": "c1",
+    "study_id": "artificial-study-1",
+    "guide_id": "artificial-guide-1",
+    "family_id": "artificial-family-1",
+    "editor": "artificial-editor-A",
+    "assay": "artificial-assay-A",
+    "eligible": true
+  },
+  {
+    "candidate_id": "c2",
+    "study_id": "artificial-study-1",
+    "guide_id": "artificial-guide-1",
+    "family_id": "artificial-family-1",
+    "editor": "artificial-editor-A",
+    "assay": "artificial-assay-A",
+    "eligible": true
+  },
+  {
+    "candidate_id": "c3",
+    "study_id": "artificial-study-1",
+    "guide_id": "artificial-guide-1",
+    "family_id": "artificial-family-1",
+    "editor": "artificial-editor-A",
+    "assay": "artificial-assay-A",
+    "eligible": true
+  },
+  {
+    "candidate_id": "c4",
+    "study_id": "artificial-study-2",
+    "guide_id": "artificial-guide-2",
+    "family_id": "artificial-family-2",
+    "editor": "artificial-editor-A",
+    "assay": "artificial-assay-A",
+    "eligible": true
+  },
+  {
+    "candidate_id": "c5",
+    "study_id": "artificial-study-2",
+    "guide_id": "artificial-guide-2",
+    "family_id": "artificial-family-2",
+    "editor": "artificial-editor-A",
+    "assay": "artificial-assay-A",
+    "eligible": true
+  },
+  {
+    "candidate_id": "c6",
+    "study_id": "artificial-study-3",
+    "guide_id": "artificial-guide-3",
+    "family_id": "artificial-family-3",
+    "editor": "artificial-editor-A",
+    "assay": "artificial-assay-A",
+    "eligible": true
+  },
+  {
+    "candidate_id": "c7",
+    "study_id": "artificial-study-3",
+    "guide_id": "artificial-guide-3",
+    "family_id": "artificial-family-3",
+    "editor": "artificial-editor-A",
+    "assay": "artificial-assay-A",
+    "eligible": true
+  },
+  {
+    "candidate_id": "c8",
+    "study_id": "artificial-study-3",
+    "guide_id": "artificial-guide-3",
+    "family_id": "artificial-family-3",
+    "editor": "artificial-editor-A",
+    "assay": "artificial-assay-A",
+    "eligible": true
+  }
+]

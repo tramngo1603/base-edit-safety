@@ -1,0 +1,7 @@
+{
+  "no_real_specimen_claim": true,
+  "reason": "specimen_availability_unresolved_or_unavailable",
+  "scientific_validation_claimed": false,
+  "scope": "Artificial canonical declaration and eligibility checks; no genomic search or real specimen verification",
+  "status": "ineligible"
+}

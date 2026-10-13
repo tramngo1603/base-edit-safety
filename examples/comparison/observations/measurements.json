@@ -1,0 +1,11 @@
+[
+  {
+    "measurement_key": "artificial-treated-1",
+    "source_study": "Artificial observation example",
+    "source_experiment": "experiment-1",
+    "source_replicate": "replicate-1",
+    "raw_value": "9.8000000000000007",
+    "raw_unit": "percent",
+    "source_reported_label": "treated"
+  }
+]

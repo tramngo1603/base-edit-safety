@@ -1,0 +1,8 @@
+##fileformat=VCFv4.3
+##reference=artificial
+##contig=<ID=artificial_1>
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Artificial genotype">
+##FORMAT=<ID=PS,Number=1,Type=Integer,Description="Artificial phase set">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	PHASED	MISSING	UNPHASED
+artificial_1	2086	artificial_spacer	T	A	.	PASS	.	GT:PS	0|0:7	0|0:7	0/1:.
+artificial_1	2103	artificial_pam	C	G	.	PASS	.	GT:PS	1|0:7	./.:.	0/1:.

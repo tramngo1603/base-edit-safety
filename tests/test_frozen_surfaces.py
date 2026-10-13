@@ -1,11 +1,7 @@
-"""Tripwires for the surfaces the 2026-08 external review froze.
+"""Check the accepted edit window, promoter coordinates and annotation release.
 
-None of these values is meant to drift on its own. Each is set deliberately and justified elsewhere:
-the BE-DICT edit window in docs/architecture.md, the promoter windows in
-docs/coordinates.md, the Ensembl pin (with its full per-gene fixture) in
-tests/test_ch_gene_spans.py. This file gathers the bare constants in one place so that ANY future
-diff touching them must change this test too, forcing the change to be deliberate rather than a
-silent side effect.
+The definitions are documented in docs/architecture.md and docs/coordinates.md.
+The per-gene coordinate checks are in tests/test_ch_gene_spans.py.
 """
 from __future__ import annotations
 
@@ -29,7 +25,5 @@ def test_promoter_windows_are_frozen():
 
 
 def test_ch_gene_spans_ensembl_release_is_frozen():
-    # The full per-gene span fixture lives in tests/test_ch_gene_spans.py; this pins the version
-    # string alongside the other frozen surfaces, because a release bump silently moves the
-    # CH-driver flag boundaries.
+    # A different annotation release can change the gene-overlap boundaries.
     assert annotation.CH_GENE_SPANS_ENSEMBL_RELEASE == "116"

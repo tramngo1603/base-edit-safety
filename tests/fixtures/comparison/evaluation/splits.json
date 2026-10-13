@@ -1,0 +1,35 @@
+{
+  "candidate_metadata_sha256": "c7b2a5827b1e4c8a8c1141f706d0d528e942f4a51fcc3845959a0121079c8a12",
+  "development_fraction": "0",
+  "format_version": "1",
+  "groups": [
+    {
+      "candidate_ids": [
+        "c1",
+        "c2",
+        "c3"
+      ],
+      "group_id": "162e15055422ed71320df62318f8f055923b2bc2424094991d20c16da8b9a7b4",
+      "partition": "evaluation"
+    },
+    {
+      "candidate_ids": [
+        "c6",
+        "c7",
+        "c8"
+      ],
+      "group_id": "b05cf26f7b261fb0fd5fe2b353fe5bb67cb3d46b9148ea5039b66d39ce425a46",
+      "partition": "evaluation"
+    },
+    {
+      "candidate_ids": [
+        "c4",
+        "c5"
+      ],
+      "group_id": "6c94ac38e843ade213e3aa8401475877473c50c0ac0436a805d3c662fd8d2409",
+      "partition": "evaluation"
+    }
+  ],
+  "seed": 17,
+  "training_fraction": "0"
+}

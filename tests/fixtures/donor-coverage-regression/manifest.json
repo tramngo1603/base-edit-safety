@@ -1,0 +1,276 @@
+{
+ "cases": {
+  "c01_star_explained_same_position": {
+   "note": "star carried on the same GT position as a covering literal deletion",
+   "ploidy": [
+    {
+     "contig": "artificial_1",
+     "copies": 2,
+     "end": 1200,
+     "start": 0
+    }
+   ],
+   "vcf": "c01_star_explained_same_position.vcf"
+  },
+  "c02_star_explained_large_deletion": {
+   "note": "supporting deletion exceeds the 50-base applied-allele cap; footprint still bounded",
+   "ploidy": [
+    {
+     "contig": "artificial_1",
+     "copies": 2,
+     "end": 1200,
+     "start": 0
+    }
+   ],
+   "vcf": "c02_star_explained_large_deletion.vcf"
+  },
+  "c03_star_orphan_single": {
+   "note": "no covering deletion; span bounded by flanking bases called present on every copy",
+   "ploidy": [
+    {
+     "contig": "artificial_1",
+     "copies": 2,
+     "end": 1200,
+     "start": 0
+    }
+   ],
+   "vcf": "c03_star_orphan_single.vcf"
+  },
+  "c04_star_orphan_cluster": {
+   "note": "consecutive orphan stars, star allele first; one shared bounded envelope",
+   "ploidy": [
+    {
+     "contig": "artificial_1",
+     "copies": 2,
+     "end": 1200,
+     "start": 0
+    }
+   ],
+   "vcf": "c04_star_orphan_cluster.vcf"
+  },
+  "c05_star_multiallelic_same_record": {
+   "note": "copy 0 carries the record's own 7 bp deletion; copy 1's star is bounded by flanks",
+   "ploidy": [
+    {
+     "contig": "artificial_1",
+     "copies": 2,
+     "end": 1200,
+     "start": 0
+    }
+   ],
+   "vcf": "c05_star_multiallelic_same_record.vcf"
+  },
+  "c06_star_filtered_support": {
+   "note": "filtered supporting call is not a complete carried call; star remains unexplained",
+   "ploidy": [
+    {
+     "contig": "artificial_1",
+     "copies": 2,
+     "end": 1200,
+     "start": 0
+    }
+   ],
+   "vcf": "c06_star_filtered_support.vcf"
+  },
+  "c07_overlapping_same_copies_conflict": {
+   "note": "both copies carry both overlapping edits; overlap cannot be applied",
+   "ploidy": [
+    {
+     "contig": "artificial_1",
+     "copies": 2,
+     "end": 1200,
+     "start": 0
+    }
+   ],
+   "vcf": "c07_overlapping_same_copies_conflict.vcf"
+  },
+  "c08a_overlapping_split_copies_starred": {
+   "note": "starred split copies with opposite GT orders; resolution must pair deletion and star",
+   "ploidy": [
+    {
+     "contig": "artificial_1",
+     "copies": 2,
+     "end": 1200,
+     "start": 0
+    }
+   ],
+   "vcf": "c08a_overlapping_split_copies_starred.vcf"
+  },
+  "c08b_overlapping_split_copies_contradictory": {
+   "note": "overlapping records without star encoding contradict; conflict gap preserved",
+   "ploidy": [
+    {
+     "contig": "artificial_1",
+     "copies": 2,
+     "end": 1200,
+     "start": 0
+    }
+   ],
+   "vcf": "c08b_overlapping_split_copies_contradictory.vcf"
+  },
+  "c09_missing_call": {
+   "note": "missing call masks the record on every declared copy",
+   "ploidy": [
+    {
+     "contig": "artificial_1",
+     "copies": 2,
+     "end": 1200,
+     "start": 0
+    }
+   ],
+   "vcf": "c09_missing_call.vcf"
+  },
+  "c10_partial_missing_call": {
+   "note": "partially missing call masks the record on every declared copy",
+   "ploidy": [
+    {
+     "contig": "artificial_1",
+     "copies": 2,
+     "end": 1200,
+     "start": 0
+    }
+   ],
+   "vcf": "c10_partial_missing_call.vcf"
+  },
+  "c11_phase_block_boundary": {
+   "note": "phase-set boundary at 1116; windows touching only one set stay evaluable",
+   "ploidy": [
+    {
+     "contig": "artificial_1",
+     "copies": 2,
+     "end": 1200,
+     "start": 0
+    }
+   ],
+   "vcf": "c11_phase_block_boundary.vcf"
+  },
+  "c12_supported_indel_paths": {
+   "note": "2 bp insertion retains boundary/offset path; SNV on the other copy",
+   "ploidy": [
+    {
+     "contig": "artificial_1",
+     "copies": 2,
+     "end": 1200,
+     "start": 0
+    }
+   ],
+   "vcf": "c12_supported_indel_paths.vcf"
+  },
+  "c13_complex_allele_bounded": {
+   "note": "complex allele: bounded footprint; not applicable as an edit",
+   "ploidy": [
+    {
+     "contig": "artificial_1",
+     "copies": 2,
+     "end": 1200,
+     "start": 0
+    }
+   ],
+   "vcf": "c13_complex_allele_bounded.vcf"
+  },
+  "c14_star_orphan_unbounded": {
+   "note": "no anchors and no covering deletion: whole-contig exclusion names the missing record",
+   "ploidy": [
+    {
+     "contig": "artificial_1",
+     "copies": 2,
+     "end": 1200,
+     "start": 0
+    }
+   ],
+   "vcf": "c14_star_orphan_unbounded.vcf"
+  },
+  "x01_xy_region_specific_ploidy": {
+   "note": "diploid and haploid intervals on one contig, declared explicitly",
+   "ploidy": [
+    {
+     "contig": "chrX",
+     "copies": 2,
+     "end": 400,
+     "start": 0
+    },
+    {
+     "contig": "chrX",
+     "copies": 1,
+     "end": 800,
+     "start": 400
+    }
+   ],
+   "vcf": "x01_xy_region_specific_ploidy.vcf"
+  },
+  "x02_xy_diploid_call_in_haploid_region": {
+   "note": "diploid syntax in a declared haploid interval stays unsupported",
+   "ploidy": [
+    {
+     "contig": "chrX",
+     "copies": 1,
+     "end": 800,
+     "start": 0
+    }
+   ],
+   "vcf": "x02_xy_diploid_call_in_haploid_region.vcf"
+  },
+  "x03_xy_undeclared_ploidy": {
+   "note": "no ploidy intervals: contig name must not imply copies",
+   "ploidy": [],
+   "vcf": "x03_xy_undeclared_ploidy.vcf"
+  },
+  "x04_xy_zero_copies": {
+   "note": "zero declared copies: no materialization, explicit exclusion",
+   "ploidy": [
+    {
+     "contig": "chrY",
+     "copies": 0,
+     "end": 400,
+     "start": 0
+    }
+   ],
+   "vcf": "x04_xy_zero_copies.vcf"
+  },
+  "x05_xy_haploid_star_explained": {
+   "note": "haploid carrier: star explained by the same copy's covering deletion",
+   "ploidy": [
+    {
+     "contig": "chrX",
+     "copies": 1,
+     "end": 800,
+     "start": 0
+    }
+   ],
+   "vcf": "x05_xy_haploid_star_explained.vcf"
+  },
+  "x06_xy_par_star_explained": {
+   "note": "star carried on copy 0, explained by the same copy's deletion in a diploid interval",
+   "ploidy": [
+    {
+     "contig": "chrX",
+     "copies": 2,
+     "end": 400,
+     "start": 0
+    },
+    {
+     "contig": "chrX",
+     "copies": 1,
+     "end": 800,
+     "start": 400
+    }
+   ],
+   "vcf": "x06_xy_par_star_explained.vcf"
+  }
+ },
+ "generator": "LCG state=(state*1103515245+12345) mod 2**31; base=ACGT[(state>>16) mod 4]",
+ "references": {
+  "artificial_1": {
+   "length": 1200,
+   "unique_23mers_forward": 1178
+  },
+  "chrX": {
+   "length": 800,
+   "unique_23mers_forward": 778
+  },
+  "chrY": {
+   "length": 400,
+   "unique_23mers_forward": 378
+  }
+ }
+}

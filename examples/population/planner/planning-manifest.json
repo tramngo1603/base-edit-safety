@@ -1,0 +1,17 @@
+{
+  "record_type": "donor_panel_manifest",
+  "schema_version": "1",
+  "run_id": "toy:activation-cost-planner",
+  "mode": "synthetic_test",
+  "coverage_basis": "synthetic_truth",
+  "request": {
+    "path": "request.json",
+    "sha256": "c026922a5fb8da7580a409fb53e28fcd13d0e4d7f74e5ecc7c083dcd80c5224b"
+  },
+  "synthetic_declaration": {
+    "path": "synthetic-declaration.json",
+    "sha256": "b8c3d3a3c7b5726ffe89a8252b13c6df7c63dd91253faf8bf2e5fbba8844bdc8"
+  },
+  "source_population_manifest": null,
+  "artifacts": []
+}

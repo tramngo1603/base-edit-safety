@@ -7,7 +7,6 @@ import pytest
 
 from base_edit_safety.pipeline.candidate_panel import build_ledger
 from base_edit_safety.pipeline.candidate_report import (
-    DISCLAIMER,
     CandidateReportError,
     main,
     render_report,
@@ -65,7 +64,6 @@ def test_report_has_fixed_sections_and_leaves_inputs_unchanged():
 
     report = render_report(designs, candidates)
 
-    assert report.count(DISCLAIMER) == 7
     assert "## Design summary" in report
     assert "## Nomination summary" in report
     assert "## Candidate evidence table" in report

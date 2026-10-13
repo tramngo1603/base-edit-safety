@@ -1,0 +1,56 @@
+[
+  {
+    "candidate_id": "p1",
+    "study_id": "artificial-study-g1",
+    "guide_id": "artificial-guide-g1",
+    "family_id": "artificial-family-g1",
+    "editor": "artificial-editor-A",
+    "assay": "artificial-assay-A",
+    "eligible": true
+  },
+  {
+    "candidate_id": "n1",
+    "study_id": "artificial-study-g1",
+    "guide_id": "artificial-guide-g1",
+    "family_id": "artificial-family-g1",
+    "editor": "artificial-editor-A",
+    "assay": "artificial-assay-A",
+    "eligible": true
+  },
+  {
+    "candidate_id": "p2",
+    "study_id": "artificial-study-g2",
+    "guide_id": "artificial-guide-g2",
+    "family_id": "artificial-family-g2",
+    "editor": "artificial-editor-A",
+    "assay": "artificial-assay-A",
+    "eligible": true
+  },
+  {
+    "candidate_id": "n2",
+    "study_id": "artificial-study-g2",
+    "guide_id": "artificial-guide-g2",
+    "family_id": "artificial-family-g2",
+    "editor": "artificial-editor-A",
+    "assay": "artificial-assay-A",
+    "eligible": true
+  },
+  {
+    "candidate_id": "p3",
+    "study_id": "artificial-study-g3",
+    "guide_id": "artificial-guide-g3",
+    "family_id": "artificial-family-g3",
+    "editor": "artificial-editor-A",
+    "assay": "artificial-assay-A",
+    "eligible": true
+  },
+  {
+    "candidate_id": "n3",
+    "study_id": "artificial-study-g3",
+    "guide_id": "artificial-guide-g3",
+    "family_id": "artificial-family-g3",
+    "editor": "artificial-editor-A",
+    "assay": "artificial-assay-A",
+    "eligible": true
+  }
+]

@@ -1,4 +1,4 @@
-"""Read and write versioned pipeline artifacts under ``data/outputs``.
+"""Read and write versioned pipeline output files under ``data/outputs``.
 
 The schema version prevents an older output file from being read with newer field meanings. Bump
 it whenever a shape change could make an existing file ambiguous.
@@ -12,15 +12,15 @@ import os
 from ..pipeline.datatypes import EditRecord
 
 # 7: executed CRISPRon-ABE fallbacks carry model-predicted-fallback confidence, model/version/input
-#    provenance, their complete outcome spectrum, and an explicit link to the untouched BE-DICT
+#    source details, their complete outcome spectrum, and an explicit link to the untouched BE-DICT
 #    exclusion ledger.
 # 6: BE-DICT records include each model's raw score sum, normalization, agreement checks,
 #    the limits of relative scores, and the fallback choice for excluded model results.
 # 5: `offtarget_sites_low_mismatch` retains all 1-3-mm sites plus 4-mm sites with CFD >= 0.10;
 #    final design records expose that list as `off_target.candidate_sites`.
 # 4: multi-edit enumeration records carry an allele-keyed joint_on_target_rate and its model,
-#    method, confidence, and caveat provenance. BE-DICT-backed records also carry uniform-v1 score
-#    normalization provenance and raw mass; run metadata records the policy and any exclusions.
+#    method, confidence, and caveat sources. BE-DICT-backed records also carry uniform-v1 score
+#    normalization source details and raw mass; run metadata records the policy and any exclusions.
 # 3: enumeration records include coordinates for off-target candidates with up to three
 #    mismatches, so they can be matched to sites in a measured panel.
 # 2: records carry `confidence` (model_predicted | not_evaluated) and a rate of None where the
@@ -35,14 +35,14 @@ _RETIRED_HEADER_KEYS = ("disclaimer", "claim_disclaim")
 class StaleArtifact(RuntimeError):
     """Raised when an output file on disk was written by a different build of this code."""
 
-# Goes at the top of every output file, so a file that gets passed around still says what it is.
+# Every output records its contents and assay scope.
 SCOPE = {
     "what_this_is": (
         "Base-editing guide and editor records with predicted edits, candidate off-targets, "
         "evidence links, and follow-up assays."
     ),
     "what_this_is_not": [
-        "A replacement for experimental confirmation or review of the underlying evidence.",
+        "Measurements of guide-independent DNA/RNA editing, delivery, dose or long-term outcomes.",
     ],
     "confirmation_assays": "amplicon NGS for on-target, CHANGE-seq-BE or GUIDE-seq for off-target.",
 }
@@ -79,11 +79,7 @@ def _write_json(filename: str, body: dict, meta: dict | None) -> str:
 
 
 def schema_complaints(doc: dict) -> list[str]:
-    """Every way this document disagrees with what the current writer produces.
-
-    Returns all of them rather than the first, because a file written by an old build usually
-    disagrees in several ways at once and the full list is what dates it.
-    """
+    """Return all format and origin problems found in a saved output dictionary."""
     found = []
     version = doc.get("artifact_schema_version")
     if version is None:
@@ -113,11 +109,7 @@ def schema_complaints(doc: dict) -> list[str]:
 
 
 def read_enumeration() -> dict:
-    """Load the enumeration file, refusing anything a different build wrote.
-
-    Every later step reads this file. Letting a stale one through means every downstream number is
-    computed from records whose meaning has since changed, which is exactly what happened here.
-    """
+    """Return the enumeration output, raising StaleArtifact for missing or incompatible data."""
     path = enumeration_path()
     if not os.path.isfile(path):
         raise StaleArtifact(
@@ -145,5 +137,5 @@ def write_records(records: list[EditRecord], filename: str, meta: dict | None = 
 
 
 def write_design_records(record_set: dict, filename: str, meta: dict | None = None) -> str:
-    """Write the design records, the main output."""
+    """Write a design-record dictionary with its metadata and return the output path."""
     return _write_json(filename, record_set, meta)

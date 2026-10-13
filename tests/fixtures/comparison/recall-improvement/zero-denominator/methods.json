@@ -1,0 +1,48 @@
+[
+  {
+    "method_id": "baseline",
+    "enumerated_ids": [
+      "q1",
+      "q2",
+      "q3"
+    ],
+    "scores": [
+      {
+        "candidate_id": "q2",
+        "score": "20"
+      },
+      {
+        "candidate_id": "q1",
+        "score": "10"
+      },
+      {
+        "candidate_id": "q3",
+        "score": "5"
+      }
+    ],
+    "runtime_seconds": "0"
+  },
+  {
+    "method_id": "proposed",
+    "enumerated_ids": [
+      "q1",
+      "q2",
+      "q3"
+    ],
+    "scores": [
+      {
+        "candidate_id": "q1",
+        "score": "20"
+      },
+      {
+        "candidate_id": "q3",
+        "score": "10"
+      },
+      {
+        "candidate_id": "q2",
+        "score": "5"
+      }
+    ],
+    "runtime_seconds": "0"
+  }
+]

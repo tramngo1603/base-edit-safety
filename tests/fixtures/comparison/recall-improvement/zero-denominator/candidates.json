@@ -1,0 +1,29 @@
+[
+  {
+    "candidate_id": "q1",
+    "study_id": "artificial-study-zq1",
+    "guide_id": "artificial-guide-zq1",
+    "family_id": "artificial-family-zq1",
+    "editor": "artificial-editor-B",
+    "assay": "artificial-assay-B",
+    "eligible": true
+  },
+  {
+    "candidate_id": "q2",
+    "study_id": "artificial-study-zq2",
+    "guide_id": "artificial-guide-zq2",
+    "family_id": "artificial-family-zq2",
+    "editor": "artificial-editor-B",
+    "assay": "artificial-assay-B",
+    "eligible": true
+  },
+  {
+    "candidate_id": "q3",
+    "study_id": "artificial-study-zq3",
+    "guide_id": "artificial-guide-zq3",
+    "family_id": "artificial-family-zq3",
+    "editor": "artificial-editor-B",
+    "assay": "artificial-assay-B",
+    "eligible": true
+  }
+]

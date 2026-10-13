@@ -1,0 +1,6 @@
+##fileformat=VCFv4.2
+##reference=artificial
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	sample
+artificial_1	551	anchor550	A	C	.	PASS	.	GT	0/0
+artificial_1	601	v600	CATGGTAT	C,*	.	PASS	.	GT	1/2
+artificial_1	661	anchor660	G	T	.	PASS	.	GT	0/0

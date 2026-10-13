@@ -6,7 +6,8 @@ a coordinate has shifted: do NOT edit the number to make it pass. Find what move
 TSS constants, or the underlying assembly), work out why, and fix the cause.
 
 The offline block runs everywhere and needs no network. The one network-gated block re-derives two
-protospacer positions from the live UCSC reference; it is skipped, never failed, on offline runs.
+protospacer positions from the live UCSC reference. Offline runs skip at the connectivity gate;
+fetch errors after that gate fail the test.
 """
 from __future__ import annotations
 
@@ -70,7 +71,7 @@ def test_tss_separation_is_the_verified_4924():
 # This 20-mer is the GRCh38 reference-derived -198 protospacer (Mayuranathan 2023, also reported by
 # Ravi). The external review confirmed it appears once per paralog on the plus strand, starting at
 # the coordinates below. This block re-fetches exactly those bases from UCSC so a silent assembly or
-# coordinate shift is caught against the live reference. It is skipped, not failed, when offline.
+# coordinate shift is caught against the live reference. Offline runs skip before fetching.
 MAYURANATHAN_198_PROTOSPACER = "GTGGGGAAGGGGCCCCCAAG"
 MAYURANATHAN_198_STARTS = {"HBG1": 5_250_049, "HBG2": 5_254_973}
 
@@ -92,18 +93,25 @@ def _network_available(host: str = "api.genome.ucsc.edu", port: int = 443,
     reason="offline: UCSC hg38 API not reachable (set BES_OFFLINE to force-skip)",
 )
 def test_mayuranathan_198_protospacer_is_at_the_verified_ucsc_coordinates():
-    from urllib.error import URLError
-
     from base_edit_safety.io import reference
 
     n = len(MAYURANATHAN_198_PROTOSPACER)
     for gene, start in MAYURANATHAN_198_STARTS.items():
-        try:
-            # use_cache=False so this always checks the live reference, not a stored copy.
-            window = reference.fetch_window("chr11", start, start + n - 1, use_cache=False)
-        except (URLError, OSError) as exc:  # transient network failure: skip, never fail
-            pytest.skip(f"UCSC fetch failed for {gene}: {exc}")
+        # use_cache=False so this always checks the live reference, not a stored copy.
+        window = reference.fetch_window("chr11", start, start + n - 1, use_cache=False)
         assert window.plus_sequence == MAYURANATHAN_198_PROTOSPACER, (
             f"{gene}: UCSC plus sequence at chr11:{start} is {window.plus_sequence!r}, "
             f"expected {MAYURANATHAN_198_PROTOSPACER!r}"
         )
+
+
+@pytest.mark.parametrize("error", [OSError("synthetic fetch failure"), RuntimeError("synthetic parser failure")])
+def test_live_coordinate_execution_errors_propagate(monkeypatch, error):
+    from base_edit_safety.io import reference
+
+    def fail_fetch(*args, **kwargs):
+        raise error
+
+    monkeypatch.setattr(reference, "fetch_window", fail_fetch)
+    with pytest.raises(type(error), match="synthetic"):
+        test_mayuranathan_198_protospacer_is_at_the_verified_ucsc_coordinates()

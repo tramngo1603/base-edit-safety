@@ -1,8 +1,7 @@
 """Combine candidate lists and experiment records for review.
 
-Check each supplied measurement against the reported DNA version at its exact site. Keep
-source results, unknowns and researcher panel decisions separate. Do not calculate a safety
-score or choose which sites the researcher should include.
+Match supplied measurements to reported DNA versions at exact sites. Return candidate
+records with separate source results, unresolved fields and researcher panel decisions.
 """
 from __future__ import annotations
 
@@ -18,6 +17,7 @@ from pathlib import Path
 from typing import Iterable
 
 from .. import __version__, anchors
+from ..measurement_units import editing_detection_limit
 from ..ingestion.crisprme import (
     SKIP_REASONS,
     SUPPORTED_FORMAT_SCHEMAS,
@@ -2186,7 +2186,24 @@ def _alignment_block_for_site(site: dict, guide: dict | None) -> dict | None:
         if item["nomination_kind"] == "computational" and item.get("site_sequence")
     ]
     if not nominations:
-        return None
+        experimental = [n for n in site["nominations"] if n["nomination_kind"] == "experimental"]
+        if not experimental or any(
+            n.get("reference_validation", {}).get("status") != "verified"
+            or n.get("strand") not in {"+", "-"}
+            or not n.get("site_sequence") or set(n["site_sequence"]) - set("ACGT")
+            or len(n["site_sequence"]) != 23
+            or site["end_0based_exclusive"] - site["start_0based"] != 23
+            or n.get("dna_bulge") not in {None, 0}
+            or n.get("rna_bulge") not in {None, 0}
+            or n.get("population_variant_id")
+            or len(n.get("pam") or "") != 3
+            or n["site_sequence"][-3:] != n["pam"]
+            for n in experimental
+        ):
+            return None
+        if len({(n["site_sequence"], n["strand"]) for n in experimental}) != 1:
+            return None
+        nominations = experimental
     nomination = nominations[0]
     target = nomination["site_sequence"]
     native_query = nomination.get("source_metadata", {}).get("native_query")
@@ -2424,8 +2441,10 @@ def _match_measurements_to_site_alleles(site: dict, guide: dict | None) -> list[
                     quality_reasons.append(f"{field}_missing")
             if measurement.get("measurement_kind") != "editing":
                 quality_reasons.append("editing_measurement_not_established")
-            if measurement["status"] == "not_detected" and not measurement.get("limit_of_detection"):
-                quality_reasons.append("detection_limit_missing")
+            if measurement["status"] == "not_detected":
+                limit = editing_detection_limit(measurement.get("limit_of_detection"))
+                if limit["reason"]:
+                    quality_reasons.append(limit["reason"])
             match_status = ("mismatch" if any(r.endswith("_mismatch") for r in identity_reasons)
                             else "unknown" if identity_reasons else "matched")
             is_usable = not identity_reasons and not quality_reasons
@@ -2886,7 +2905,7 @@ def build_ledger(
                 "assay and its detection limit."
             ),
             "panel_decision": (
-                "An explicit researcher decision for targeted follow-up; not an inferred safety label."
+                "A researcher-supplied decision for targeted follow-up."
             ),
         },
         "limitations": [

@@ -1,0 +1,24 @@
+{
+  "basis": "Specification section 9, before evaluating planner outcomes",
+  "kind": "artificial_software_acceptance_case",
+  "donors": ["C", "N"],
+  "designs": ["A", "B"],
+  "treated_conditions": ["C/A", "C/B", "N/A", "N/B"],
+  "required_loci_per_condition": ["T", "L"],
+  "independent_donors_per_arm": 1,
+  "technical_replicates": 1,
+  "cost_unit": "simulation_units",
+  "cost_components": {
+    "study_overhead": 2,
+    "donor_activation_total": 2,
+    "treatment_preparation_total": 4,
+    "measurement_panel_total": 8,
+    "mock_package_total": 2
+  },
+  "minimum_complete_cost": 18,
+  "budget_18_complete_questions": 1,
+  "budget_17_complete_questions": 0,
+  "isolated_condition_question_gain": 0,
+  "evidence_status_after_planning": "no_measurements",
+  "scope": "These counts and prices test software; they are not laboratory estimates or a sufficient scientific sample size."
+}

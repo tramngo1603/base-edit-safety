@@ -1,7 +1,7 @@
 """Build a small no-data example of the HBG review record.
 
 The example uses the checked-in GRCh38 anchor table, invokes no predictor, and contains no
-paper-derived rows or measurements.  It exists so a new reviewer can inspect the record shape
+paper-derived rows or measurements. It exists so a new reviewer can inspect the record shape
 before installing CRISPOR or BE-DICT.
 """
 from __future__ import annotations
